@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PSCBioVerificationFace" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ExtractorMinIod" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorMaxIod" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorFaceQuality" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorFaceConfidence" Type="System.Double" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorMaxRollAngleDeviation" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EnrollTemplateSize" Type="Neurotec.Biometrics.NleTemplateSize" Scope="User">
+      <Value Profile="(Default)">Large</Value>
+    </Setting>
+    <Setting Name="IdentificationTemplateSize" Type="Neurotec.Biometrics.NleTemplateSize" Scope="User">
+      <Value Profile="(Default)">Large</Value>
+    </Setting>
+    <Setting Name="MatcherSpeed" Type="Neurotec.Biometrics.NMatchingSpeed" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MatcherThreshold" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorFavorLargestFace" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorUseLivenessCheck" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorLivenessCheckThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorLiveEnrollFrameCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ExtractorMaxYawAngle" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExtractorDetectAllFeaturesNonLive" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
