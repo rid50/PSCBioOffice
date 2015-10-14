@@ -26,9 +26,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ODBC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Nomad.Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

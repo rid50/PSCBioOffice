@@ -50,7 +50,7 @@ namespace Nomad
 			MatcherFacade();
 			~MatcherFacade();
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			bool match(void *buffer2, int size);
+			bool match(void *prescannedTemplate, int prescannedTemplateSize);
 		};
 	}
 
@@ -94,10 +94,11 @@ namespace Nomad
 		public:
 			Odbc();
 			~Odbc();
-			SQLRETURN connect(int*);
+			//SQLRETURN connect(int*);
+			bool getRowCount(int *rowcount);
 			//SQLRETURN exec();
 			//SQLRETURN exec(unsigned int, unsigned int, unsigned int);
-			void enroll(unsigned char *record, unsigned __int32 size);
+			static void enroll(unsigned char *record, unsigned __int32 size);
 			unsigned __int32 exec(unsigned long int, unsigned int);
 			void disconnect();
 

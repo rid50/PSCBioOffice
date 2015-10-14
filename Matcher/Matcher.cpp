@@ -91,11 +91,15 @@ namespace Nomad
 			Matcher::enroll(record, size);
 		}
 
-		bool MatcherFacade::match(void *buffer2, int size) {
-			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(buffer2, size);
+		bool MatcherFacade::match(void *prescannedTemplate, int prescannedTemplateSize) {
+			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(prescannedTemplate, prescannedTemplateSize);
 		}
 
-		void match(void *buffer2, int size);
+		//void match(void *buffer2, int size);
+
+		NSizeType	Matcher::enrolledTemplateSize = 0;
+		void		*Matcher::enrolledTemplate = 0;
+
 		Matcher::~Matcher() {
 			//if (hExtractor != NULL)
 			//	NObjectFree(hExtractor);
@@ -112,26 +116,23 @@ namespace Nomad
 			//printStatusStatement("Kuku2");
 		};
 
-		NSizeType	Matcher::packedSize = 0;
-		void		*Matcher::buffer = 0;
-
 		Matcher::Matcher() {
-			hImageFile = NULL;
-			hImageFile2 = NULL;
-			hImage = NULL;
-			hImage2 = NULL;
-			//buffer = NULL;
-			buffer2 = NULL;
-			hRecord = NULL;
-			hRecord2 = NULL;
+			//hImageFile = NULL;
+			//hImageFile2 = NULL;
+			//hImage = NULL;
+			//hImage2 = NULL;
+			////buffer = NULL;
+			//buffer2 = NULL;
+			//hRecord = NULL;
+			//hRecord2 = NULL;
 
-			hExtractor = 0;
+			//hExtractor = 0;
 			hMatcher = 0;
 
 			//int i = 5;
 			//printStatusStatement("Kuku");
 
-			NResult result;
+			//NResult result;
 			const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
 			const NChar * LicensesBSS[] = { L"FingersBSS" };
 
@@ -247,8 +248,8 @@ namespace Nomad
 		//}
 
 		void Matcher::enroll(unsigned char *record, unsigned __int32 size) {
-			buffer = record;
-			packedSize = size;
+			enrolledTemplate = record;
+			enrolledTemplateSize = size;
 
 			//wchar_t * szFileName = L"C:\\roman\\psc\\wsq\\lindex.wsq";
 			//std::wcout << szFileName  << std::endl;
@@ -295,19 +296,19 @@ namespace Nomad
 			//}
 		}
 
-		bool Matcher::match(void *buffer2, int size) {
+		bool Matcher::match(void *prescannedTemplate, int prescannedTemplateSize) {
 
 			NInt score;
 			NMMatchDetails **ppMatchDetails = NULL;
-			NSizeType packedSize2 = size;
+			NSizeType packedSize2 = prescannedTemplateSize;
 
 			//TimedRun([this, buffer2, packedSize2, ppMatchDetails, &score](){NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);}, "Matching: Time elapsed");
-			result = NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);
-			result = N_OK;
+			result = NMVerify(hMatcher, enrolledTemplate, (NSizeType)enrolledTemplateSize, prescannedTemplate, (NSizeType)prescannedTemplateSize, ppMatchDetails, &score);
+			//result = N_OK;
 
 			if (result != N_OK) {
 				printStatusStatement("Error matching the records");
-				clean();
+				//clean();
 				return false;
 			}
 
@@ -435,55 +436,55 @@ namespace Nomad
 		//	clean();
 		//}
 
-		void Matcher::clean() {
-			if (buffer != NULL)
-				free(buffer);
-			if (buffer2 != NULL)
-				free(buffer2);
-			if (hRecord != NULL)
-				NObjectFree(hRecord);
-			if (hRecord2 != NULL)
-				NObjectFree(hRecord2);
-			//		if (hImage != NULL)
-			//			NObjectFree(hImage);
-			//		if (hImage2 != NULL)
-			//			NObjectFree(hImage2);
-			if (hImageFile != NULL) {
-				NImageFileClose(hImageFile);
-				NObjectFree(hImageFile);
-				hImageFile = NULL;
-			}
-			if (hImageFile2 != NULL) {
-				NImageFileClose(hImageFile2);
-				NObjectFree(hImageFile2);
-				hImageFile2 = NULL;
-			}
+		//void Matcher::clean() {
+		//	if (buffer != NULL)
+		//		free(buffer);
+		//	if (buffer2 != NULL)
+		//		free(buffer2);
+		//	if (hRecord != NULL)
+		//		NObjectFree(hRecord);
+		//	if (hRecord2 != NULL)
+		//		NObjectFree(hRecord2);
+		//	//		if (hImage != NULL)
+		//	//			NObjectFree(hImage);
+		//	//		if (hImage2 != NULL)
+		//	//			NObjectFree(hImage2);
+		//	if (hImageFile != NULL) {
+		//		NImageFileClose(hImageFile);
+		//		NObjectFree(hImageFile);
+		//		hImageFile = NULL;
+		//	}
+		//	if (hImageFile2 != NULL) {
+		//		NImageFileClose(hImageFile2);
+		//		NObjectFree(hImageFile2);
+		//		hImageFile2 = NULL;
+		//	}
 
-		}
+		//}
 
-		void Matcher::checkExtractionStatus(const NfeExtractionStatus &extractionStatus) {
-			if (extractionStatus == nfeesTemplateCreated)
-			{
-				printStatusStatement("extracted");
-			}
-			else
-			{
-				switch (extractionStatus)
-				{
-				case nfeesTooFewMinutiae:
-					printStatusStatement("failed to extract (too few minutiae)");
-					break;
-				case nfeesQualityCheckFailed:
-					printStatusStatement("failed to extract (quality check failed)");
-					break;
-				case nfeesMatchingFailed:
-					printStatusStatement("failed to extract (matching failed)");
-					break;
-				default:
-					printStatusStatement("failed to extract");
-					break;
-				}
-			}
-		}
+		//void Matcher::checkExtractionStatus(const NfeExtractionStatus &extractionStatus) {
+		//	if (extractionStatus == nfeesTemplateCreated)
+		//	{
+		//		printStatusStatement("extracted");
+		//	}
+		//	else
+		//	{
+		//		switch (extractionStatus)
+		//		{
+		//		case nfeesTooFewMinutiae:
+		//			printStatusStatement("failed to extract (too few minutiae)");
+		//			break;
+		//		case nfeesQualityCheckFailed:
+		//			printStatusStatement("failed to extract (quality check failed)");
+		//			break;
+		//		case nfeesMatchingFailed:
+		//			printStatusStatement("failed to extract (matching failed)");
+		//			break;
+		//		default:
+		//			printStatusStatement("failed to extract");
+		//			break;
+		//		}
+		//	}
+		//}
 	}
 }

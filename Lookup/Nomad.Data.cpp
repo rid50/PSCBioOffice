@@ -15,6 +15,11 @@ namespace Nomad
 {
 	namespace Data
 	{
+		void Odbc::enroll(unsigned char *record, unsigned __int32 size) {
+			//matcherFacadePtr->enroll(record, size);
+			Nomad::Bio::MatcherFacade::enroll(record, size);
+		}
+
 		Odbc::~Odbc() {
 			disconnect();
 		}
@@ -30,16 +35,11 @@ namespace Nomad
 							sizeof(ConnStrIn) - 1);
 
 			//ConnStrIn = "DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=Northwind;Trusted_Connection=yes";
-			cbConnStrOut = 0;
-		}
+			//cbConnStrOut = 0;
+		//}
 
-		void Odbc::enroll(unsigned char *record, unsigned __int32 size) {
-			//matcherFacadePtr->enroll(record, size);
-			Nomad::Bio::MatcherFacade::enroll(record, size);
-		}
-
-		SQLRETURN Odbc::connect(int *rowcount) {
-			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+		//SQLRETURN Odbc::connect(int *rowcount) {
+			//SQLHSTMT hStmt = SQL_NULL_HSTMT;
 
 			// Allocate environment handle
 			rc = SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv );
@@ -59,24 +59,47 @@ namespace Nomad
 						rc = SQLDriverConnect( hDBC, NULL, ConnStrIn, SQL_NTS, ConnStrOut, MAXBUFLEN, &cbConnStrOut, SQL_DRIVER_COMPLETE );
 						if (!SQL_SUCCEEDED(rc) && rc != SQL_SUCCESS_WITH_INFO)						{
 							extract_error("SQLDriverConnect", hDBC, SQL_HANDLE_DBC);
-							return 1;
-						} else {
-							rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
-							if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-								SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
-								if (SQLFetch(hStmt) == SQL_SUCCESS) {
-									SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(int), 0);
-									SQLCloseCursor(hStmt);
-									SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
-								}
-							}
+							//return 1;
 						}
+						//else {
+						//	rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
+						//	if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
+						//		extract_error("SQLAllocHandle", hDBC, SQL_HANDLE_DBC);
+						//		//return -1;
+
+						//		//SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
+						//		//if (SQLFetch(hStmt) == SQL_SUCCESS) {
+						//		//	SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(int), 0);
+						//		//	SQLCloseCursor(hStmt);
+						//		//	SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+						//		//}
+						//	}
+						//}
 					}
 				}		
 			}
 			
-			return 0;
+			//return 0;
 		}
+
+		bool Odbc::getRowCount(int *rowcount) {
+			bool retcode = false;
+			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
+			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
+				SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
+				if (SQLFetch(hStmt) == SQL_SUCCESS) {
+					SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(int), 0);
+					SQLCloseCursor(hStmt);
+					retcode = true;
+				}
+
+				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+			}
+
+			return retcode;
+		}
+
 
 		//SQLRETURN Odbc::exec(unsigned int from, unsigned int to, unsigned int limit) {
 		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit) {
@@ -256,7 +279,7 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 						delete [] ImageStruct.pImage;
 						if (matched) {
 							AppId = AppIDStructArray[i].AppID;
-							//break;
+							break;
 						}
 					//} else if (rc == SQL_NO_DATA) {
 					//	//extract_error("SQLExecute", hStmt, SQL_HANDLE_STMT);
@@ -277,8 +300,8 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 				}
 //				cout << "----------------------" << endl;
 
-				//if (matched)
-				//	break;
+				if (matched)
+					break;
 			}
 
 			std::cout << AppIDStructArray[n].AppID << endl;

@@ -15,16 +15,19 @@ namespace Nomad {
 		bool __stdcall init() {
 			odbcPtr = new Nomad::Data::Odbc();
 			rowcount = 0;
-			if (odbcPtr->connect(&rowcount) == 0)
-				return true;
-			else
-				return false;
+			bool retcode = false;
+			if (odbcPtr->getRowCount(&rowcount))
+				retcode = true;
+
+			delete odbcPtr;
+			return retcode;
 		}
 
 		unsigned __int32 __stdcall match(unsigned char *record, unsigned __int32 size) {
 			unsigned __int32 retcode = 0;
 
-			odbcPtr->enroll(record, size);
+			//odbcPtr->enroll(record, size);
+			Nomad::Data::Odbc::enroll(record, size);
 
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
@@ -38,14 +41,17 @@ namespace Nomad {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](unsigned int i) {
-						if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit)) == -1)
+						unsigned __int32 retcode = 0;
+						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
+						if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit)) > 0)
 							tg.cancel();
+						delete odbcPtr;
 					});
 				});
 			} else {
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
-					if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit)) == -1)
+					if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit)) > 0)
 						break;
 				}
 			}

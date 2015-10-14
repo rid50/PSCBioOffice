@@ -88,7 +88,6 @@
   <ItemGroup>
     <ClCompile Include="Lookup.cpp" />
     <ClCompile Include="Nomad.Data.cpp" />
-    <ClCompile Include="ODBC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lookup.h" />
