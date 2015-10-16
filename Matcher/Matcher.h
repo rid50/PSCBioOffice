@@ -59,6 +59,22 @@ namespace Nomad
 			bool match(void *prescannedTemplate, int prescannedTemplateSize);
 		};
 
+		class License
+		{
+		private:
+			NResult		result;
+		public:
+			License();
+			//~License();
+
+			inline void printStatusStatement(char * statusStatement) {
+#ifdef _DEBUG
+				//sprintf_s (Matcher::statusStatement, statusStatement);
+				std::cout << statusStatement << std::endl;
+#endif
+			}
+		};
+
 		class Matcher
 		{
 			//private:
@@ -75,6 +91,7 @@ namespace Nomad
 			//HNFRecord	hRecord2;
 			static NSizeType	enrolledTemplateSize;
 			static void			*enrolledTemplate;
+
 			//void		*buffer2;
 			//bool		matchingStatus;
 			//typedef pair <int, HNImage> imageMapPair;

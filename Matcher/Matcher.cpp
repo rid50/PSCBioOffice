@@ -96,6 +96,34 @@ namespace Nomad
 		}
 
 		//void match(void *buffer2, int size);
+		License::License() {
+			const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
+			const NChar * LicensesBSS[] = { L"FingersBSS" };
+
+			result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
+			if (NFailed(result))
+			{
+				if (result == N_E_FAILED)
+				{
+					printStatusStatement("Failed to obtain licenses for extractor and/or matcher");
+				}
+				else
+				{
+					printStatusStatement("Licensing manager is not running");
+				}
+			}
+			else
+			{
+				printStatusStatement("Licenses for extractor and/or matcher obtained");
+			}
+
+			result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
+			if (NSucceeded(result))
+			{
+				printStatusStatement("Licenses for BSS obtained");
+			}
+		}
+
 
 		NSizeType	Matcher::enrolledTemplateSize = 0;
 		void		*Matcher::enrolledTemplate = 0;
@@ -133,31 +161,31 @@ namespace Nomad
 			//printStatusStatement("Kuku");
 
 			//NResult result;
-			const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
-			const NChar * LicensesBSS[] = { L"FingersBSS" };
+			//const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
+			//const NChar * LicensesBSS[] = { L"FingersBSS" };
 
-			result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
-			if (NFailed(result))
-			{
-				if (result == N_E_FAILED)
-				{
-					printStatusStatement("Failed to obtain licenses for extractor and/or matcher");
-				}
-				else
-				{
-					printStatusStatement("Licensing manager is not running");
-				}
-			}
-			else
-			{
-				printStatusStatement("Licenses for extractor and/or matcher obtained");
-			}
+			//result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
+			//if (NFailed(result))
+			//{
+			//	if (result == N_E_FAILED)
+			//	{
+			//		printStatusStatement("Failed to obtain licenses for extractor and/or matcher");
+			//	}
+			//	else
+			//	{
+			//		printStatusStatement("Licensing manager is not running");
+			//	}
+			//}
+			//else
+			//{
+			//	printStatusStatement("Licenses for extractor and/or matcher obtained");
+			//}
 
-			result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
-			if (NSucceeded(result))
-			{
-				printStatusStatement("Licenses for BSS obtained");
-			}
+			//result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
+			//if (NSucceeded(result))
+			//{
+			//	printStatusStatement("Licenses for BSS obtained");
+			//}
 
 			//result = NfeCreate(&hExtractor);
 
@@ -165,6 +193,8 @@ namespace Nomad
 			//	printStatusStatement("Error creating the Extractor");
 			//	return;
 			//}
+
+			static License license;
 
 			result = NMCreate(&hMatcher);
 

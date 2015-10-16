@@ -22,11 +22,14 @@ namespace PSCBioIdentification
     public partial class Form1 : Form
     {
 
-        [DllImport("Lookup.dll", CharSet = CharSet.Auto)]
-        public static extern bool init();
+        //[DllImport("Lookup.dll", CharSet = CharSet.Auto)]
+        //public static extern bool initFingerMatcher();
 
-        [DllImport("Lookup.dll", CharSet = CharSet.Auto)]
-        public static extern UInt32 match(byte[] template, UInt32 size);
+        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern UInt32 match(byte[] template, UInt32 size, System.Text.StringBuilder errorMessage);
+        //public static extern UInt32 match(byte[] template, UInt32 size, String errorMessage);
+        //public static extern UInt32 match(byte[] template, UInt32 size, 
+          //  [MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.LPStr)] String[] errorMessage);
         //public static extern UInt32 match([MarshalAs(UnmanagedType.LPStruct)] NFRecord template);
         //public static extern UInt32 match(System.Runtime.Remoting.ObjRef objRef);
 
@@ -176,8 +179,8 @@ namespace PSCBioIdentification
             personId.Text = "20095423";
             //buttonRequest.Focus();
             //buttonScan.Enabled = false;
-            if (!init())
-                ShowErrorMessage("Lookup service: Error connecting to database");
+            //if (!initFingerMatcher())
+            //    ShowErrorMessage("Lookup service: Error connecting to database");
         }
 
         private void startCapturing()
@@ -823,6 +826,10 @@ namespace PSCBioIdentification
         {
             public UInt32 size;
             public byte[] template;
+            //public String errorMessage;
+            //public String[] errorMessage = new String[1];
+            public System.Text.StringBuilder errorMessage;
+
         }
 
         private void doIdentify(NFRecord template)
@@ -841,7 +848,11 @@ namespace PSCBioIdentification
             Record record = new Record();
             record.size = (UInt32)template.GetSize();
             record.template = template.Save();
-
+            record.errorMessage = new System.Text.StringBuilder(50);
+            record.errorMessage.Append("kuku");
+            //record.errorMessage[0] = "kuku";
+            //record.errorMessage = "kuku";
+            //String errorMessage = "kuku";
             //pt.x = 5;
             //pt.y = 6;
 
@@ -853,7 +864,7 @@ namespace PSCBioIdentification
             {
                 fixed (UInt32* ptr = &record.size)
                 {
-                    score = match(record.template, record.size);
+                    score = match(record.template, record.size, record.errorMessage);
                 }
             }
 

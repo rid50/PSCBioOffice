@@ -8,8 +8,8 @@
 //#include <cstdio>
 //#include <stdio.h>
 
-using std::cout;
-using std::endl;
+//using std::cout;
+//using std::endl;
 
 namespace Nomad
 {
@@ -19,6 +19,13 @@ namespace Nomad
 			//matcherFacadePtr->enroll(record, size);
 			Nomad::Bio::MatcherFacade::enroll(record, size);
 		}
+
+		void Odbc::terminateLoop(bool terminateLoop) {
+			//matcherFacadePtr->enroll(record, size);
+			shallTerminateLoop = terminateLoop;
+		}
+
+		bool Odbc::shallTerminateLoop = false;
 
 		Odbc::~Odbc() {
 			disconnect();
@@ -82,16 +89,18 @@ namespace Nomad
 			//return 0;
 		}
 
-		bool Odbc::getRowCount(int *rowcount) {
+		bool Odbc::getRowCount(unsigned __int32 *rowcount) {
 			bool retcode = false;
 			SQLHSTMT hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-				SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
+				SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers2", SQL_NTS);
 				if (SQLFetch(hStmt) == SQL_SUCCESS) {
-					SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(int), 0);
+					SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(unsigned __int32), 0);
 					SQLCloseCursor(hStmt);
 					retcode = true;
+				} else {
+					extract_error("SQLAllocHandle", hDBC, SQL_HANDLE_DBC);
 				}
 
 				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
@@ -182,7 +191,7 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 			//stmt << "SELECT AppID, AppImage FROM Egy_T_AppPers WITH (NOLOCK) WHERE datalength(AppImage) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 
 			//stmt << "SELECT AppID, AppImage FROM Egy_T_AppPers WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
-			stmt << "SELECT AppID, li FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			stmt << "SELECT AppID, rm FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 
 			//stmt << "SELECT AppID, AppImage FROM (SELECT ROW_NUMBER() OVER(ORDER BY AppID) AS row, AppID, AppImage FROM Egy_T_AppPers WHERE datalength(AppImage) IS NOT NULL) r WHERE row > " << from << " and row <= " << to << "\n";
 			//stmt << "SELECT AppID FROM (SELECT ROW_NUMBER() OVER(ORDER BY AppID) AS row, AppID FROM Egy_T_AppPers) r WHERE row > " << from << "\n";
@@ -230,7 +239,7 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 				//cout << "Number of rows: " << n << endl;
 				n = NumRowsFetched - 1;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {
-					if (RowStatusArray[i] == SQL_ROW_SUCCESS) {
+					//if (RowStatusArray[i] == SQL_ROW_SUCCESS) {
 
 						//if (AppIDStructArray[i].AppIDInd == SQL_NULL_DATA)
 						//	printf(" NULL      ");
@@ -243,7 +252,10 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 						//	printf(" NULL      ");
 						//else
 						//	printf("%d\t", AppIDArray[i]);
-					}
+					//}
+
+					if (shallTerminateLoop)
+						break;
 
 					// Call SQLGetData to determine the amount of data that's waiting.
 					//pPicture = new BYTE[1];
@@ -302,9 +314,13 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 
 				if (matched)
 					break;
+
+				if (shallTerminateLoop)
+					break;
 			}
 
-			std::cout << AppIDStructArray[n].AppID << endl;
+			printStatusStatement(AppIDStructArray[n].AppID);
+			//std::cout << AppIDStructArray[n].AppID << endl;
 			delete[] RowStatusArray;
 			delete[] AppIDStructArray;
 			FreeStmtHandle(hStmt);
@@ -406,17 +422,20 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 			SQLSMALLINT	len;
 			SQLRETURN	ret;
 
-			fprintf(stderr,
-					"\n"
-					"The driver reported the following diagnostics whilst running "
-					"%s\n\n",
-					fn);
+			//fprintf(stdout,
+			//		"\n"
+			//		"The driver reported the following diagnostics whilst running "
+			//		"%s\n\n",
+			//		fn);
+
+			std::cout << "The driver reported the following diagnostics whilst running " << fn << std::endl;
 
 			do
 			{
 				ret = SQLGetDiagRec(type, handle, ++i, state, &native, text, sizeof(text), &len );
 				if (SQL_SUCCEEDED(ret))
-					printf("%s:%ld:%ld:%s\n", state, i, native, text);
+					std::cout << state << ":" << i << ":"  << native << ":" << text << std::endl;
+					//printf("%s:%ld:%ld:%s\n", state, i, native, text);
 			}
 			while( ret == SQL_SUCCESS );
 		}

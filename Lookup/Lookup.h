@@ -1,16 +1,23 @@
 #pragma once
 
 #include "Nomad.Data.h"
-#include <string>
+//#include <string>
 
 using namespace std;
 
 namespace Nomad {
 	namespace Lookup {
 		Nomad::Data::Odbc *odbcPtr;
-		int rowcount;
+		//int rowcount;
 
-		extern "C" bool __declspec(dllexport) __stdcall init();
-		extern "C" unsigned __int32 __declspec(dllexport) __stdcall match(unsigned char *record, unsigned __int32 size);
+		//extern "C" bool __declspec(dllexport) __stdcall initFingerMatcher();
+		extern "C" unsigned __int32 __declspec(dllexport) __stdcall match(unsigned char *record, unsigned __int32 size, char *errorMessage);
+
+		inline void printStatusStatement(double statusStatement) {
+#ifdef _DEBUG
+			//sprintf_s (ServiceListener::statusStatement, statusStatement);
+			std::cout << statusStatement << std::endl;
+#endif
+		}
 	}
 }

@@ -20,7 +20,7 @@
 #include <sqlncli.h>
 #include <iostream>
 #include <sstream>
-#include <conio.h>
+//#include <conio.h>
 
 //#include <NFExtractor.h>
 //#include <NMatcher.h>
@@ -50,6 +50,7 @@ namespace Nomad
 			MatcherFacade();
 			~MatcherFacade();
 			static void enroll(unsigned char *record, unsigned __int32 size);
+			static void terminateLoop(bool terminateLoop);
 			bool match(void *prescannedTemplate, int prescannedTemplateSize);
 		};
 	}
@@ -63,7 +64,8 @@ namespace Nomad
 
 		private:
 			//Nomad::Bio::MatcherFacade matcherFacade;
-			Nomad::Bio::MatcherFacade *matcherFacadePtr;
+			Nomad::Bio::MatcherFacade	*matcherFacadePtr;
+			static bool	shallTerminateLoop;
 
 			//void *buffer;
 			//void *buffer2;
@@ -95,10 +97,11 @@ namespace Nomad
 			Odbc();
 			~Odbc();
 			//SQLRETURN connect(int*);
-			bool getRowCount(int *rowcount);
+			bool getRowCount(unsigned __int32 *rowcount);
 			//SQLRETURN exec();
 			//SQLRETURN exec(unsigned int, unsigned int, unsigned int);
 			static void enroll(unsigned char *record, unsigned __int32 size);
+			static void terminateLoop(bool terminateLoop);
 			unsigned __int32 exec(unsigned long int, unsigned int);
 			void disconnect();
 
@@ -132,6 +135,13 @@ namespace Nomad
 			}
 
 			inline void printStatusStatement(char * statusStatement) {
+#ifdef _DEBUG
+				//sprintf_s (ServiceListener::statusStatement, statusStatement);
+				std::cout << statusStatement << std::endl;
+#endif
+			}
+
+			inline void printStatusStatement(int statusStatement) {
 #ifdef _DEBUG
 				//sprintf_s (ServiceListener::statusStatement, statusStatement);
 				std::cout << statusStatement << std::endl;
