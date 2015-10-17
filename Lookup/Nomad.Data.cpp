@@ -10,6 +10,7 @@
 
 //using std::cout;
 //using std::endl;
+//using std::string;
 
 namespace Nomad
 {
@@ -89,18 +90,22 @@ namespace Nomad
 			//return 0;
 		}
 
-		bool Odbc::getRowCount(unsigned __int32 *rowcount) {
+		bool Odbc::getRowCount(unsigned __int32 *rowcount, std::string *errorMessage) {
 			bool retcode = false;
 			SQLHSTMT hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-				SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers2", SQL_NTS);
-				if (SQLFetch(hStmt) == SQL_SUCCESS) {
-					SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(unsigned __int32), 0);
-					SQLCloseCursor(hStmt);
-					retcode = true;
+				rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers2", SQL_NTS);
+				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
+					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
+						SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(unsigned __int32), 0);
+						SQLCloseCursor(hStmt);
+						retcode = true;
+					} else {
+						extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
+					}
 				} else {
-					extract_error("SQLAllocHandle", hDBC, SQL_HANDLE_DBC);
+					extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
 				}
 
 				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
@@ -415,12 +420,31 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 
 		void Odbc::extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type)
 		{
+			extract_error(fn, handle, type, NULL);
+		}
+
+		void Odbc::extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type, std::string *errorMessage)
+		{
 			SQLSMALLINT	i = 0;
 			SQLINTEGER	native;
 			SQLCHAR		state[ 7 ];
 			SQLCHAR		text[256];
 			SQLSMALLINT	len;
 			SQLRETURN	ret;
+			std::stringstream ss; 
+
+
+			//std::streambuf *psbuf, *backup;
+			//std::ofstream filestr;
+			//filestr.open("error.txt");
+			//backup = std::cout.rdbuf();     // back up cout's streambuf
+			//psbuf = filestr.rdbuf();        // get file's streambuf
+			//std::cout.rdbuf(psbuf);         // assign streambuf to cout
+			//std::cout << "The driver reported the following diagnostics whilst running " << fn << std::endl;
+			//std::cout.rdbuf(backup);        // restore cout's original streambuf
+			//filestr.close();
+
+
 
 			//fprintf(stdout,
 			//		"\n"
@@ -428,16 +452,18 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 			//		"%s\n\n",
 			//		fn);
 
-			std::cout << "The driver reported the following diagnostics whilst running " << fn << std::endl;
-
+			ss << "The driver reported the following diagnostics whilst running " << fn << std::endl;
+//			printStatusStatement("The driver reported the following diagnostics whilst running " + fn);
 			do
 			{
 				ret = SQLGetDiagRec(type, handle, ++i, state, &native, text, sizeof(text), &len );
 				if (SQL_SUCCEEDED(ret))
-					std::cout << state << ":" << i << ":"  << native << ":" << text << std::endl;
+					ss << state << ":" << i << ":"  << native << ":" << text << std::endl;
 					//printf("%s:%ld:%ld:%s\n", state, i, native, text);
 			}
 			while( ret == SQL_SUCCESS );
+
+			*errorMessage = ss.str();
 		}
 	}
 }

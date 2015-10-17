@@ -25,10 +25,10 @@ namespace Nomad {
 		//	return true;
 		//}
 
-		unsigned __int32 __stdcall match(unsigned char *record, unsigned __int32 size, char *errorMessage) {
+		unsigned __int32 __stdcall match(unsigned char *record, unsigned __int32 size, char *errorMessage, __int32 messageSize) {
 			unsigned __int32 retcode = 0;
 
-			std::cout << errorMessage << endl;
+			//std::cout << errorMessage << endl;
 
 			odbcPtr = new Nomad::Data::Odbc();
 			unsigned __int32 rowcount = 0;
@@ -36,11 +36,24 @@ namespace Nomad {
 			//bool retcode = false;
 			//if (odbcPtr->getRowCount(&rowcount))
 			//	retcode = true;
-			if (!odbcPtr->getRowCount(&rowcount)) {
+			std::string errMessage;
+			if (!odbcPtr->getRowCount(&rowcount, &errMessage)) {
 				delete odbcPtr;
+
+				//strcpy_s(errorMessage, strlen(str.c_str()) + 1, str.c_str());
+				//if (
+				//strcpy_s(errorMessage, str.length() + 1, str.c_str());
+
 				//errorMessage = "back";
 				//errorMessage = reinterpret_cast<char*>("back");
-				strcpy_s(errorMessage, 9, "kukuback");
+				//unsigned int i = static_cast<unsigned __int32>(messageSize);
+				//bool b = static_cast<unsigned __int32>(messageSize) < errMessage.length() + 1;
+				if (static_cast<unsigned __int32>(messageSize) < errMessage.length() + 1)
+					strcpy_s(errorMessage, messageSize, errMessage.substr(0, messageSize - 1).c_str() + '\0');
+				else
+					strcpy_s(errorMessage, errMessage.length() + 1, errMessage.c_str());
+
+				//strcpy_s(errorMessage, static_cast<unsigned __int32>(messageSize) < errMessage.length() + 1 ? messageSize - 1 : errMessage.length() + 1, errMessage.c_str());
 
 				//std:string str = "bask";
 				//errorMessage = const_cast<char*>(str.c_str());

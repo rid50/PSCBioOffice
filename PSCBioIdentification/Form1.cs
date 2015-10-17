@@ -26,7 +26,7 @@ namespace PSCBioIdentification
         //public static extern bool initFingerMatcher();
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 match(byte[] template, UInt32 size, System.Text.StringBuilder errorMessage);
+        public static extern UInt32 match(byte[] template, UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
         //public static extern UInt32 match(byte[] template, UInt32 size, String errorMessage);
         //public static extern UInt32 match(byte[] template, UInt32 size, 
           //  [MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.LPStr)] String[] errorMessage);
@@ -46,7 +46,8 @@ namespace PSCBioIdentification
 
         private BackgroundWorker backgroundWorkerProgressBar;
         private BackgroundWorker backgroundWorkerDataService;
-
+        private BackgroundWorker backgroundWorkerMatchingService;
+        
         private bool enrollMode = true;
         //private NGrayscaleImage[] images = new NGrayscaleImage[0];
         //private NGrayscaleImage[] resultImages = new NGrayscaleImage[0];
@@ -111,6 +112,10 @@ namespace PSCBioIdentification
             backgroundWorkerDataService = new BackgroundWorker();
             backgroundWorkerDataService.DoWork += new DoWorkEventHandler(backgroundWorkerDataService_DoWork);
             backgroundWorkerDataService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerDataService_RunWorkerCompleted);
+
+            backgroundWorkerMatchingService = new BackgroundWorker();
+            backgroundWorkerMatchingService.DoWork += new DoWorkEventHandler(backgroundWorkerMatchingService_DoWork);
+            backgroundWorkerMatchingService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerMatchingService_RunWorkerCompleted);
 
             Data.NFExtractor = new NFExtractor();
             Data.UpdateNfe();
@@ -653,7 +658,7 @@ namespace PSCBioIdentification
                 Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
                 template.G, Data.SizeToString(template.Save().Length)));
 
-
+            //bool retcode = true;
             switch (mode)
             {
                 case ProgramMode.Enroll:
@@ -673,7 +678,8 @@ namespace PSCBioIdentification
                     break;
             }
 
-            WaitingForImageToScan();
+            //if (retcode)
+                WaitingForImageToScan();
 
             //ResourceManager rm2 = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
             //string text2 = rm2.GetString("msgWaitingForImage"); // "Waiting for image..."
@@ -834,6 +840,7 @@ namespace PSCBioIdentification
 
         private void doIdentify(NFRecord template)
         {
+            //bool retcode = true;
             //long retcode = match();
             //System.Runtime.Remoting.ObjRef objRef = template.CreateObjRef(template.GetType());
             //UInt32 score = match(objRef);
@@ -845,11 +852,14 @@ namespace PSCBioIdentification
            //IntPtr* ptr = template; }
 
             //UInt32 score = match(template);
-            Record record = new Record();
-            record.size = (UInt32)template.GetSize();
-            record.template = template.Save();
-            record.errorMessage = new System.Text.StringBuilder(50);
-            record.errorMessage.Append("kuku");
+
+            //Record record = new Record();
+            //record.size = (UInt32)template.GetSize();
+            //record.template = template.Save();
+            //record.errorMessage = new System.Text.StringBuilder(512);
+            
+            
+            //record.errorMessage.Append("kuku");
             //record.errorMessage[0] = "kuku";
             //record.errorMessage = "kuku";
             //String errorMessage = "kuku";
@@ -858,90 +868,103 @@ namespace PSCBioIdentification
 
             //byte[] bt;
             startProgressBar();
+            startMatchingServiceProcess(template);
 
-            UInt32 score = 0;
-            unsafe
-            {
-                fixed (UInt32* ptr = &record.size)
-                {
-                    score = match(record.template, record.size, record.errorMessage);
-                }
-            }
-
-            stopProgressBar();
-
-            //NMMatchDetails matchDetails;
-            //try
+            //UInt32 score = 0;
+            //unsafe
             //{
-            //    //score = Data.NMatcher.Verify(Template.Save(), record.Template, out matchDetails);
-            //    score = Data.NMatcher.Verify(Template.Save(), this.enrolledTemplate.Save(), out matchDetails);
+            //    fixed (UInt32* ptr = &record.size)
+            //    {
+            //        score = match(record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
+            //    }
             //}
-            //catch (Exception ex)
+
+            //stopProgressBar();
+
+            ////NMMatchDetails matchDetails;
+            ////try
+            ////{
+            ////    //score = Data.NMatcher.Verify(Template.Save(), record.Template, out matchDetails);
+            ////    score = Data.NMatcher.Verify(Template.Save(), this.enrolledTemplate.Save(), out matchDetails);
+            ////}
+            ////catch (Exception ex)
+            ////{
+            ////    //MessageBox.Show(string.Format("Error verifying templates: {0}", ex.Message),
+            ////    //  Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+            ////    string text = string.Format("Error verifying templates: {0}", ex.Message);
+            ////    ShowErrorMessage(text);
+
+            ////    LogLine(string.Format("Error verifying templates: {0}", ex.Message), true);
+
+            ////    pictureBox2.Image = Properties.Resources.redcross;
+
+            ////    return;
+            ////}
+
+            ////sw.Stop();
+
+            ////            string str = string.Format("Verification {0}. Time: {1}",
+            ////              score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score), Data.TimeToString(sw.Elapsed));
+            //string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
+
+            //LogLine(str, true);
+
+            ////ShowStatusMessage(str);
+
+            //personId.Text = "";
+            //if (score > 0)
             //{
-            //    //MessageBox.Show(string.Format("Error verifying templates: {0}", ex.Message),
-            //    //  Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
-            //    string text = string.Format("Error verifying templates: {0}", ex.Message);
-            //    ShowErrorMessage(text);
-
-            //    LogLine(string.Format("Error verifying templates: {0}", ex.Message), true);
-
+            //    this.userId = (int)score;
+            //    personId.Text = score.ToString();
+            //    pictureBox2.Image = Properties.Resources.checkmark;
+            //} 
+            //else
             //    pictureBox2.Image = Properties.Resources.redcross;
 
-            //    return;
+            //if (score > 0)
+            //{
+            //    startProgressBar();
+            //    startDataServiceProcess();
+            //    /*
+            //                    DBHelper.DBUtil db = new DBHelper.DBUtil();
+            //                    byte[] buffer;
+
+            //                    MemoryStream ms = null;
+            //                    try
+            //                    {
+            //                        if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
+            //                            buffer = db.GetImageFromWebService(IMAGE_TYPE.picture, this.userId);
+            //                        else
+            //                            buffer = db.GetImage(IMAGE_TYPE.picture, this.userId);
+
+            //                        ms = new MemoryStream(buffer);
+            //                        pictureBox1.Image = Image.FromStream(ms);
+            //                    }
+            //                    catch (Exception ex)
+            //                    {
+            //                        ShowErrorMessage(ex.Message);
+            //                        return;
+            //                    }
+            //                    finally
+            //                    {
+            //                        ms.Dispose();
+            //                    }
+            //    */
+            //}
+            //else
+            //{
+            //    if (record.errorMessage.Length != 0)
+            //    {
+            //        //retcode = false;
+            //        MessageBox.Show(record.errorMessage.ToString());
+            //        //ShowErrorMessage(record.errorMessage.ToString());
+            //    }
+
             //}
 
-            //sw.Stop();
+            //return retcode;
 
-            //            string str = string.Format("Verification {0}. Time: {1}",
-            //              score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score), Data.TimeToString(sw.Elapsed));
-            string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
-
-            LogLine(str, true);
-
-            ShowStatusMessage(str);
-
-            personId.Text = "";
-            if (score > 0)
-            {
-                this.userId = (int)score;
-                personId.Text = score.ToString();
-                pictureBox2.Image = Properties.Resources.checkmark;
-            } 
-            else
-                pictureBox2.Image = Properties.Resources.redcross;
-
-            if (score > 0)
-            {
-                startProgressBar();
-                startDataServiceProcess();
-
-                /*
-                                DBHelper.DBUtil db = new DBHelper.DBUtil();
-                                byte[] buffer;
-
-                                MemoryStream ms = null;
-                                try
-                                {
-                                    if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
-                                        buffer = db.GetImageFromWebService(IMAGE_TYPE.picture, this.userId);
-                                    else
-                                        buffer = db.GetImage(IMAGE_TYPE.picture, this.userId);
-
-                                    ms = new MemoryStream(buffer);
-                                    pictureBox1.Image = Image.FromStream(ms);
-                                }
-                                catch (Exception ex)
-                                {
-                                    ShowErrorMessage(ex.Message);
-                                    return;
-                                }
-                                finally
-                                {
-                                    ms.Dispose();
-                                }
-                */
-            }
         }
 
         //private void backgroundWorkerDataService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

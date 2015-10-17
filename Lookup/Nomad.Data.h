@@ -12,14 +12,16 @@
 #include <Windows.h>
 //#include <memory>
 
-//#include <string>
+#include <string>
 
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
 #include <sqlncli.h>
-#include <iostream>
-#include <sstream>
+#include <iostream>     // std::streambuf, std::cout
+#include <fstream>      // std::ofstream
+#include <sstream>		// std::stringstream
+
 //#include <conio.h>
 
 //#include <NFExtractor.h>
@@ -76,7 +78,8 @@ namespace Nomad
 		private:
 			//void printStatusStatement(char * statusStatement);
 			void FreeStmtHandle(SQLHSTMT hStmt);
-			void extract_error(char *fn, SQLHANDLE handle,	SQLSMALLINT type);
+			void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type);
+			void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type, std::string *errorMessage);
 			//void clean();
 			//void TimedRun(Func test, string label);
 
@@ -97,7 +100,7 @@ namespace Nomad
 			Odbc();
 			~Odbc();
 			//SQLRETURN connect(int*);
-			bool getRowCount(unsigned __int32 *rowcount);
+			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			//SQLRETURN exec();
 			//SQLRETURN exec(unsigned int, unsigned int, unsigned int);
 			static void enroll(unsigned char *record, unsigned __int32 size);
