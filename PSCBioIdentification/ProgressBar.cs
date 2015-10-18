@@ -24,7 +24,7 @@ namespace PSCBioIdentification
             //toolStripProgressBar.Enabled = true;
 
             //toolStripStatusLabelError.Text = message;
-
+            toolStripStatusLabelError.Text = "";
             backgroundWorkerProgressBar.RunWorkerAsync();
         }
 
@@ -33,7 +33,7 @@ namespace PSCBioIdentification
             if (IsCapturing)
             {
                 backgroundWorkerProgressBar.CancelAsync();
-//                Application.DoEvents();
+                //Application.DoEvents();
             }
         }
 
@@ -48,7 +48,7 @@ namespace PSCBioIdentification
                 for (int i = 1; i < _max; i++)
                 {
                     // Introduce some delay to simulate a more complicated calculation.
-                    //System.Threading.Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(50);
                     //backgroundWorkerProgressBar.ReportProgress((int)((float)(100 * i) / (float)_max), "Working...");
                     //(sender as BackgroundWorker).ReportProgress((int)((float)(100 * i) / (float)_max), "WorkingAAAAAAAA...");
                     (sender as BackgroundWorker).ReportProgress((100 * i) / _max, "Working...");
@@ -57,10 +57,8 @@ namespace PSCBioIdentification
                     if (backgroundWorkerProgressBar.CancellationPending)
                         break;
 
-                    System.Threading.Thread.Sleep(50);
+                    //System.Threading.Thread.Sleep(50);
                 }
-
-                toolStripProgressBar.Value = 0;
 
                 if (backgroundWorkerProgressBar.CancellationPending)
                     break;
@@ -85,6 +83,8 @@ namespace PSCBioIdentification
         private void backgroundWorkerProgressBar_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             toolStripProgressBar.Value = 0;
+            //toolStripStatusLabelError.Text = "";
+
             //toolStripProgressBar.Enabled = false;
         }
     }

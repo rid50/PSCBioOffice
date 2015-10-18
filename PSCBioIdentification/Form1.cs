@@ -205,7 +205,10 @@ namespace PSCBioIdentification
             try
             {
                 if (!scanner.IsCapturing)
+                {
                     scanner.StartCapturing();
+                    WaitingForImageToScan();
+                }
             }
             catch (Exception ex)
             {
@@ -654,32 +657,30 @@ namespace PSCBioIdentification
                 Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
                 template.G, Data.SizeToString(template.Save().Length));
 
-            ShowStatusMessage(String.Format("Template extracted{0}. G: {1}. Size: {2}", true,
-                Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
-                template.G, Data.SizeToString(template.Save().Length)));
+            //ShowStatusMessage(String.Format("Template extracted{0}. G: {1}. Size: {2}", true,
+            //    Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
+            //    template.G, Data.SizeToString(template.Save().Length)));
 
             //bool retcode = true;
             switch (mode)
             {
                 case ProgramMode.Enroll:
-                    //                       doEnroll(this.userId, image);
                     doEnroll();
                     nfView2.Zoom = 1F;
+                    //WaitingForImageToScan();
                     break;
                 case ProgramMode.Verify:
-                    //                        doVerify(this.userId);
                     doVerify();
                     nfView2.Zoom = 0.5F;
                     break;
                 case ProgramMode.Identify:
-                    //                        doVerify(this.userId);
                     doIdentify(template);
                     nfView2.Zoom = 0.5F;
                     break;
             }
 
             //if (retcode)
-                WaitingForImageToScan();
+                //WaitingForImageToScan();
 
             //ResourceManager rm2 = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
             //string text2 = rm2.GetString("msgWaitingForImage"); // "Waiting for image..."
@@ -690,6 +691,9 @@ namespace PSCBioIdentification
 
         private void WaitingForImageToScan()
         {
+            //System.Threading.Thread.Sleep(50);
+            //Application.DoEvents();
+
             ResourceManager rm2 = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
             string text2 = rm2.GetString("msgWaitingForImage"); // "Waiting for image..."
 
@@ -744,6 +748,7 @@ namespace PSCBioIdentification
         //        private void doVerify(int id)
         private void doVerify()
         {
+            this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
 
             //Record record = Data.Database.Records[id.ToString()];
             /*
@@ -867,6 +872,8 @@ namespace PSCBioIdentification
             //pt.y = 6;
 
             //byte[] bt;
+            this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+
             startProgressBar();
             startMatchingServiceProcess(template);
 

@@ -78,7 +78,7 @@ namespace Nomad
 		private:
 			//void printStatusStatement(char * statusStatement);
 			void FreeStmtHandle(SQLHSTMT hStmt);
-			void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type);
+			//void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type);
 			void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type, std::string *errorMessage);
 			//void clean();
 			//void TimedRun(Func test, string label);
@@ -99,13 +99,10 @@ namespace Nomad
 		public:
 			Odbc();
 			~Odbc();
-			//SQLRETURN connect(int*);
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
-			//SQLRETURN exec();
-			//SQLRETURN exec(unsigned int, unsigned int, unsigned int);
+			unsigned __int32 exec(unsigned long int, unsigned int, std::string *errorMessage);
 			static void enroll(unsigned char *record, unsigned __int32 size);
 			static void terminateLoop(bool terminateLoop);
-			unsigned __int32 exec(unsigned long int, unsigned int);
 			void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);

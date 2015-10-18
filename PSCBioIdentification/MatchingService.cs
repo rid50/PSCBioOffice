@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Xml;
 using System.IO;
 using Neurotec.Biometrics;
+using System.Windows.Forms;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -38,7 +39,7 @@ namespace PSCBioIdentification
             //record.template = template.Save();
             record.size = (UInt32)(e.Argument as NFRecord).GetSize();
             record.template = (e.Argument as NFRecord).Save();
-            record.errorMessage = new System.Text.StringBuilder(512);
+            record.errorMessage = new System.Text.StringBuilder(140);
            
             //UInt32 score = 0;
             unsafe
@@ -77,28 +78,45 @@ namespace PSCBioIdentification
                     this.userId = (int)score;
                     personId.Text = score.ToString();
                     pictureBox2.Image = Properties.Resources.checkmark;
-                }
-                else
-                    pictureBox2.Image = Properties.Resources.redcross;
-
-                if (score > 0)
-                {
-                    startProgressBar();
                     startDataServiceProcess();
                 }
                 else
                 {
+                    pictureBox2.Image = Properties.Resources.redcross;
+
+                    stopProgressBar();
+
                     if (record.errorMessage.Length != 0)
                     {
                         //retcode = false;
+                        ShowErrorMessage("ERROR!!!");
                         System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
-                        //ShowErrorMessage(record.errorMessage.ToString());
                     }
-
+                    else
+                    {
+                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                    }
                 }
+
+                //if (score > 0)
+                //{
+                //    //startProgressBar();
+                //    startDataServiceProcess();
+                //}
+                //else
+                //{
+                //    stopProgressBar();
+
+                //    if (record.errorMessage.Length != 0)
+                //    {
+                //        //retcode = false;
+                //        System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
+                //        //ShowErrorMessage(record.errorMessage.ToString());
+                //    }
+
+                //}
             }
 
-            stopProgressBar();
             //buttonRequest.Enabled = true;
         }
     }

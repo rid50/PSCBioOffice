@@ -9,6 +9,7 @@ using System.IO;
 //using System.Windows.Forms;
 
 using DataSourceServices;
+using System.Windows.Forms;
 
 namespace PSCBioIdentification
 {
@@ -73,6 +74,7 @@ namespace PSCBioIdentification
             //Application.DoEvents();
 
             //MessageBox.Show(toolStripProgressBar.Value.ToString());
+            stopProgressBar();
 
             if (e.Error != null)
             {
@@ -96,6 +98,9 @@ namespace PSCBioIdentification
                             else
                                 pictureBox1.Image = null;
                         }
+
+                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+
                     }
                 }
                 catch (Exception ex)
@@ -105,7 +110,10 @@ namespace PSCBioIdentification
                 }
             }
 
-            stopProgressBar();
+//            stopProgressBar();
+
+            //System.Windows.Forms.Application.DoEvents();
+
             buttonRequest.Enabled = true;
         }
     }
