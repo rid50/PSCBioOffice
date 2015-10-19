@@ -113,9 +113,34 @@ namespace Nomad
 			return retcode;
 		}
 
+		bool Odbc::getAppId(unsigned __int32 *appid, std::string *errorMessage) {
+			bool retcode = false;
+			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
+			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
+				std::stringstream stmt;
+				stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
+				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
+					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
+						SQLGetData(hStmt, 1, SQL_C_SLONG, appid, sizeof(unsigned __int32), 0);
+						SQLCloseCursor(hStmt);
+						retcode = true;
+					} else {
+						extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
+					}
+				} else {
+					extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
+				}
+
+				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+			}
+
+			return retcode;
+		}
 
 		//SQLRETURN Odbc::exec(unsigned int from, unsigned int to, unsigned int limit) {
-		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, std::string *errorMessage) {
+		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *arrOfFingers[], __int32 numOfFieldsToMatch, std::string *errorMessage) {
 
 			SQLHSTMT hStmt = SQL_NULL_HSTMT;
 
@@ -196,7 +221,22 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 			//stmt << "SELECT AppID, AppImage FROM Egy_T_AppPers WITH (NOLOCK) WHERE datalength(AppImage) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 
 			//stmt << "SELECT AppID, AppImage FROM Egy_T_AppPers WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
-			stmt << "SELECT rm FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << "SELECT ri, rm FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+
+			if (numOfFieldsToMatch == 0) {
+				numOfFieldsToMatch = 10;
+				stmt << "SELECT li, lm, lr, ll, ri, rm, rr, rl, lt, rt FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			}
+			else {
+				stmt << "SELECT ";
+				for (int i = 0; i < numOfFieldsToMatch; i++) {
+					if (i != 0)
+						stmt << ",";
+
+					stmt << arrOfFingers[i];
+				}
+				stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			}
 
 			//stmt << "SELECT AppID, AppImage FROM (SELECT ROW_NUMBER() OVER(ORDER BY AppID) AS row, AppID, AppImage FROM Egy_T_AppPers WHERE datalength(AppImage) IS NOT NULL) r WHERE row > " << from << " and row <= " << to << "\n";
 			//stmt << "SELECT AppID FROM (SELECT ROW_NUMBER() OVER(ORDER BY AppID) AS row, AppID FROM Egy_T_AppPers) r WHERE row > " << from << "\n";
@@ -268,33 +308,44 @@ SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, 1, SQL_IS_INTEGER);
 					rc = SQLSetPos(hStmt, i + 1, SQL_POSITION, SQL_LOCK_NO_CHANGE);
 					if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO)
 					{
-						rc = SQLGetData(hStmt, 1, SQL_C_BINARY, (SQLPOINTER)&ImageStruct.pByte, 0, &ImageStruct.imageIndicator);
-						if ((rc = SQLGetData(hStmt, 1, SQL_C_BINARY, (SQLPOINTER)&ImageStruct.pByte, 0, &ImageStruct.imageIndicator)) == SQL_SUCCESS_WITH_INFO)
-						//if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO)
-						{
-							//std::cout << "Photo size: " << imageIndicator << "\n\n";
-
-							// Get all the data at once.
-							ImageStruct.pImage = new BYTE[ImageStruct.imageIndicator];
-							if (SQLGetData(hStmt, 1, SQL_C_BINARY, ImageStruct.pImage, ImageStruct.imageIndicator, &ImageStruct.imageIndicator) == SQL_SUCCESS)
+						//short numOfFieldsToMatch = 2;
+						short numOfMatches = 0;
+						for (int j = 1; j < numOfFieldsToMatch + 1; j++) {
+							rc = SQLGetData(hStmt, j, SQL_C_BINARY, (SQLPOINTER)&ImageStruct.pByte, 0, &ImageStruct.imageIndicator);
+							if ((rc = SQLGetData(hStmt, j, SQL_C_BINARY, (SQLPOINTER)&ImageStruct.pByte, 0, &ImageStruct.imageIndicator)) == SQL_SUCCESS_WITH_INFO)
+							//if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO)
 							{
-								matched = matcherFacadePtr->match(ImageStruct.pImage, ImageStruct.imageIndicator);
-								//if (ismatched)
-									//std::cout << "AppId: " << AppIDStructArray[i].AppID << " --- templates matched " << std::endl;
+								//std::cout << "Photo size: " << imageIndicator << "\n\n";
 
-								//std::cout << "AppId: " << AppIDStructArray[i].AppID << " - data length: " << ImageStruct.imageIndicator << std::endl;
+								// Get all the data at once.
+								ImageStruct.pImage = new BYTE[ImageStruct.imageIndicator];
+								if (SQLGetData(hStmt, j, SQL_C_BINARY, ImageStruct.pImage, ImageStruct.imageIndicator, &ImageStruct.imageIndicator) == SQL_SUCCESS)
+								{
+									matched = matcherFacadePtr->match(ImageStruct.pImage, ImageStruct.imageIndicator);
+									//if (ismatched)
+										//std::cout << "AppId: " << AppIDStructArray[i].AppID << " --- templates matched " << std::endl;
 
-								//matcherFacade.match(static_cast<void*>(ImageStruct.pImage), static_cast<int>(ImageStruct.imageIndicator));
-							} else {
-								extract_error("SQLExecute", hStmt, SQL_HANDLE_STMT, errorMessage);
-							}
+									//std::cout << "AppId: " << AppIDStructArray[i].AppID << " - data length: " << ImageStruct.imageIndicator << std::endl;
 
-							//std::cout << "Column 2" << pImage << std::endl;
-							delete [] ImageStruct.pImage;
-							if (matched) {
-								//AppId = AppIDStructArray[i].AppID;
-								AppId = i + from;
-								break;
+									//matcherFacade.match(static_cast<void*>(ImageStruct.pImage), static_cast<int>(ImageStruct.imageIndicator));
+								} else {
+									extract_error("SQLExecute", hStmt, SQL_HANDLE_STMT, errorMessage);
+									FreeStmtHandle(hStmt);
+									delete matcherFacadePtr;
+									return 0;
+								}
+
+								//std::cout << "Column 2" << pImage << std::endl;
+								delete [] ImageStruct.pImage;
+								if (matched) {
+									numOfMatches++;
+									if (numOfFieldsToMatch == numOfMatches) {
+										//AppId = AppIDStructArray[i].AppID;
+										AppId = i + from;
+										break;
+									} else
+										matched = false;
+								}
 							}
 						}
 						//} else if (rc == SQL_NO_DATA) {

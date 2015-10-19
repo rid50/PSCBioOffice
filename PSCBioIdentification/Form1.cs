@@ -26,7 +26,10 @@ namespace PSCBioIdentification
         //public static extern bool initFingerMatcher();
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 match(byte[] template, UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
+        public static extern UInt32 match(
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] arrOfFingers, int arrOffingersSize,
+            byte[] template, UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
         //public static extern UInt32 match(byte[] template, UInt32 size, String errorMessage);
         //public static extern UInt32 match(byte[] template, UInt32 size, 
           //  [MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.LPStr)] String[] errorMessage);
@@ -833,18 +836,21 @@ namespace PSCBioIdentification
             }
         }
 
-        class Record
-        {
-            public UInt32 size;
-            public byte[] template;
-            //public String errorMessage;
-            //public String[] errorMessage = new String[1];
-            public System.Text.StringBuilder errorMessage;
+        //class Record
+        //{
+        //    public UInt32 size;
+        //    public byte[] template;
+        //    //public String errorMessage;
+        //    //public String[] errorMessage = new String[1];
+        //    public System.Text.StringBuilder errorMessage;
 
-        }
+        //}
 
         private void doIdentify(NFRecord template)
         {
+            //var pos = template.Position;
+            //var dc = template.DoubleCores;
+
             //bool retcode = true;
             //long retcode = match();
             //System.Runtime.Remoting.ObjRef objRef = template.CreateObjRef(template.GetType());

@@ -16,6 +16,18 @@ namespace PSCBioIdentification
 {
     partial class Form1
     {
+        class Record
+        {
+            public UInt32   size;
+            public byte[]   template;
+            public string[] arrOfFingers;
+            public int      arrOfFingersSize;
+            public System.Text.StringBuilder errorMessage;
+            //public String errorMessage;
+            //public String[] errorMessage = new String[1];
+
+        }
+
         Record record;
 
         void startMatchingServiceProcess(NFRecord template)
@@ -35,18 +47,20 @@ namespace PSCBioIdentification
             // on the UI thread from this method.
 
             record = new Record();
+            record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
+            record.arrOfFingersSize = 3;
             //record.size = (UInt32)template.GetSize();
             //record.template = template.Save();
             record.size = (UInt32)(e.Argument as NFRecord).GetSize();
             record.template = (e.Argument as NFRecord).Save();
-            record.errorMessage = new System.Text.StringBuilder(140);
+            record.errorMessage = new System.Text.StringBuilder(512);
            
             //UInt32 score = 0;
             unsafe
             {
                 fixed (UInt32* ptr = &record.size)
                 {
-                    e.Result = match(record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
+                    e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
                 }
             }
         }

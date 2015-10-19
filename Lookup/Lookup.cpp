@@ -25,9 +25,12 @@ namespace Nomad {
 		//	return true;
 		//}
 
-		unsigned __int32 __stdcall match(unsigned char *record, unsigned __int32 size, char *errorMessage, __int32 messageSize) {
+		unsigned __int32 __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize,
+			unsigned char *record, unsigned __int32 size, char *errorMessage, __int32 messageSize) {
+
 			unsigned __int32 retcode = 0;
 
+			
 			//std::cout << errorMessage << endl;
 			try {
 				odbcPtr = new Nomad::Data::Odbc();
@@ -48,6 +51,7 @@ namespace Nomad {
 			//if (odbcPtr->getRowCount(&rowcount))
 			//	retcode = true;
 			std::string errMessage;
+
 			if (!odbcPtr->getRowCount(&rowcount, &errMessage)) {
 				delete odbcPtr;
 
@@ -93,7 +97,7 @@ namespace Nomad {
 						unsigned __int32 ret = 0;
 						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
 						//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
-						ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage);
+						ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
 						if (ret > 0) {
 							retcode = ret;
 							Nomad::Data::Odbc::terminateLoop(true);
@@ -111,7 +115,7 @@ namespace Nomad {
 				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
-					if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
+					if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
 						break;
 					} else if (retcode == 0 && errMessage.length() != 0) {
 						break;
@@ -133,6 +137,14 @@ namespace Nomad {
 			//printStatusStatement(result);
 			std::cout << result << " sec" << endl;
 
+			if (retcode > 0) {
+				odbcPtr = new Nomad::Data::Odbc();
+				//std::string errMessage;
+				if (!odbcPtr->getAppId(&retcode, &errMessage))
+					retcode = 0;
+				delete odbcPtr;
+			} 
+				
 			if (retcode == 0 && errMessage.length() != 0) {
 				if (static_cast<unsigned __int32>(messageSize) < errMessage.length() + 1)
 					strcpy_s(errorMessage, messageSize, errMessage.substr(0, messageSize - 1).c_str() + '\0');
