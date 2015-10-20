@@ -53,9 +53,9 @@ namespace PSCBioIdentification
                     ds = new DataBaseService();
 
                 int imageType = 0;
-                if (mode == ProgramMode.Enroll)
+                if (mode == ProgramMode.PreEnrolled)
                     imageType = (int)DataSource.IMAGE_TYPE.wsq;
-                else if (mode == ProgramMode.Verify || mode == ProgramMode.Identify)
+                else if (mode == ProgramMode.Verification || mode == ProgramMode.Identification)
                     imageType = (int)DataSource.IMAGE_TYPE.picture;
 
                 //System.Threading.Thread.Sleep(40000);
@@ -85,11 +85,12 @@ namespace PSCBioIdentification
             {
                 try
                 {
-                    if (mode == ProgramMode.Enroll)
+                    if (Mode == ProgramMode.PreEnrolled || mode == ProgramMode.Identification)
                     {
                         processEnrolledData(e.Result as byte[]);
                     }
-                    else if (mode == ProgramMode.Verify || mode == ProgramMode.Identify)
+                    
+                    if (Mode == ProgramMode.Verification || mode == ProgramMode.Identification)
                     {
                         using (var ms = new MemoryStream(e.Result as byte[]))
                         {
@@ -99,7 +100,7 @@ namespace PSCBioIdentification
                                 pictureBox1.Image = null;
                         }
 
-                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                        //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
                     }
                 }

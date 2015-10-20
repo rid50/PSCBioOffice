@@ -38,8 +38,16 @@
             this.personId = new System.Windows.Forms.TextBox();
             this.lblPersonId = new System.Windows.Forms.Label();
             this.gbResults = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.buttonRequest = new System.Windows.Forms.Button();
             this.lblThumbs = new System.Windows.Forms.Label();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
@@ -67,7 +75,6 @@
             this.groupBoxMode = new System.Windows.Forms.GroupBox();
             this.radioButtonIdentify = new System.Windows.Forms.RadioButton();
             this.radioButtonVerify = new System.Windows.Forms.RadioButton();
-            this.radioButtonEnroll = new System.Windows.Forms.RadioButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelError = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -75,51 +82,59 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbFinger10 = new System.Windows.Forms.Label();
             this.lbFinger9 = new System.Windows.Forms.Label();
-            this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox10 = new PSCBioIdentification.MyPictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lbFinger8 = new System.Windows.Forms.Label();
             this.lbFinger7 = new System.Windows.Forms.Label();
             this.lbFinger6 = new System.Windows.Forms.Label();
             this.lbFinger5 = new System.Windows.Forms.Label();
-            this.fpPictureBox6 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox5 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox7 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox8 = new PSCBioIdentification.MyPictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbFinger1 = new System.Windows.Forms.Label();
             this.lbFinger2 = new System.Windows.Forms.Label();
             this.lbFinger3 = new System.Windows.Forms.Label();
             this.lbFinger4 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
+            this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox10 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox6 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox5 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox7 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox8 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox3 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox1 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox2 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox4 = new PSCBioIdentification.MyPictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.nfViewSplitContainer.Panel1.SuspendLayout();
             this.nfViewSplitContainer.Panel2.SuspendLayout();
             this.nfViewSplitContainer.SuspendLayout();
             this.gbMainLog.SuspendLayout();
             this.gbResults.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBoxMode.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).BeginInit();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox8)).BeginInit();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // nfViewSplitContainer
@@ -205,6 +220,17 @@
             // 
             // gbResults
             // 
+            this.gbResults.Controls.Add(this.groupBox4);
+            this.gbResults.Controls.Add(this.checkBox10);
+            this.gbResults.Controls.Add(this.checkBox9);
+            this.gbResults.Controls.Add(this.checkBox8);
+            this.gbResults.Controls.Add(this.checkBox7);
+            this.gbResults.Controls.Add(this.checkBox6);
+            this.gbResults.Controls.Add(this.checkBox5);
+            this.gbResults.Controls.Add(this.checkBox1);
+            this.gbResults.Controls.Add(this.checkBox2);
+            this.gbResults.Controls.Add(this.checkBox3);
+            this.gbResults.Controls.Add(this.checkBox4);
             this.gbResults.Controls.Add(this.gbMainLog);
             this.gbResults.Controls.Add(this.pictureBox1);
             this.gbResults.Controls.Add(this.pictureBox2);
@@ -239,19 +265,65 @@
             this.gbResults.Name = "gbResults";
             this.gbResults.TabStop = false;
             // 
-            // pictureBox1
+            // checkBox10
             // 
-            this.pictureBox1.BackgroundImage = global::PSCBioIdentification.Properties.Resources._66;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.TabStop = false;
+            resources.ApplyResources(this.checkBox10, "checkBox10");
+            this.checkBox10.Name = "checkBox10";
+            this.checkBox10.UseVisualStyleBackColor = true;
             // 
-            // pictureBox2
+            // checkBox9
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.TabStop = false;
+            resources.ApplyResources(this.checkBox9, "checkBox9");
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.UseVisualStyleBackColor = true;
+            // 
+            // checkBox8
+            // 
+            resources.ApplyResources(this.checkBox8, "checkBox8");
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.UseVisualStyleBackColor = true;
+            // 
+            // checkBox7
+            // 
+            resources.ApplyResources(this.checkBox7, "checkBox7");
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // checkBox6
+            // 
+            resources.ApplyResources(this.checkBox6, "checkBox6");
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // checkBox5
+            // 
+            resources.ApplyResources(this.checkBox5, "checkBox5");
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            resources.ApplyResources(this.checkBox2, "checkBox2");
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            resources.ApplyResources(this.checkBox3, "checkBox3");
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            resources.ApplyResources(this.checkBox4, "checkBox4");
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // buttonRequest
             // 
@@ -271,7 +343,6 @@
             this.radioButton10.Name = "radioButton10";
             this.radioButton10.TabStop = true;
             this.radioButton10.UseVisualStyleBackColor = true;
-            this.radioButton10.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label10
             // 
@@ -284,7 +355,6 @@
             this.radioButton9.Name = "radioButton9";
             this.radioButton9.TabStop = true;
             this.radioButton9.UseVisualStyleBackColor = true;
-            this.radioButton9.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label9
             // 
@@ -307,7 +377,6 @@
             this.radioButton8.Name = "radioButton8";
             this.radioButton8.TabStop = true;
             this.radioButton8.UseVisualStyleBackColor = true;
-            this.radioButton8.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label8
             // 
@@ -320,7 +389,6 @@
             this.radioButton7.Name = "radioButton7";
             this.radioButton7.TabStop = true;
             this.radioButton7.UseVisualStyleBackColor = true;
-            this.radioButton7.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label7
             // 
@@ -333,7 +401,6 @@
             this.radioButton6.Name = "radioButton6";
             this.radioButton6.TabStop = true;
             this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label6
             // 
@@ -346,7 +413,6 @@
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.TabStop = true;
             this.radioButton5.UseVisualStyleBackColor = true;
-            this.radioButton5.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label5
             // 
@@ -359,7 +425,6 @@
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.TabStop = true;
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label1
             // 
@@ -372,7 +437,6 @@
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.TabStop = true;
             this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label2
             // 
@@ -385,7 +449,6 @@
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.TabStop = true;
             this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label3
             // 
@@ -398,7 +461,6 @@
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.TabStop = true;
             this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.Click += new System.EventHandler(this.radioButton1_Click);
             // 
             // label4
             // 
@@ -409,7 +471,6 @@
             // 
             this.groupBoxMode.Controls.Add(this.radioButtonIdentify);
             this.groupBoxMode.Controls.Add(this.radioButtonVerify);
-            this.groupBoxMode.Controls.Add(this.radioButtonEnroll);
             resources.ApplyResources(this.groupBoxMode, "groupBoxMode");
             this.groupBoxMode.Name = "groupBoxMode";
             this.groupBoxMode.TabStop = false;
@@ -428,13 +489,6 @@
             this.radioButtonVerify.Name = "radioButtonVerify";
             this.radioButtonVerify.UseVisualStyleBackColor = true;
             this.radioButtonVerify.CheckedChanged += new System.EventHandler(this.radioButtonGroup_CheckedChanged);
-            // 
-            // radioButtonEnroll
-            // 
-            resources.ApplyResources(this.radioButtonEnroll, "radioButtonEnroll");
-            this.radioButtonEnroll.Name = "radioButtonEnroll";
-            this.radioButtonEnroll.UseVisualStyleBackColor = true;
-            this.radioButtonEnroll.CheckedChanged += new System.EventHandler(this.radioButtonGroup_CheckedChanged);
             // 
             // statusStrip1
             // 
@@ -488,24 +542,6 @@
             this.lbFinger9.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger9.Name = "lbFinger9";
             // 
-            // fpPictureBox9
-            // 
-            this.fpPictureBox9.Active = false;
-            this.fpPictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox9, "fpPictureBox9");
-            this.fpPictureBox9.Name = "fpPictureBox9";
-            this.fpPictureBox9.TabStop = false;
-            this.fpPictureBox9.Tag = "leftThumb";
-            // 
-            // fpPictureBox10
-            // 
-            this.fpPictureBox10.Active = false;
-            this.fpPictureBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox10, "fpPictureBox10");
-            this.fpPictureBox10.Name = "fpPictureBox10";
-            this.fpPictureBox10.TabStop = false;
-            this.fpPictureBox10.Tag = "rightThumb";
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lbFinger8);
@@ -547,42 +583,6 @@
             this.lbFinger5.BackColor = System.Drawing.Color.Transparent;
             this.lbFinger5.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger5.Name = "lbFinger5";
-            // 
-            // fpPictureBox6
-            // 
-            this.fpPictureBox6.Active = false;
-            this.fpPictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox6, "fpPictureBox6");
-            this.fpPictureBox6.Name = "fpPictureBox6";
-            this.fpPictureBox6.TabStop = false;
-            this.fpPictureBox6.Tag = "rightMiddle";
-            // 
-            // fpPictureBox5
-            // 
-            this.fpPictureBox5.Active = false;
-            this.fpPictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox5, "fpPictureBox5");
-            this.fpPictureBox5.Name = "fpPictureBox5";
-            this.fpPictureBox5.TabStop = false;
-            this.fpPictureBox5.Tag = "rightIndex";
-            // 
-            // fpPictureBox7
-            // 
-            this.fpPictureBox7.Active = false;
-            this.fpPictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox7, "fpPictureBox7");
-            this.fpPictureBox7.Name = "fpPictureBox7";
-            this.fpPictureBox7.TabStop = false;
-            this.fpPictureBox7.Tag = "rightRing";
-            // 
-            // fpPictureBox8
-            // 
-            this.fpPictureBox8.Active = false;
-            this.fpPictureBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox8, "fpPictureBox8");
-            this.fpPictureBox8.Name = "fpPictureBox8";
-            this.fpPictureBox8.TabStop = false;
-            this.fpPictureBox8.Tag = "rightLittle";
             // 
             // groupBox1
             // 
@@ -626,6 +626,106 @@
             this.lbFinger4.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger4.Name = "lbFinger4";
             // 
+            // pictureBox3
+            // 
+            resources.ApplyResources(this.pictureBox3, "pictureBox3");
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::PSCBioIdentification.Properties.Resources._66;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.TabStop = false;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.pictureBoxRed);
+            this.groupBox4.Controls.Add(this.pictureBoxGreen);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.TabStop = false;
+            // 
+            // pictureBoxRed
+            // 
+            this.pictureBoxRed.Active = false;
+            this.pictureBoxRed.Image = global::PSCBioIdentification.Properties.Resources.red_light;
+            resources.ApplyResources(this.pictureBoxRed, "pictureBoxRed");
+            this.pictureBoxRed.Name = "pictureBoxRed";
+            this.pictureBoxRed.TabStop = false;
+            this.pictureBoxRed.Tag = "leftLittle";
+            // 
+            // pictureBoxGreen
+            // 
+            this.pictureBoxGreen.Active = false;
+            this.pictureBoxGreen.Image = global::PSCBioIdentification.Properties.Resources.green_light;
+            resources.ApplyResources(this.pictureBoxGreen, "pictureBoxGreen");
+            this.pictureBoxGreen.Name = "pictureBoxGreen";
+            this.pictureBoxGreen.TabStop = false;
+            this.pictureBoxGreen.Tag = "leftLittle";
+            // 
+            // fpPictureBox9
+            // 
+            this.fpPictureBox9.Active = false;
+            this.fpPictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox9, "fpPictureBox9");
+            this.fpPictureBox9.Name = "fpPictureBox9";
+            this.fpPictureBox9.TabStop = false;
+            this.fpPictureBox9.Tag = "leftThumb";
+            // 
+            // fpPictureBox10
+            // 
+            this.fpPictureBox10.Active = false;
+            this.fpPictureBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox10, "fpPictureBox10");
+            this.fpPictureBox10.Name = "fpPictureBox10";
+            this.fpPictureBox10.TabStop = false;
+            this.fpPictureBox10.Tag = "rightThumb";
+            // 
+            // fpPictureBox6
+            // 
+            this.fpPictureBox6.Active = false;
+            this.fpPictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox6, "fpPictureBox6");
+            this.fpPictureBox6.Name = "fpPictureBox6";
+            this.fpPictureBox6.TabStop = false;
+            this.fpPictureBox6.Tag = "rightMiddle";
+            // 
+            // fpPictureBox5
+            // 
+            this.fpPictureBox5.Active = false;
+            this.fpPictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox5, "fpPictureBox5");
+            this.fpPictureBox5.Name = "fpPictureBox5";
+            this.fpPictureBox5.TabStop = false;
+            this.fpPictureBox5.Tag = "rightIndex";
+            // 
+            // fpPictureBox7
+            // 
+            this.fpPictureBox7.Active = false;
+            this.fpPictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox7, "fpPictureBox7");
+            this.fpPictureBox7.Name = "fpPictureBox7";
+            this.fpPictureBox7.TabStop = false;
+            this.fpPictureBox7.Tag = "rightRing";
+            // 
+            // fpPictureBox8
+            // 
+            this.fpPictureBox8.Active = false;
+            this.fpPictureBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox8, "fpPictureBox8");
+            this.fpPictureBox8.Name = "fpPictureBox8";
+            this.fpPictureBox8.TabStop = false;
+            this.fpPictureBox8.Tag = "rightLittle";
+            // 
             // fpPictureBox3
             // 
             this.fpPictureBox3.Active = false;
@@ -663,12 +763,6 @@
             this.fpPictureBox4.TabStop = false;
             this.fpPictureBox4.Tag = "leftLittle";
             // 
-            // pictureBox3
-            // 
-            resources.ApplyResources(this.pictureBox3, "pictureBox3");
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.TabStop = false;
-            // 
             // Form1
             // 
             this.AcceptButton = this.buttonRequest;
@@ -691,8 +785,6 @@
             this.gbMainLog.PerformLayout();
             this.gbResults.ResumeLayout(false);
             this.gbResults.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBoxMode.ResumeLayout(false);
             this.groupBoxMode.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -700,21 +792,26 @@
             this.panel1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox8)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -734,7 +831,6 @@
         private System.Windows.Forms.GroupBox groupBoxMode;
         private System.Windows.Forms.RadioButton radioButtonIdentify;
         private System.Windows.Forms.RadioButton radioButtonVerify;
-        private System.Windows.Forms.RadioButton radioButtonEnroll;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton radioButton8;
         private System.Windows.Forms.Label label8;
@@ -789,6 +885,19 @@
         private System.Windows.Forms.Label lbFinger2;
         private System.Windows.Forms.Label lbFinger3;
         private System.Windows.Forms.Label lbFinger4;
+        private System.Windows.Forms.CheckBox checkBox10;
+        private System.Windows.Forms.CheckBox checkBox9;
+        private System.Windows.Forms.CheckBox checkBox8;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBox4;
+        private MyPictureBox pictureBoxRed;
+        private MyPictureBox pictureBoxGreen;
+        private System.Windows.Forms.GroupBox groupBox4;
 
     }
 }

@@ -142,6 +142,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.en-US.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -181,8 +182,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\red_light.png" />
     <None Include="Resources\66.png" />
     <Content Include="Resources\checkmark.png" />
+    <None Include="Resources\green_light.png" />
     <Content Include="Resources\redcross.png" />
   </ItemGroup>
   <ItemGroup>
