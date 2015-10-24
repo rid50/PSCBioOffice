@@ -197,29 +197,16 @@ namespace PSCBioIdentification
 
             //ProgramMode mode = (ProgramMode)Settings.Default.ProgramMode;
             //ProgramMode mode = ProgramMode.Identify;
-            radioButtonIdentify.Checked = true;
-            checkBox5.Checked = true;
-            checkBox6.Checked = true;
-            checkBox7.Checked = true;
 
-            if (radioButtonIdentify.Checked)
-            {
-                this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
-            }
-            else
-            {
-                pictureBoxGreen.Active = false;
-                pictureBoxGreen.Invalidate();
-                pictureBoxRed.Active = true;
-                pictureBoxRed.Invalidate();
-            }
+            radioButtonIdentify.Checked = true;
+ 
 
             //setMode(mode);
             //setModeRadioButtons(mode);
 
             personId.Focus();
 
-            //personId.Text = "123";
+            //personId.Text = "123"; 20010235
             personId.Text = "20095423";
             //buttonRequest.Focus();
             //buttonScan.Enabled = false;
@@ -236,8 +223,8 @@ namespace PSCBioIdentification
             {
                 ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
                 string text = rm.GetString("msgNoScannersAttached"); // "No scanners attached"
-                ShowErrorMessage(text);
                 LogLine(text, true);
+                ShowErrorMessage(text);
                 return;
             }
 
@@ -246,11 +233,13 @@ namespace PSCBioIdentification
                 if (!scanner.IsCapturing)
                 {
                     scanner.StartCapturing();
-                    WaitingForImageToScan();
                     pictureBoxGreen.Active = true;
                     pictureBoxGreen.Invalidate();
                     pictureBoxRed.Active = false;
                     pictureBoxRed.Invalidate();
+                    radioButtonVerify.Enabled = true;
+                    radioButtonIdentify.Enabled = true;
+                    WaitingForImageToScan();
                 }
             }
             catch (Exception ex)
@@ -279,6 +268,12 @@ namespace PSCBioIdentification
                     pictureBoxGreen.Invalidate();
                     pictureBoxRed.Active = true;
                     pictureBoxRed.Invalidate();
+                    if (Mode != ProgramMode.PreEnrolled)
+                    {
+                        radioButtonVerify.Enabled = false;
+                        radioButtonIdentify.Enabled = false;
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -506,7 +501,11 @@ namespace PSCBioIdentification
         private void clearView()
         {
             if (mode == ProgramMode.PreEnrolled || mode == ProgramMode.Identification)
+            {
                 nfView1.Image = null;
+                if (mode == ProgramMode.Identification)
+                    clearFingerBoxes();
+            }
 
             //nfView1.ResultImage = null;
             //nfView1.Template = null;
@@ -526,11 +525,12 @@ namespace PSCBioIdentification
 
         private void clearFingerBoxes()
         {
-            PictureBox pb;
-            for (int i = 0; i <= 9; i++)
+            MyPictureBox pb;
+            for (int i = 0; i < 10; i++)
             {
                 this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0].Text = "";
-                pb = this.Controls.Find("fpPictureBox" + (i + 1).ToString(), true)[0] as PictureBox;
+                pb = this.Controls.Find("fpPictureBox" + (i + 1).ToString(), true)[0] as MyPictureBox;
+                pb.Active = false;
                 //pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
                 pb.Image = null;
             }
@@ -684,7 +684,7 @@ namespace PSCBioIdentification
             if (nfView2.Template != null) nfView2.Template.Dispose();
             nfView2.Template = this.template;
 
-            if (template == null)
+            if (template == null || (Helpers.QualityToPercent(template.Quality) < 70 && Mode == ProgramMode.Identification))
             {
                 ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
                 string text = rm.GetString("msgFingerprintImageIsOfLowQuality"); // "Fingerprint image is of low quality"
@@ -698,14 +698,20 @@ namespace PSCBioIdentification
 
                 return;
             }
+
+            //template.Save();
+
             //Settings settings = Settings.Default;
             //            LogLine("Template extracted{0}. G: {1}. Size: {2}. Time: {3}", true,
             //              Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Utils.QualityToPercent(template.Quality) / 100.0) : null,
             //           template.G, Data.SizeToString(template.Save().Length), Data.TimeToString(sw.Elapsed));
-            
-            LogLine("Template extracted{0}. G: {1}. Size: {2}", true,
-                Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
-                template.G, Data.SizeToString(template.Save().Length));
+
+            //LogLine("Template extracted{0}. G: {1}. Size: {2}", true,
+            //    Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
+            //    template.G, Data.SizeToString(template.Save().Length));
+
+            LogLine("Template extracted{0}", true,
+                Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null);
 
             //ShowStatusMessage(String.Format("Template extracted{0}. G: {1}. Size: {2}", true,
             //    Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
@@ -725,6 +731,7 @@ namespace PSCBioIdentification
                     nfView2.Zoom = 0.5F;
                     break;
                 case ProgramMode.Identification:
+                    personId.Text = "";
                     this.BeginInvoke(new MethodInvoker(delegate() { doIdentify(template); }));
                     //doIdentify(template);
                     nfView2.Zoom = 0.5F;
@@ -1089,6 +1096,7 @@ namespace PSCBioIdentification
 
         private void LogLine(string text, bool mainLog)
         {
+            //if (text == "
             Log(text, false, mainLog);
             LogLine(mainLog);
         }
@@ -1175,32 +1183,44 @@ namespace PSCBioIdentification
 
         private void radioButtonGroup_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender is ButtonBase)
-            {
-                //radioButton10.
-                ButtonBase radiobutton = sender as ButtonBase;
-                switch (radiobutton.Text)
+            var button = sender as RadioButton;
+            if (button.Checked) {
+                clearLog();
+
+                switch (button.Text)
                 {
-                    case "Enroll":
-                        mode = ProgramMode.PreEnrolled;
-                        break;
+                    //case "Enroll":
+                    //    mode = ProgramMode.PreEnrolled;
+                    //    break;
                     case "Verify":
-                        mode = ProgramMode.Verification;
-                        lblPersonId.Show();
-                        personId.Show();
+                        mode = ProgramMode.PreEnrolled;
+
+                        personId.ReadOnly = false;
                         buttonRequest.Show();
                         ShowRadioHideCheckButtons(true);
+
+                        LogLine("Enter Person ID:", true);
+                        ShowStatusMessage("Enter Person ID:");
+
+                        this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+
                         break;
                     case "Identify":
                         mode = ProgramMode.Identification;
-                        lblPersonId.Hide();
-                        personId.Hide();
+
+                        //checkBox1.Checked = true;
+                        checkBox5.Checked = true;
+                        checkBox6.Checked = true;
+                        checkBox7.Checked = true;
+
+                        personId.ReadOnly = true;
                         buttonRequest.Hide();
                         ShowRadioHideCheckButtons(false);
+
+                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+
                         break;
                 }
-
-                //setStatus(mode.ToString());
             }
         }
 
@@ -1480,10 +1500,23 @@ namespace PSCBioIdentification
             }
 
             //stopProgressBar();
-            if (Mode == ProgramMode.PreEnrolled)
+            if (radioButtonVerify.Checked)
             {
                 rb = this.Controls.Find("radioButton" + (bestQualityRadioButton + 1).ToString(), true)[0] as RadioButton;
                 this.BeginInvoke(new MethodInvoker(delegate() { checkRadioButton(rb.Name); }));
+            }
+            else if (radioButtonIdentify.Checked)
+            {
+                CheckBox cb;
+                for (int i = 1; i < 11; i++)
+                {
+                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    if (cb.Checked)
+                    {
+                        var m = System.Text.RegularExpressions.Regex.Match(cb.Name, @"\d+$");
+                        fingerChanged(Int32.Parse(m.Value) - 1, false);
+                    }
+                }
             }
 
             //System.Threading.Thread.Sleep(5000);
@@ -1678,7 +1711,7 @@ namespace PSCBioIdentification
             return true;
         }
 
-        private void fingerChanged(int fingerNumber)
+        private void fingerChanged(int fingerNumber, bool radiobuttons)
         {
             MyPictureBox pb;
             for (int i = 0; i < _fingersCollection.Count; i++)
@@ -1691,7 +1724,7 @@ namespace PSCBioIdentification
                     pb.Active = true;
                     pb.Invalidate();
                 } 
-                else
+                else if (radiobuttons)
                 {
                     if (pb.Active)
                     {
@@ -1737,6 +1770,9 @@ namespace PSCBioIdentification
 
         private void buttonBase_Click(object sender, EventArgs e)
         {
+            if (sender.GetType().Name == "CheckBox")
+                return;
+
             if (_fingersCollection == null || _fingersCollection.Count == 0)
                 return;
 
@@ -1762,7 +1798,7 @@ namespace PSCBioIdentification
             //rbNumber = Int32.Parse(rb.Name.Substring(rbNumber));
             WsqImage wsqImage = _fingersCollection[Int32.Parse(m.Value) - 1] as WsqImage;
             //WsqImage wsqImage = _fingersCollection[rbNumber - 1] as WsqImage;
-            fingerChanged(Int32.Parse(m.Value) - 1);
+            fingerChanged(Int32.Parse(m.Value) - 1, true);
 
             enrollFromWSQ(wsqImage);
         }

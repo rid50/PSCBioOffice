@@ -53,12 +53,30 @@ namespace Nomad
 			~MatcherFacade();
 			static void enroll(unsigned char *record, unsigned __int32 size);
 			static void terminateLoop(bool terminateLoop);
-			bool match(void *prescannedTemplate, int prescannedTemplateSize);
+			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 		};
 	}
 
 	namespace Data
 	{
+		inline void Log(std::string str)
+		{
+			if (0) {
+				std::streambuf *psbuf, *backup;
+				std::ofstream filestr;
+				filestr.open("error.txt");
+				backup = std::cout.rdbuf();     // back up cout's streambuf
+				psbuf = filestr.rdbuf();        // get file's streambuf
+				std::cout.rdbuf(psbuf);         // assign streambuf to cout
+				std::cout << str << std::endl;
+				std::cout.rdbuf(backup);        // restore cout's original streambuf
+				filestr.close();
+			} else {
+				OutputDebugString(str.c_str());
+				//std::cout << str << std::endl;
+			}
+		}
+
 		class Odbc
 		{
 #define MAXBUFLEN   255
@@ -67,7 +85,7 @@ namespace Nomad
 		private:
 			//Nomad::Bio::MatcherFacade matcherFacade;
 			Nomad::Bio::MatcherFacade	*matcherFacadePtr;
-			static bool	shallTerminateLoop;
+			static bool	terminateLoop;
 
 			//void *buffer;
 			//void *buffer2;
@@ -94,8 +112,6 @@ namespace Nomad
 			SQLSMALLINT cbConnStrOut;
 			SQLRETURN rc;
 
-
-
 		public:
 			Odbc();
 			~Odbc();
@@ -103,7 +119,7 @@ namespace Nomad
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
 			unsigned __int32 exec(unsigned long int, unsigned int, char *arrOfFingers[], __int32 arrOfFingersSize, std::string *errorMessage);
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			static void terminateLoop(bool terminateLoop);
+			static void terminate(bool terminateLoop);
 			void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);
@@ -148,7 +164,6 @@ namespace Nomad
 				std::cout << statusStatement << std::endl;
 #endif
 			}
-
 		};
 	}
 }

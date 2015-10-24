@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using Neurotec.Images;
 using System.Data;
-using System.Data.SQLite;
+//using System.Data.SQLite;
 using Neurotec.Biometrics;
 using PSCBioIdentification.Properties;
 
@@ -56,7 +56,7 @@ namespace PSCBioIdentification
 
 		#endregion
 	}
-
+/*
 	public class Database : IDisposable
 	{
 		#region Public types
@@ -285,7 +285,7 @@ namespace PSCBioIdentification
 
 		#endregion
 	}
-
+*/
     static class Data
     {
         #region Public static fields

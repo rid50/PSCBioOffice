@@ -78,20 +78,22 @@ namespace PSCBioIdentification
 
             if (e.Error != null)
             {
-                LogLine(e.Error.Message, true);
+                LogLine("Data service: " + e.Error.Message, true);
                 ShowErrorMessage(e.Error.Message);
             }
             else
             {
                 try
                 {
-                    if (Mode == ProgramMode.PreEnrolled || mode == ProgramMode.Identification)
+                    if (Mode == ProgramMode.PreEnrolled)
                     {
                         processEnrolledData(e.Result as byte[]);
-                    }
-                    
-                    if (Mode == ProgramMode.Verification || mode == ProgramMode.Identification)
-                    {
+                        if (radioButtonIdentify.Checked)
+                        {
+                            Mode = ProgramMode.Identification;
+                            startDataServiceProcess();
+                        }
+                    } else if (Mode == ProgramMode.Verification || mode == ProgramMode.Identification) {
                         using (var ms = new MemoryStream(e.Result as byte[]))
                         {
                             if (ms.Length != 0)
@@ -100,7 +102,7 @@ namespace PSCBioIdentification
                                 pictureBox1.Image = null;
                         }
 
-                        //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
                     }
                 }

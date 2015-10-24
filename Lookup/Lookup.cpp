@@ -78,33 +78,40 @@ namespace Nomad {
 			delete odbcPtr;
 			//return retcode;
 			//odbcPtr->enroll(record, size);
-			Nomad::Data::Odbc::terminateLoop(false);
+			Nomad::Data::Odbc::terminate(false);
 			Nomad::Data::Odbc::enroll(record, size);
 
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
-			unsigned int limit = 1000;
+			unsigned int limit = 10000;
 			unsigned int topindex = rowcount/limit + 1;
 			//topindex = 1;
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (1) {
+			if (0) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
 						unsigned __int32 ret = 0;
 						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
 						//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
-						ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+						try {
+							ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+						} catch (std::exception& e) {
+							errMessage = "ODBC Error: ";
+							errMessage += e.what();
+							ret = 0;
+						}
+
 						if (ret > 0) {
 							retcode = ret;
-							Nomad::Data::Odbc::terminateLoop(true);
+							Nomad::Data::Odbc::terminate(true);
 							tg.cancel();
 						} else if (ret == 0 && errMessage.length() != 0) {
 							retcode = 0;
-							Nomad::Data::Odbc::terminateLoop(true);
+							Nomad::Data::Odbc::terminate(true);
 							tg.cancel();
 						}
 
@@ -113,9 +120,18 @@ namespace Nomad {
 				});
 			} else {
 				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
-				for (unsigned int i = 0; i < topindex; i++) {
+				for (unsigned int i = 9; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
-					if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
+					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
+					try {
+						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+					} catch (std::exception& e) {
+						errMessage = "ODBC Error: ";
+						errMessage += e.what();
+						retcode = 0;
+					}
+
+					if (retcode > 0) {
 						break;
 					} else if (retcode == 0 && errMessage.length() != 0) {
 						break;
@@ -123,11 +139,13 @@ namespace Nomad {
 				}
 				delete odbcPtr;
 			}
-			//}
+			
+#ifdef _DEBUG
 			QueryPerformanceCounter(&end);
 			QueryPerformanceFrequency(&freq);
 
 			double result = (end.QuadPart - begin.QuadPart) / (double) freq.QuadPart;
+
 			//printf("%s : %4.2f ms\n", "ODBC - Time elapsed: ", result * 1000);
 
 			//char buffer [30];
@@ -135,9 +153,17 @@ namespace Nomad {
 			//printf ("%s",buffer);
 
 			//printStatusStatement(result);
-			std::cout << result << " sec" << endl;
+			//std::cout << result << " sec" << endl;
+
+
+			std::stringstream ss; 
+			ss << result << " sec" << endl;
+			Data::Log(ss.str().c_str());
+#endif
+			//OutputDebugString(ss.str().c_str());
 
 			if (retcode > 0) {
+				retcode--;
 				odbcPtr = new Nomad::Data::Odbc();
 				//std::string errMessage;
 				if (!odbcPtr->getAppId(&retcode, &errMessage))

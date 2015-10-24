@@ -91,7 +91,7 @@ namespace Nomad
 			Matcher::enroll(record, size);
 		}
 
-		bool MatcherFacade::match(void *prescannedTemplate, int prescannedTemplateSize) {
+		bool MatcherFacade::match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize) {
 			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(prescannedTemplate, prescannedTemplateSize);
 		}
 
@@ -326,7 +326,7 @@ namespace Nomad
 			//}
 		}
 
-		bool Matcher::match(void *prescannedTemplate, int prescannedTemplateSize) {
+		bool Matcher::match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize) {
 
 			NInt score;
 			NMMatchDetails **ppMatchDetails = NULL;

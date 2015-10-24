@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PSCBioIdentification</RootNamespace>
     <AssemblyName>PSCBioIdentification</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -30,7 +31,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -62,9 +63,6 @@
     <Reference Include="Neurotec.Biometrics.Matchers">
       <HintPath>..\dotNET\Neurotec.Biometrics.Matchers.dll</HintPath>
     </Reference>
-    <Reference Include="Neurotec.Biometrics.Standards">
-      <HintPath>..\dotNET\Neurotec.Biometrics.Standards.dll</HintPath>
-    </Reference>
     <Reference Include="Neurotec.Biometrics.Templates">
       <HintPath>..\dotNET\Neurotec.Biometrics.Templates.dll</HintPath>
     </Reference>
@@ -83,14 +81,10 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\..\Program Files (x86)\Neurotechnology\VeriFinger 6.2\Bin\Win32_x86\System.Data.SQLite.DLL</HintPath>
-    </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />

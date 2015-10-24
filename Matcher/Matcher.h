@@ -56,7 +56,7 @@ namespace Nomad
 			MatcherFacade();
 			~MatcherFacade();
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			bool match(void *prescannedTemplate, int prescannedTemplateSize);
+			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 		};
 
 		class License
@@ -109,7 +109,7 @@ namespace Nomad
 			//bool readImages(wchar_t * szFileName, wchar_t * szFileName2);
 			//int extract(HNImage nImage, NfeExtractionStatus* extractionStatus, HNFRecord* hRecord);
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			bool match(void *prescannedTemplate, int prescannedTemplateSize);
+			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 			//void __declspec(dllexport) enroll(void);
 			//void __declspec(dllexport) match(void *buffer2, int size);
 			//void run();

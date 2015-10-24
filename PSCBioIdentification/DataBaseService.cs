@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Configuration;
 //using System.Data.SqlClient;
 using System.Data;
-using System.Data.SqlTypes;
 //using System.Data.SqlServerCe;
-using System.Data.Common;
 using System.Data.SqlClient;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Net;
-using System.IO;
 using System.Security.Cryptography;
 
 namespace DataSourceServices

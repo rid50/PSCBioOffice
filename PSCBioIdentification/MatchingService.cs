@@ -47,14 +47,27 @@ namespace PSCBioIdentification
             // on the UI thread from this method.
 
             record = new Record();
-            record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
-            record.arrOfFingersSize = 3;
             //record.size = (UInt32)template.GetSize();
             //record.template = template.Save();
             record.size = (UInt32)(e.Argument as NFRecord).GetSize();
             record.template = (e.Argument as NFRecord).Save();
             record.errorMessage = new System.Text.StringBuilder(512);
-           
+
+            var ar = new System.Collections.ArrayList();
+
+            //record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
+            //record.arrOfFingersSize = 3;
+            CheckBox cb;
+            for (int i = 1; i < 11; i++)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    ar.Add(cb.Tag);
+            }
+            record.arrOfFingersSize = ar.Count;
+            //record.arrOfFingers = new string[ar.Count];
+            record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+
             //UInt32 score = 0;
             unsafe
             {
@@ -73,7 +86,7 @@ namespace PSCBioIdentification
 
             if (e.Error != null)
             {
-                LogLine(e.Error.Message, true);
+                LogLine("Matching service: " + e.Error.Message, true);
                 ShowErrorMessage(e.Error.Message);
             }
             else
@@ -92,6 +105,7 @@ namespace PSCBioIdentification
                     this.userId = (int)score;
                     personId.Text = score.ToString();
                     pictureBox2.Image = Properties.Resources.checkmark;
+                    Mode = ProgramMode.PreEnrolled;
                     startDataServiceProcess();
                 }
                 else
