@@ -331,6 +331,9 @@ namespace Nomad
 									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(*index));
 									matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
 									if (matched) {
+										std::stringstream ss; 
+										ss << "Matched: " << j << " : " << i;
+										Log(ss.str());
 										numOfMatches++;
 									}
 								} catch (std::exception& e) {

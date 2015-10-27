@@ -90,7 +90,7 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (0) {
+			if (1) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
@@ -120,7 +120,7 @@ namespace Nomad {
 				});
 			} else {
 				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
-				for (unsigned int i = 9; i < topindex; i++) {
+				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
 					try {
@@ -157,8 +157,8 @@ namespace Nomad {
 
 
 			std::stringstream ss; 
-			ss << result << " sec" << endl;
-			Data::Log(ss.str().c_str());
+			ss << result << " sec";
+			Data::Log(ss.str());
 #endif
 			//OutputDebugString(ss.str().c_str());
 

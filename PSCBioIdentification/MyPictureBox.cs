@@ -8,7 +8,7 @@ using System.Drawing.Imaging;
 
 namespace PSCBioIdentification
 {
-    class MyPictureBox : PictureBox
+    public class MyPictureBox : PictureBox
     {
         public MyPictureBox()
         {

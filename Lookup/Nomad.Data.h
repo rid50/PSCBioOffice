@@ -61,10 +61,10 @@ namespace Nomad
 	{
 		inline void Log(std::string str)
 		{
-			if (0) {
+			if (1) {
 				std::streambuf *psbuf, *backup;
 				std::ofstream filestr;
-				filestr.open("error.txt");
+				filestr.open("error.txt", std::fstream::app | std::fstream::out);
 				backup = std::cout.rdbuf();     // back up cout's streambuf
 				psbuf = filestr.rdbuf();        // get file's streambuf
 				std::cout.rdbuf(psbuf);         // assign streambuf to cout
@@ -72,6 +72,7 @@ namespace Nomad
 				std::cout.rdbuf(backup);        // restore cout's original streambuf
 				filestr.close();
 			} else {
+				str.append(" ======================================================\n");
 				OutputDebugString(str.c_str());
 				//std::cout << str << std::endl;
 			}

@@ -4,8 +4,10 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using Neurotec.Biometrics;
+//using Neurotec.Biometrics.Gui;
 using Neurotec.Images;
 using Neurotec.DeviceManager;
+//using Neurotec.Devices;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
@@ -64,6 +66,7 @@ namespace PSCBioIdentification
         private NFRecord template;
         private NFRecord enrolledTemplate;
         private FPScannerMan scannerMan;
+        //private NDeviceManager scannerMan;
         private string selectedScannerModules = string.Empty;
         private int userId = 0;
 
@@ -146,6 +149,7 @@ namespace PSCBioIdentification
             ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
             string selectedScannerModules = "Futronic";
             scannerMan = new FPScannerMan(selectedScannerModules, this);
+            //scannerMan = new NDeviceManager(selectedScannerModules, this);
             FPScanner scanner;
             if (scannerMan.Scanners.Count != 0)
             {
@@ -204,7 +208,7 @@ namespace PSCBioIdentification
             //setMode(mode);
             //setModeRadioButtons(mode);
 
-            personId.Focus();
+            //personId.Focus();
 
             //personId.Text = "123"; 20010235
             personId.Text = "20095423";
@@ -1194,6 +1198,7 @@ namespace PSCBioIdentification
                     //    break;
                     case "Verify":
                         mode = ProgramMode.PreEnrolled;
+                        //nfView1.Visible = true;
 
                         personId.ReadOnly = false;
                         buttonRequest.Show();
@@ -1204,14 +1209,18 @@ namespace PSCBioIdentification
 
                         this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
 
+                        //System.Threading.Thread.Sleep(100);
+                        //personId.Focus();
+
                         break;
                     case "Identify":
                         mode = ProgramMode.Identification;
+                        //nfView1.Visible = false;
 
                         //checkBox1.Checked = true;
                         checkBox5.Checked = true;
                         checkBox6.Checked = true;
-                        checkBox7.Checked = true;
+                        //checkBox7.Checked = true;
 
                         personId.ReadOnly = true;
                         buttonRequest.Hide();
