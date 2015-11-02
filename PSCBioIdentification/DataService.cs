@@ -83,41 +83,14 @@ namespace PSCBioIdentification
             }
             else
             {
-                try
-                {
-                    if (Mode == ProgramMode.PreEnrolled)
-                    {
-                        processEnrolledData(e.Result as byte[]);
-                        if (radioButtonIdentify.Checked)
-                        {
-                            Mode = ProgramMode.Identification;
-                            startDataServiceProcess();
-                        }
-                    } else if (Mode == ProgramMode.Verification || mode == ProgramMode.Identification) {
-                        using (var ms = new MemoryStream(e.Result as byte[]))
-                        {
-                            if (ms.Length != 0)
-                                pictureBox1.Image = Image.FromStream(ms);
-                            else
-                                pictureBox1.Image = null;
-                        }
-
-                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogLine(ex.ToString(), true);
-                    ShowErrorMessage(ex.ToString());
-                }
+                BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
             }
 
 //            stopProgressBar();
 
             //System.Windows.Forms.Application.DoEvents();
 
-            buttonRequest.Enabled = true;
+            //buttonRequest.Enabled = true;
         }
     }
 }

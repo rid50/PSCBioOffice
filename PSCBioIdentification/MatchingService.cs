@@ -50,7 +50,7 @@ namespace PSCBioIdentification
             //record.size = (UInt32)template.GetSize();
             //record.template = template.Save();
             record.size = (UInt32)(e.Argument as NFRecord).GetSize();
-            record.template = (e.Argument as NFRecord).Save();
+//!!!!!!!!!!!!!!            record.template = (e.Argument as NFRecord).Save();
             record.errorMessage = new System.Text.StringBuilder(512);
 
             var ar = new System.Collections.ArrayList();
@@ -104,13 +104,13 @@ namespace PSCBioIdentification
                 {
                     this.userId = (int)score;
                     personId.Text = score.ToString();
-                    pictureBox2.Image = Properties.Resources.checkmark;
+                    pictureBoxCheckMark.Image = Properties.Resources.checkmark;
                     Mode = ProgramMode.PreEnrolled;
                     startDataServiceProcess();
                 }
                 else
                 {
-                    pictureBox2.Image = Properties.Resources.redcross;
+                    pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
                     stopProgressBar();
 

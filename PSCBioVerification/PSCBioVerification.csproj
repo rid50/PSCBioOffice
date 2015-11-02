@@ -46,9 +46,6 @@
     <Reference Include="Neurotec.Biometrics.Matchers">
       <HintPath>..\dotNET\Neurotec.Biometrics.Matchers.dll</HintPath>
     </Reference>
-    <Reference Include="Neurotec.Biometrics.Standards">
-      <HintPath>..\dotNET\Neurotec.Biometrics.Standards.dll</HintPath>
-    </Reference>
     <Reference Include="Neurotec.Biometrics.Templates">
       <HintPath>..\dotNET\Neurotec.Biometrics.Templates.dll</HintPath>
     </Reference>

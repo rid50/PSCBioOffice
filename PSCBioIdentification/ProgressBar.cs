@@ -83,7 +83,7 @@ namespace PSCBioIdentification
         private void backgroundWorkerProgressBar_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             toolStripProgressBar.Value = 0;
-            //toolStripStatusLabelError.Text = "";
+            toolStripStatusLabelError.Text = "";
 
             //toolStripProgressBar.Enabled = false;
         }

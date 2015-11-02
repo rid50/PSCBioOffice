@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
+using Neurotec.Licensing;
 
 namespace PSCBioIdentification
 {
@@ -13,20 +12,52 @@ namespace PSCBioIdentification
         [STAThread]
         static void Main()
         {
-            IList<string> licensesMain = new List<string>(new string[] { "FingersExtractor", "FingersMatcher" });
-            IList<string> licensesBss = new List<string>(new string[] { "FingersBSS" });
+
+            //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ,Biometrics.FingerSegmentation,Biometrics.FingerQualityAssessmentBase";
+            //try
+            //{
+            //    foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            //    {
+            //        NLicense.ObtainComponents(LicensePanel.Address, LicensePanel.Port, component);
+            //    }
+
+            //    Application.EnableVisualStyles();
+            //    Application.SetCompatibleTextRenderingDefault(false);
+            //    Application.Run(new Form1());
+            //}
+            //catch (Exception ex)
+            //{
+            //    Utils.ShowException(ex);
+            //}
+            //finally
+            //{
+            //    NLicense.ReleaseComponents(Components);
+            //}
+
+            //IList<string> licensesMain = new List<string>(new string[] { "Biometrics.FingerExtraction", "Biometrics.FingerMatching" });
+//            IList<string> licensesMain = new List<string>(new string[] { "FingersExtractor", "FingersMatcher" });
+//            IList<string> licensesBss = new List<string>(new string[] { "FingersBSS" });
+
+            //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ,Biometrics.FingerSegmentation,Biometrics.FingerQualityAssessmentBase";
+            const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ";
 
             try
             {
-                Helpers.ObtainLicenses(licensesMain);
-
-                try
+                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    Helpers.ObtainLicenses(licensesBss);
+                    NLicense.ObtainComponents("/local", "5000", component);
                 }
-                catch (Exception ex) {
-                    Console.WriteLine(ex.ToString());
-                }
+
+                //Helpers.ObtainLicenses(licensesMain);
+
+                //try
+                //{
+                //    Helpers.ObtainLicenses(licensesBss);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.ToString());
+                //}
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -34,12 +65,16 @@ namespace PSCBioIdentification
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error. Details: " + ex.Message, "Fingers Sample", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Utils.ShowException(ex);
+
+                //MessageBox.Show("Error. Details: " + ex.Message, "Fingers Sample", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                Helpers.ReleaseLicenses(licensesMain);
-                Helpers.ReleaseLicenses(licensesBss);
+                NLicense.ReleaseComponents(Components);
+                //Helpers.ReleaseLicenses(licensesMain);
+                //Helpers.ReleaseLicenses(licensesBss);
             }
         }
     }

@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.nfViewSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.nfView1 = new Neurotec.Biometrics.Gui.NFView();
-            this.nfView2 = new Neurotec.Biometrics.Gui.NFView();
+            this.fingerView1 = new Neurotec.Biometrics.Gui.NFingerView();
+            this.fingerView2 = new Neurotec.Biometrics.Gui.NFingerView();
             this.gbMainLog = new System.Windows.Forms.GroupBox();
             this.lblWaitingForImg = new System.Windows.Forms.Label();
             this.rtbMain = new System.Windows.Forms.RichTextBox();
@@ -39,8 +39,6 @@
             this.lblPersonId = new System.Windows.Forms.Label();
             this.gbResults = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
-            this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
             this.checkBox10 = new System.Windows.Forms.CheckBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
@@ -51,8 +49,8 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPhoto = new System.Windows.Forms.PictureBox();
+            this.pictureBoxCheckMark = new System.Windows.Forms.PictureBox();
             this.buttonRequest = new System.Windows.Forms.Button();
             this.lblThumbs = new System.Windows.Forms.Label();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
@@ -87,54 +85,58 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbFinger10 = new System.Windows.Forms.Label();
             this.lbFinger9 = new System.Windows.Forms.Label();
-            this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox10 = new PSCBioIdentification.MyPictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lbFinger8 = new System.Windows.Forms.Label();
             this.lbFinger7 = new System.Windows.Forms.Label();
             this.lbFinger6 = new System.Windows.Forms.Label();
             this.lbFinger5 = new System.Windows.Forms.Label();
-            this.fpPictureBox6 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox5 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox7 = new PSCBioIdentification.MyPictureBox();
-            this.fpPictureBox8 = new PSCBioIdentification.MyPictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbFinger1 = new System.Windows.Forms.Label();
             this.lbFinger2 = new System.Windows.Forms.Label();
             this.lbFinger3 = new System.Windows.Forms.Label();
             this.lbFinger4 = new System.Windows.Forms.Label();
+            this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
+            this.scannersListBox = new System.Windows.Forms.ListBox();
+            this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
+            this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox10 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox6 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox5 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox7 = new PSCBioIdentification.MyPictureBox();
+            this.fpPictureBox8 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox3 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox1 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox2 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox4 = new PSCBioIdentification.MyPictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.nfViewSplitContainer)).BeginInit();
             this.nfViewSplitContainer.Panel1.SuspendLayout();
             this.nfViewSplitContainer.Panel2.SuspendLayout();
             this.nfViewSplitContainer.SuspendLayout();
             this.gbMainLog.SuspendLayout();
             this.gbResults.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).BeginInit();
             this.groupBoxMode.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).BeginInit();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox8)).BeginInit();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // nfViewSplitContainer
@@ -146,46 +148,51 @@
             // nfViewSplitContainer.Panel1
             // 
             resources.ApplyResources(this.nfViewSplitContainer.Panel1, "nfViewSplitContainer.Panel1");
-            this.nfViewSplitContainer.Panel1.Controls.Add(this.nfView1);
+            this.nfViewSplitContainer.Panel1.Controls.Add(this.fingerView1);
             // 
             // nfViewSplitContainer.Panel2
             // 
             resources.ApplyResources(this.nfViewSplitContainer.Panel2, "nfViewSplitContainer.Panel2");
-            this.nfViewSplitContainer.Panel2.Controls.Add(this.nfView2);
+            this.nfViewSplitContainer.Panel2.Controls.Add(this.fingerView2);
             this.nfViewSplitContainer.TabStop = false;
             // 
-            // nfView1
+            // fingerView1
             // 
-            resources.ApplyResources(this.nfView1, "nfView1");
-            this.nfView1.BackColor = System.Drawing.SystemColors.Control;
-            this.nfView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.nfView1.MinutiaColor = System.Drawing.Color.Red;
-            this.nfView1.Name = "nfView1";
-            this.nfView1.NeighborMinutiaColor = System.Drawing.Color.Orange;
-            this.nfView1.SelectedMinutiaColor = System.Drawing.Color.Magenta;
-            this.nfView1.SelectedSingularPointColor = System.Drawing.Color.Magenta;
-            this.nfView1.SingularPointColor = System.Drawing.Color.Red;
-            this.nfView1.TreeColor = System.Drawing.Color.Crimson;
-            this.nfView1.TreeMinutiaNumberDiplayFormat = Neurotec.Biometrics.Gui.MinutiaNumberDiplayFormat.DontDisplay;
-            this.nfView1.TreeMinutiaNumberFont = new System.Drawing.Font("Arial", 10F);
-            this.nfView1.TreeWidth = 2D;
+            resources.ApplyResources(this.fingerView1, "fingerView1");
+            this.fingerView1.BackColor = System.Drawing.SystemColors.Control;
+            this.fingerView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.fingerView1.BoundingRectColor = System.Drawing.Color.Red;
+            this.fingerView1.MinutiaColor = System.Drawing.Color.Red;
+            this.fingerView1.Name = "fingerView1";
+            this.fingerView1.NeighborMinutiaColor = System.Drawing.Color.Orange;
+            this.fingerView1.ResultImageColor = System.Drawing.Color.Green;
+            this.fingerView1.SelectedMinutiaColor = System.Drawing.Color.Magenta;
+            this.fingerView1.SelectedSingularPointColor = System.Drawing.Color.Magenta;
+            this.fingerView1.SingularPointColor = System.Drawing.Color.Red;
+            this.fingerView1.TreeColor = System.Drawing.Color.Crimson;
+            this.fingerView1.TreeMinutiaNumberDiplayFormat = Neurotec.Biometrics.Gui.MinutiaNumberDiplayFormat.DontDisplay;
+            this.fingerView1.TreeMinutiaNumberFont = new System.Drawing.Font("Arial", 10F);
+            this.fingerView1.TreeWidth = 2D;
             // 
-            // nfView2
+            // fingerView2
             // 
-            resources.ApplyResources(this.nfView2, "nfView2");
-            this.nfView2.BackColor = System.Drawing.SystemColors.Control;
-            this.nfView2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.nfView2.MinutiaColor = System.Drawing.Color.Red;
-            this.nfView2.Name = "nfView2";
-            this.nfView2.NeighborMinutiaColor = System.Drawing.Color.Orange;
-            this.nfView2.SelectedMinutiaColor = System.Drawing.Color.Magenta;
-            this.nfView2.SelectedSingularPointColor = System.Drawing.Color.Magenta;
-            this.nfView2.ShownImage = Neurotec.Biometrics.Gui.ShownImage.Result;
-            this.nfView2.SingularPointColor = System.Drawing.Color.Red;
-            this.nfView2.TreeColor = System.Drawing.Color.Crimson;
-            this.nfView2.TreeMinutiaNumberDiplayFormat = Neurotec.Biometrics.Gui.MinutiaNumberDiplayFormat.DontDisplay;
-            this.nfView2.TreeMinutiaNumberFont = new System.Drawing.Font("Arial", 10F);
-            this.nfView2.TreeWidth = 2D;
+            resources.ApplyResources(this.fingerView2, "fingerView2");
+            this.fingerView2.BackColor = System.Drawing.SystemColors.Control;
+            this.fingerView2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.fingerView2.BoundingRectColor = System.Drawing.Color.Red;
+            this.fingerView2.MinutiaColor = System.Drawing.Color.Red;
+            this.fingerView2.Name = "fingerView2";
+            this.fingerView2.NeighborMinutiaColor = System.Drawing.Color.Orange;
+            this.fingerView2.ResultImageColor = System.Drawing.Color.Green;
+            this.fingerView2.SelectedMinutiaColor = System.Drawing.Color.Magenta;
+            this.fingerView2.SelectedSingularPointColor = System.Drawing.Color.Magenta;
+            this.fingerView2.ShownImage = Neurotec.Biometrics.Gui.ShownImage.Result;
+            this.fingerView2.SingularPointColor = System.Drawing.Color.Red;
+            this.fingerView2.TreeColor = System.Drawing.Color.Crimson;
+            this.fingerView2.TreeMinutiaNumberDiplayFormat = Neurotec.Biometrics.Gui.MinutiaNumberDiplayFormat.DontDisplay;
+            this.fingerView2.TreeMinutiaNumberFont = new System.Drawing.Font("Arial", 10F);
+            this.fingerView2.TreeWidth = 2D;
+            this.fingerView2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FingerViewMouseClick);
             // 
             // gbMainLog
             // 
@@ -232,8 +239,8 @@
             this.gbResults.Controls.Add(this.checkBox3);
             this.gbResults.Controls.Add(this.checkBox4);
             this.gbResults.Controls.Add(this.gbMainLog);
-            this.gbResults.Controls.Add(this.pictureBox1);
-            this.gbResults.Controls.Add(this.pictureBox2);
+            this.gbResults.Controls.Add(this.pictureBoxPhoto);
+            this.gbResults.Controls.Add(this.pictureBoxCheckMark);
             this.gbResults.Controls.Add(this.buttonRequest);
             this.gbResults.Controls.Add(this.lblThumbs);
             this.gbResults.Controls.Add(this.radioButton10);
@@ -272,24 +279,6 @@
             resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
-            // 
-            // pictureBoxRed
-            // 
-            this.pictureBoxRed.Active = false;
-            this.pictureBoxRed.Image = global::PSCBioIdentification.Properties.Resources.red_light;
-            resources.ApplyResources(this.pictureBoxRed, "pictureBoxRed");
-            this.pictureBoxRed.Name = "pictureBoxRed";
-            this.pictureBoxRed.TabStop = false;
-            this.pictureBoxRed.Tag = "leftLittle";
-            // 
-            // pictureBoxGreen
-            // 
-            this.pictureBoxGreen.Active = false;
-            this.pictureBoxGreen.Image = global::PSCBioIdentification.Properties.Resources.green_light;
-            resources.ApplyResources(this.pictureBoxGreen, "pictureBoxGreen");
-            this.pictureBoxGreen.Name = "pictureBoxGreen";
-            this.pictureBoxGreen.TabStop = false;
-            this.pictureBoxGreen.Tag = "leftLittle";
             // 
             // checkBox10
             // 
@@ -361,19 +350,19 @@
             this.checkBox4.Tag = "ll";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // pictureBoxPhoto
             // 
-            this.pictureBox1.BackgroundImage = global::PSCBioIdentification.Properties.Resources._66;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxPhoto.BackgroundImage = global::PSCBioIdentification.Properties.Resources._66;
+            this.pictureBoxPhoto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.pictureBoxPhoto, "pictureBoxPhoto");
+            this.pictureBoxPhoto.Name = "pictureBoxPhoto";
+            this.pictureBoxPhoto.TabStop = false;
             // 
-            // pictureBox2
+            // pictureBoxCheckMark
             // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.TabStop = false;
+            resources.ApplyResources(this.pictureBoxCheckMark, "pictureBoxCheckMark");
+            this.pictureBoxCheckMark.Name = "pictureBoxCheckMark";
+            this.pictureBoxCheckMark.TabStop = false;
             // 
             // buttonRequest
             // 
@@ -598,24 +587,6 @@
             this.lbFinger9.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger9.Name = "lbFinger9";
             // 
-            // fpPictureBox9
-            // 
-            this.fpPictureBox9.Active = false;
-            this.fpPictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox9, "fpPictureBox9");
-            this.fpPictureBox9.Name = "fpPictureBox9";
-            this.fpPictureBox9.TabStop = false;
-            this.fpPictureBox9.Tag = "leftThumb";
-            // 
-            // fpPictureBox10
-            // 
-            this.fpPictureBox10.Active = false;
-            this.fpPictureBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox10, "fpPictureBox10");
-            this.fpPictureBox10.Name = "fpPictureBox10";
-            this.fpPictureBox10.TabStop = false;
-            this.fpPictureBox10.Tag = "rightThumb";
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lbFinger8);
@@ -657,42 +628,6 @@
             this.lbFinger5.BackColor = System.Drawing.Color.Transparent;
             this.lbFinger5.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger5.Name = "lbFinger5";
-            // 
-            // fpPictureBox6
-            // 
-            this.fpPictureBox6.Active = false;
-            this.fpPictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox6, "fpPictureBox6");
-            this.fpPictureBox6.Name = "fpPictureBox6";
-            this.fpPictureBox6.TabStop = false;
-            this.fpPictureBox6.Tag = "rightMiddle";
-            // 
-            // fpPictureBox5
-            // 
-            this.fpPictureBox5.Active = false;
-            this.fpPictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox5, "fpPictureBox5");
-            this.fpPictureBox5.Name = "fpPictureBox5";
-            this.fpPictureBox5.TabStop = false;
-            this.fpPictureBox5.Tag = "rightIndex";
-            // 
-            // fpPictureBox7
-            // 
-            this.fpPictureBox7.Active = false;
-            this.fpPictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox7, "fpPictureBox7");
-            this.fpPictureBox7.Name = "fpPictureBox7";
-            this.fpPictureBox7.TabStop = false;
-            this.fpPictureBox7.Tag = "rightRing";
-            // 
-            // fpPictureBox8
-            // 
-            this.fpPictureBox8.Active = false;
-            this.fpPictureBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.fpPictureBox8, "fpPictureBox8");
-            this.fpPictureBox8.Name = "fpPictureBox8";
-            this.fpPictureBox8.TabStop = false;
-            this.fpPictureBox8.Tag = "rightLittle";
             // 
             // groupBox1
             // 
@@ -736,6 +671,91 @@
             this.lbFinger4.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger4.Name = "lbFinger4";
             // 
+            // pictureBoxCompanyLogo
+            // 
+            resources.ApplyResources(this.pictureBoxCompanyLogo, "pictureBoxCompanyLogo");
+            this.pictureBoxCompanyLogo.Name = "pictureBoxCompanyLogo";
+            this.pictureBoxCompanyLogo.TabStop = false;
+            // 
+            // scannersListBox
+            // 
+            this.scannersListBox.FormattingEnabled = true;
+            resources.ApplyResources(this.scannersListBox, "scannersListBox");
+            this.scannersListBox.Name = "scannersListBox";
+            this.scannersListBox.SelectedIndexChanged += new System.EventHandler(this.ScannersListBoxSelectedIndexChanged);
+            // 
+            // pictureBoxRed
+            // 
+            this.pictureBoxRed.Active = false;
+            this.pictureBoxRed.Image = global::PSCBioIdentification.Properties.Resources.red_light;
+            resources.ApplyResources(this.pictureBoxRed, "pictureBoxRed");
+            this.pictureBoxRed.Name = "pictureBoxRed";
+            this.pictureBoxRed.TabStop = false;
+            this.pictureBoxRed.Tag = "leftLittle";
+            // 
+            // pictureBoxGreen
+            // 
+            this.pictureBoxGreen.Active = false;
+            this.pictureBoxGreen.Image = global::PSCBioIdentification.Properties.Resources.green_light;
+            resources.ApplyResources(this.pictureBoxGreen, "pictureBoxGreen");
+            this.pictureBoxGreen.Name = "pictureBoxGreen";
+            this.pictureBoxGreen.TabStop = false;
+            this.pictureBoxGreen.Tag = "leftLittle";
+            // 
+            // fpPictureBox9
+            // 
+            this.fpPictureBox9.Active = false;
+            this.fpPictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox9, "fpPictureBox9");
+            this.fpPictureBox9.Name = "fpPictureBox9";
+            this.fpPictureBox9.TabStop = false;
+            this.fpPictureBox9.Tag = "leftThumb";
+            // 
+            // fpPictureBox10
+            // 
+            this.fpPictureBox10.Active = false;
+            this.fpPictureBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox10, "fpPictureBox10");
+            this.fpPictureBox10.Name = "fpPictureBox10";
+            this.fpPictureBox10.TabStop = false;
+            this.fpPictureBox10.Tag = "rightThumb";
+            // 
+            // fpPictureBox6
+            // 
+            this.fpPictureBox6.Active = false;
+            this.fpPictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox6, "fpPictureBox6");
+            this.fpPictureBox6.Name = "fpPictureBox6";
+            this.fpPictureBox6.TabStop = false;
+            this.fpPictureBox6.Tag = "rightMiddle";
+            // 
+            // fpPictureBox5
+            // 
+            this.fpPictureBox5.Active = false;
+            this.fpPictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox5, "fpPictureBox5");
+            this.fpPictureBox5.Name = "fpPictureBox5";
+            this.fpPictureBox5.TabStop = false;
+            this.fpPictureBox5.Tag = "rightIndex";
+            // 
+            // fpPictureBox7
+            // 
+            this.fpPictureBox7.Active = false;
+            this.fpPictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox7, "fpPictureBox7");
+            this.fpPictureBox7.Name = "fpPictureBox7";
+            this.fpPictureBox7.TabStop = false;
+            this.fpPictureBox7.Tag = "rightRing";
+            // 
+            // fpPictureBox8
+            // 
+            this.fpPictureBox8.Active = false;
+            this.fpPictureBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.fpPictureBox8, "fpPictureBox8");
+            this.fpPictureBox8.Name = "fpPictureBox8";
+            this.fpPictureBox8.TabStop = false;
+            this.fpPictureBox8.Tag = "rightLittle";
+            // 
             // fpPictureBox3
             // 
             this.fpPictureBox3.Active = false;
@@ -773,19 +793,14 @@
             this.fpPictureBox4.TabStop = false;
             this.fpPictureBox4.Tag = "leftLittle";
             // 
-            // pictureBox3
-            // 
-            resources.ApplyResources(this.pictureBox3, "pictureBox3");
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.TabStop = false;
-            // 
             // Form1
             // 
             this.AcceptButton = this.buttonRequest;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
-            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.scannersListBox);
+            this.Controls.Add(this.pictureBoxCompanyLogo);
             this.Controls.Add(this.gbResults);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -796,16 +811,15 @@
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.nfViewSplitContainer.Panel1.ResumeLayout(false);
             this.nfViewSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.nfViewSplitContainer)).EndInit();
             this.nfViewSplitContainer.ResumeLayout(false);
             this.gbMainLog.ResumeLayout(false);
             this.gbMainLog.PerformLayout();
             this.gbResults.ResumeLayout(false);
             this.gbResults.PerformLayout();
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).EndInit();
             this.groupBoxMode.ResumeLayout(false);
             this.groupBoxMode.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -813,21 +827,23 @@
             this.panel1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox8)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -836,8 +852,8 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer nfViewSplitContainer;
-        private Neurotec.Biometrics.Gui.NFView nfView1;
-        private Neurotec.Biometrics.Gui.NFView nfView2;
+        private Neurotec.Biometrics.Gui.NFingerView fingerView1;
+        private Neurotec.Biometrics.Gui.NFingerView fingerView2;
         private System.Windows.Forms.GroupBox gbMainLog;
         private System.Windows.Forms.Label lblWaitingForImg;
         private System.Windows.Forms.RichTextBox rtbMain;
@@ -871,7 +887,7 @@
         private System.Windows.Forms.Label lblRight;
         private System.Windows.Forms.Label lblLeft;
         private System.Windows.Forms.Button buttonRequest;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBoxCheckMark;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelError;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
@@ -886,11 +902,11 @@
         private MyPictureBox fpPictureBox2;
         private MyPictureBox fpPictureBox3;
         private MyPictureBox fpPictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxPhoto;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBoxCompanyLogo;
         private System.Windows.Forms.Label lbFinger5;
         private System.Windows.Forms.Label lbFinger10;
         private System.Windows.Forms.Label lbFinger9;
@@ -914,6 +930,7 @@
         private MyPictureBox pictureBoxRed;
         private MyPictureBox pictureBoxGreen;
         private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.ListBox scannersListBox;
 
     }
 }

@@ -16,17 +16,17 @@ namespace PSCBioIdentification
 	{
 		private const string LicensesConfiguration = "NLicenses.cfg";
 
-		public static void PrintTutorialHeader()
-		{
-			string description = ((AssemblyDescriptionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;
-			string version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-			string copyright = ((AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
-			Console.WriteLine(GetAssemblyName());
-			Console.WriteLine("");
-			Console.WriteLine("{0} (Version: {1})", description, version);
-			Console.WriteLine(copyright.Replace("?", "(C)"));
-			Console.WriteLine();
-		}
+        //public static void PrintTutorialHeader()
+        //{
+        //    string description = ((AssemblyDescriptionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;
+        //    string version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+        //    string copyright = ((AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
+        //    Console.WriteLine(GetAssemblyName());
+        //    Console.WriteLine("");
+        //    Console.WriteLine("{0} (Version: {1})", description, version);
+        //    Console.WriteLine(copyright.Replace("?", "(C)"));
+        //    Console.WriteLine();
+        //}
 
 		private static Dictionary<string, string> _licenseCfg;
 
@@ -209,5 +209,13 @@ namespace PSCBioIdentification
 
 			return localDataDir;
 		}
+
+        //public static void ShowException(Exception ex)
+        //{
+        //    while ((ex is AggregateException) && (ex.InnerException != null))
+        //        ex = ex.InnerException;
+
+        //    MessageBox.Show(ex.ToString(), null, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //}
 	}
 }
