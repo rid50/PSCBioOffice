@@ -30,6 +30,7 @@ namespace PSCBioIdentification
             else
                 param = "db";
 
+            startProgressBar();
             backgroundWorkerDataService.RunWorkerAsync(param);
         }
 
@@ -61,7 +62,10 @@ namespace PSCBioIdentification
                 //System.Threading.Thread.Sleep(40000);
                 e.Result = ds.GetImage((DataSource.IMAGE_TYPE)imageType, this.userId);
 
-
+                if (Mode == ProgramMode.PreEnrolled)
+                {
+                    processEnrolledData(e.Result as byte[]);
+                }
             }
             catch (Exception ex)
             {
@@ -83,7 +87,24 @@ namespace PSCBioIdentification
             }
             else
             {
-                BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
+                if (Mode == ProgramMode.PreEnrolled && radioButtonIdentify.Checked)
+                {
+                    Mode = ProgramMode.Identification;
+                    startDataServiceProcess();          // go for a photo
+                }
+                else
+                {
+                    using (var ms = new MemoryStream(e.Result as byte[]))
+                    {
+                        if (ms.Length != 0)
+                            pictureBoxPhoto.Image = Image.FromStream(ms);
+                        else
+                            pictureBoxPhoto.Image = null;
+                    }
+
+//                    BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
+                }
+                //int i = 0;
             }
 
 //            stopProgressBar();

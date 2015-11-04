@@ -70,11 +70,12 @@ namespace PSCBioIdentification
         private NFRecord enrolledTemplate;
         //private FPScannerMan scannerMan;
 
-        private NImage _image;
+        //private NImage _image;
         private NDeviceManager _deviceManager;
         private NBiometricClient _biometricClient;
         private NSubject _subject;
-        private NFinger _subjectFinger;
+        private NSubject _subject2;
+        //private NFinger _subjectFinger;
         private NDevice _device;
         
         private bool _isCapturing = false;
@@ -180,9 +181,15 @@ namespace PSCBioIdentification
 
             _biometricClient = new NBiometricClient { UseDeviceManager = true, BiometricTypes = NBiometricType.Finger };
             _biometricClient.Initialize();
-            _biometricClient.FingersReturnProcessedImage = true;
+            //_biometricClient.FingerScanner.CapturePreview += OnFingerPropertyChanged;
+
+            //_biometricClient.FingersReturnProcessedImage = true;
 
             _deviceManager = _biometricClient.DeviceManager;
+            _deviceManager.Initialize();
+            //set type of the device used
+            //_deviceManager.DeviceTypes = NDeviceType.FingerScanner;
+
             UpdateScannerList();
 
             //string selectedScannerModules = "Futronic";
@@ -237,12 +244,15 @@ namespace PSCBioIdentification
             
             }
 
+            AcceptButton = buttonRequest;
+ 
             //ProgramMode mode = (ProgramMode)Settings.Default.ProgramMode;
             //ProgramMode mode = ProgramMode.Identify;
 
             radioButtonVerify.Checked = true;
             //radioButtonIdentify.Checked = true;
- 
+            EnableSemaphorControls(false);
+            EnableControls(true);
 
             //setMode(mode);
             //setModeRadioButtons(mode);
@@ -257,17 +267,30 @@ namespace PSCBioIdentification
             //    ShowErrorMessage("Lookup service: Error connecting to database");
         }
 
-        private void SetControls(bool capturing)
+        private void EnableSemaphorControls(bool capturing)
         {
+            buttonScan.Enabled = !capturing;
             pictureBoxGreen.Active = capturing;
             pictureBoxGreen.Invalidate();
             pictureBoxRed.Active = !capturing;
             pictureBoxRed.Invalidate();
-            radioButtonVerify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
-            radioButtonIdentify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
+            groupBoxMode.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
+            //radioButtonVerify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
+            //radioButtonIdentify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
             
+            if (fingerView1.Finger == null)
+                buttonScan.Enabled = !capturing;
+
             if (capturing)
                 WaitingForImageToScan();
+        }
+
+        private void EnableControls(bool enable)
+        {
+            //buttonRequest.Enabled = enable;
+            buttonScan.Enabled = enable && fingerView1.Finger != null;
+            pictureBoxCheckMark.Image = null;
+            pictureBoxPhoto.Image = null;
         }
 
         private void UpdateScannerList()
@@ -276,10 +299,14 @@ namespace PSCBioIdentification
             try
             {
                 scannersListBox.Items.Clear();
+                //if (_biometricClient.DeviceManager != null)
                 if (_deviceManager != null)
                 {
+                    //foreach (NDevice item in _biometricClient.DeviceManager.Devices)
                     foreach (NDevice item in _deviceManager.Devices)
                     {
+                        //var fn = ((NFingerScanner)_device).;
+                        
                         if (_device == null)
                             _device = item;
 
@@ -309,23 +336,49 @@ namespace PSCBioIdentification
             else
             {
                 _isCapturing = true;
-                SetControls(true);
+                EnableSemaphorControls(true);
+                EnableControls(false);
+
                 startProgressBar();
 
+                //using (var subject = new NSubject())
+                //using (var finger = new NFinger())
+
+                //_subject2 = null;
+
                 // Create a finger
-                _subjectFinger = new NFinger();
-
                 // Add finger to the subject and fingerView
-                _subject = new NSubject();
-                _subject.Fingers.Add(_subjectFinger);
-                _subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
-                fingerView1.Finger = _subjectFinger;
-                fingerView1.ShownImage = ShownImage.Original;
+                if (_subject2 == null)
+                {
+                    _subject2 = new NSubject();
+                    //var subjectFinger = new NFinger();
+                    //_subject2.Fingers.Add(subjectFinger);
+                    //_subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
+                    //fingerView2.Finger = subjectFinger;
+                    //fingerView2.ZoomToFit = true;
+                    fingerView2.ShownImage = ShownImage.Result;
+                    _biometricClient.FingersReturnProcessedImage = true;
+                }
 
+                if (_subject2.Fingers.Count > 0)
+                    _subject2.Fingers.RemoveAt(0);
+
+                var finger = new NFinger();
+                _subject2.Fingers.Add(finger);
+                fingerView2.Finger = finger;
+
+                //if (_subject2.Fingers.Count > 0)
+                //    _subject2.Fingers.RemoveAt(0);
+                //else
+                //    fingerView2.Finger = subjectFinger;
+                
+                //subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
+                //fingerView2.Finger = subjectFinger;
+
+                _biometricClient.FingersTemplateSize = NTemplateSize.Small;
                 // Begin capturing
-                _biometricClient.FingersReturnProcessedImage = true;
-                NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Capture | NBiometricOperations.CreateTemplate, _subject);
-                _biometricClient.BeginPerformTask(task, OnEnrollCompleted, null);
+                NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Capture | NBiometricOperations.CreateTemplate, _subject2);
+                _biometricClient.BeginPerformTask(task, OnEnrollFromScannerCompleted, null);
             }
 
             //FPScanner scanner;
@@ -369,7 +422,8 @@ namespace PSCBioIdentification
             {
                 _biometricClient.Cancel();
                 _isCapturing = false;
-                SetControls(false);
+                EnableSemaphorControls(false);
+                EnableControls(true);
                 stopProgressBar();
             }
 
@@ -406,10 +460,20 @@ namespace PSCBioIdentification
             //}
         }
 
+        private void OnFingerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Status")
+            {
+                //int i = 0;
+                //BeginInvoke(new Action<NBiometricStatus>(status => lblQuality.Text = status.ToString()), _subjectFinger.Status);
+            }
+        }
+
         private void OnAttributesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Status")
             {
+                int i = 0;
                 //BeginInvoke(new Action<NBiometricStatus>(status => lblQuality.Text = status.ToString()), _subjectFinger.Status);
             }
         }
@@ -420,16 +484,16 @@ namespace PSCBioIdentification
             {
                 if (Mode == ProgramMode.PreEnrolled)
                 {
-                    if (processEnrolledData(buff))
-                    {
-                        if (radioButtonIdentify.Checked)
-                        {
-                            Mode = ProgramMode.Identification;
-                            startDataServiceProcess();          // go for a photo
-                        }
-                    }
+                    //if (processEnrolledData(buff))
+                    //{
+                    //    if (radioButtonIdentify.Checked)
+                    //    {
+                    //        Mode = ProgramMode.Identification;
+                    //        startDataServiceProcess();          // go for a photo
+                    //    }
+                    //}
                 }
-                else if (Mode == ProgramMode.Verification || mode == ProgramMode.Identification)
+                else
                 {
                     using (var ms = new MemoryStream(buff))
                     {
@@ -439,7 +503,7 @@ namespace PSCBioIdentification
                             pictureBoxPhoto.Image = null;
                     }
 
-                    BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                    //BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
                 }
             }
@@ -451,36 +515,80 @@ namespace PSCBioIdentification
 
 
             buttonRequest.Enabled = true;
+            buttonScan.Focus();
 
         }
 
-        private void OnEnrollCompleted(IAsyncResult r)
+        private void OnEnrollFromScannerCompleted(IAsyncResult r)
         {
-            //if (InvokeRequired)
-            //{
-            //    BeginInvoke(new AsyncCallback(OnEnrollCompleted), r);
-            //}
-            //else
-            //{
-            //    NBiometricTask task = _biometricClient.EndPerformTask(r);
-            //    EnableControls(false);
-            //    NBiometricStatus status = task.Status;
+            if (InvokeRequired)
+            {
+                BeginInvoke(new AsyncCallback(OnEnrollFromScannerCompleted), r);
+            }
+            else
+            {
+                //fingerView2.Finger = _subject2.Fingers[0];
 
-            //    // Check if extraction was canceled
-            //    if (status == NBiometricStatus.Canceled) return;
+                NBiometricTask task = _biometricClient.EndPerformTask(r);
+                //EnableControls(false);
+                NBiometricStatus status = task.Status;
 
-            //    if (status == NBiometricStatus.Ok)
-            //    {
-            //        lblQuality.Text = String.Format("Quality: {0}", _subjectFinger.Objects[0].Quality);
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show(string.Format("The template was not extracted: {0}.", status), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        _subject = null;
-            //        _subjectFinger = null;
-            //        EnableControls(false);
-            //    }
-            //}
+                // Check if extraction was canceled
+                if (status == NBiometricStatus.Canceled) return;
+
+                if (status == NBiometricStatus.Ok)
+                {
+                    this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+
+                    string text = string.Format("Template extracted {0}. Size: {1}",
+                        string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality),
+                        _subject2.Fingers[0].Objects[0].Template.GetSize());
+
+                    //string text = string.Format("Template extracted {0}",
+                    //    string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality));
+
+                    //fingerView2.ShownImage = ShownImage.Result;
+
+                    ShowErrorMessage(text);
+                    LogLine(text, true);
+
+                    if (radioButtonIdentify.Checked)
+                    {
+                        Mode = ProgramMode.Identification;
+                        startDataServiceProcess();          // go to get a photo
+                    }
+                    else if (radioButtonVerify.Checked)
+                    {
+                        Mode = ProgramMode.Verification;
+                        BeginInvoke(new MethodInvoker(delegate { doVerify(); }));
+                    }
+
+
+                    //LogLine("Template extracted{0}. G: {1}. Size: {2}", true,
+                    //    Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
+                    //    template.G, Data.SizeToString(template.Save().Length));
+
+                    //ShowStatusMessage(String.Format("Template extracted{0}. G: {1}. Size: {2}", true,
+                    //    Data.NFExtractor.UseQuality ? string.Format(". Quality: {0:P0}", Helpers.QualityToPercent(template.Quality) / 100.0) : null,
+                    //    template.G, Data.SizeToString(template.Save().Length)));
+
+                    //lblQuality.Text = String.Format("Quality: {0}", _subjectFinger.Objects[0].Quality);
+                }
+                else
+                {
+
+                    string text = string.Format("Extraction failed: {0}", status);
+                    ShowErrorMessage(text);
+                    LogLine(text, true);
+
+                    //pictureBoxCheckMark.Image = Properties.Resources.redcross;
+
+                    //MessageBox.Show(string.Format("The template was not extracted: {0}.", status), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _subject2 = null;
+                    //_subjectFinger = null;
+                    //EnableControls(false);
+                }
+            }
         }
 
         //private void scanner_ImageScanned(object sender, FPScannerImageScannedEventArgs ea)
@@ -562,6 +670,9 @@ namespace PSCBioIdentification
                 finger = new NFinger { Image = image };
                 fingerView1.Finger = finger;
 
+                _subject = new NSubject();
+                _subject.Fingers.Add(finger);
+
                 //_subjectFinger = new NFinger { Image = image };
                 //_subject = new NSubject();
                 //_subject.Fingers.Add(_subjectFinger);
@@ -605,6 +716,8 @@ namespace PSCBioIdentification
 
 //!!!!!!!!            NGrayscaleImage grayImage = (NGrayscaleImage)NImage.FromImage(NPixelFormat.Grayscale, 0, horzResolution, vertResolution, nImage);
 //!!!!!!!!!!!!!!            OnImage(grayImage);
+            BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+
 
             return true;
         }
@@ -679,8 +792,13 @@ namespace PSCBioIdentification
                         templates = new NFRecord[count];
                         availableCount = 0;
             */
-            this.template = null;
-            this.enrolledTemplate = null;
+            //this.template = null;
+            //this.enrolledTemplate = null;
+            _subject = null;
+            _subject2 = null;
+            fingerView1.Finger = null;
+            fingerView2.Finger = null;
+
             if (_fingersCollection != null)
                 _fingersCollection.Clear();
             //LogWait();
@@ -877,9 +995,61 @@ namespace PSCBioIdentification
         //        private void doVerify(int id)
         private void doVerify()
         {
-            this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+            //this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
 
-            int score = 0;
+            //int score = 0;
+
+
+            if (_subject != null && _subject2 != null)
+            {
+                _biometricClient.MatchingWithDetails = true;
+                fingerView1.MatedMinutiae = null;
+                fingerView2.MatedMinutiae = null;
+                var status = _biometricClient.Verify(_subject, _subject2);
+
+                LogLine(string.Format("Verification status: {0}", status), true);
+
+                //ShowStatusMessage(str);
+
+                if (status == NBiometricStatus.Ok)
+                {
+                    // Get matching score
+                    //int score = _subject.MatchingResults[0].Score;
+                    //LogLine(string.Format("Score of matched templates: {0}", score), true);
+
+                    var matedMinutiae = _subject.MatchingResults[0].MatchingDetails.Fingers[0].GetMatedMinutiae();
+
+                    fingerView1.MatedMinutiaIndex = 0;
+                    fingerView1.MatedMinutiae = matedMinutiae;
+
+                    fingerView2.MatedMinutiaIndex = 1;
+                    fingerView2.MatedMinutiae = matedMinutiae;
+
+                    //fingerView1.PrepareTree();
+                    //fingerView2.Tree = fingerView1.Tree;
+
+                    pictureBoxCheckMark.Image = Properties.Resources.checkmark;
+
+                    //startProgressBar();
+                    startDataServiceProcess();  // to get a picture
+
+                    //Thread.Sleep(1000);
+                    //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+
+                }
+                else
+                {
+                    //LogLine(string.Format("Verification status: {0}", status), true);
+                    pictureBoxPhoto.Image = null;
+                    pictureBoxCheckMark.Image = Properties.Resources.redcross;
+                    buttonScan.Focus();
+                }
+
+                //string str = string.Format("Verification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
+
+
+
+            }
 
             //NMMatchDetails matchDetails;
             //try
@@ -900,25 +1070,25 @@ namespace PSCBioIdentification
 
             //sw.Stop();
 
-            string str = string.Format("Verification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
+            //string str = string.Format("Verification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
 
-            LogLine(str, true);
+            //LogLine(str, true);
 
-            ShowStatusMessage(str);
+            //ShowStatusMessage(str);
 
-            if (score > 0)
-                pictureBoxCheckMark.Image = Properties.Resources.checkmark;
-            else
-                pictureBoxCheckMark.Image = Properties.Resources.redcross;
+            //if (score > 0)
+            //    pictureBoxCheckMark.Image = Properties.Resources.checkmark;
+            //else
+            //    pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
-            if (score > 0)
-            {
-                startProgressBar();
-                startDataServiceProcess();  // to get a picture
-            }
+            //if (score > 0)
+            //{
+            //    startProgressBar();
+            //    startDataServiceProcess();  // to get a picture
+            //}
 
-            Thread.Sleep(1000);
-            this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+            //Thread.Sleep(1000);
+            //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
         }
 
         //class Record
@@ -1156,27 +1326,7 @@ namespace PSCBioIdentification
         {
             LogLine(string.Format(format, args), mainLog);
         }
-        /*
-                private void LogWait()
-                {
-                    //if (count == 1)
-                    //{
-                    lblWaitingForImg.Text = "Waiting for image...";
-                    LogLine(lblWaitingForImg.Text, true);
-                    //}
-                    //else
-                    //{
-                    //  lblWaitingForImg.Text = string.Format("Waiting for image {0} of {1}", availableCount + 1, count);
-                    //LogLine(lblWaitingForImg.Text, true);
-                    //}
-                }
-        */
-
-        //private void setStatus(string status)
-        //{
-        //  Text = appName + status;
-        //}
-
+ 
         //private void setMode(ProgramMode mode)
         //{
         //    //setStatus(mode.ToString());
@@ -1198,32 +1348,6 @@ namespace PSCBioIdentification
         //    //dgvFields.Rows.Clear();
         //}
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //if (scannerMan != null)
-            //{
-            //    foreach (FPScanner scanner in scannerMan.Scanners)
-            //    {
-            //        if (scanner.IsCapturing)
-            //            scanner.StopCapturing();
-            //    }
-            //    scannerMan.Dispose();
-            //}
-
-            //Data.NFExtractor.Dispose();
-            //Data.NMatcher.Dispose();
-            ////Data.Database.Dispose();
-
-            //Settings settings = Settings.Default;
-            //settings.NFRecordFromSize = WindowState != FormWindowState.Normal ? RestoreBounds.Size : Size;
-            //settings.NFRecordFormMaximized = WindowState == FormWindowState.Maximized;
-            //Settings.Default.Save();
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            //if (Settings.Default.NFRecordFormMaximized) WindowState = FormWindowState.Maximized;
-        }
 
         private void radioButtonGroup_CheckedChanged(object sender, EventArgs e)
         {
@@ -1266,7 +1390,7 @@ namespace PSCBioIdentification
                         buttonRequest.Hide();
                         ShowRadioHideCheckButtons(false);
 
-                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                        //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
                         break;
                 }
@@ -1313,8 +1437,13 @@ namespace PSCBioIdentification
             if (!isUserIdValid())
                 return;
 
-            startProgressBar();
+            //startProgressBar();
             startDataServiceProcess();
+        }
+
+        private void buttonScan_Click(object sender, EventArgs e)
+        {
+            BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
         }
 
         //private void buttonRequest_Click(object sender, EventArgs e)
@@ -1370,6 +1499,9 @@ namespace PSCBioIdentification
             //Bitmap bm = null;
             //bool rbChecked = false;
             //, pbChecked = false;
+
+            _biometricClient.FingersTemplateSize = NTemplateSize.Small;
+
             for (int i = 0; i < _fingersCollection.Count; i++)
             {
                 Control[] control = this.Controls.Find("radioButton" + (i + 1).ToString(), true);
@@ -1380,16 +1512,33 @@ namespace PSCBioIdentification
                 rb = control[0] as RadioButton;
                 lab = controlLab[0] as Label;
 
+
+                //this.BeginInvoke((Action)(() =>
+                //{
+                //    toolStripStatusLabelError.Text = "Error while scan is in process";
+                //    this.Cursor = Cursors.Default;
+                //    enableButtons(true);
+                //    stopProgressBar();
+                //}), null);
+
+
+
                 wsqImage = _fingersCollection[i] as WsqImage;
                 if (wsqImage == null)
                 {
-                    rb.Enabled = false;
-                    lab.Enabled = false;
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        rb.Enabled = false;
+                        lab.Enabled = false;
+                    }), null);
                 }
                 else
                 {
-                    rb.Enabled = true;
-                    lab.Enabled = true;
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        rb.Enabled = true;
+                        lab.Enabled = true;
+                    }), null);
                 }
 
                 pb = this.Controls.Find("fpPictureBox" + (i + 1).ToString(), true)[0] as PictureBox;
@@ -1423,17 +1572,17 @@ namespace PSCBioIdentification
                         //int q = GetImageQuality(grayImage, this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
 
                         // Create a finger subject and begin extracting
-                        _subjectFinger = new NFinger { Image = nImage };
-                        _subject = new NSubject();
-                        _subject.Fingers.Add(_subjectFinger);
+                        var finger = new NFinger { Image = nImage };
+                        var subject = new NSubject();
+                        subject.Fingers.Add(finger);
                         //fingerView2.Finger = _subjectFinger;
 
                         //_biometricClient.BeginCreateTemplate(_subject, OnExtractionCompleted, null);
-                        int q = GetImageQuality(_subject, this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
+                        int q = GetImageQuality(subject, this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
 
                                 //fingerView2.Finger = null;
-                        _subject = null;
-                        _subjectFinger = null;
+                        subject = null;
+                        finger = null;
 
                         if (bestQuality < q)
                         {
@@ -1441,10 +1590,11 @@ namespace PSCBioIdentification
                             bestQualityRadioButton = i;
                         }
 
-                        //pb.Image = nImage.ToBitmap();
-                        pb.Image = nImage.ToBitmap();
-                        //image = NImage.FromBitmap(bm);
-                        pb.SizeMode = PictureBoxSizeMode.Zoom;
+                        this.BeginInvoke((Action)(() =>
+                        {
+                            pb.Image = nImage.ToBitmap();
+                            pb.SizeMode = PictureBoxSizeMode.Zoom;
+                        }), null);
 
                         //if (rbChecked && !pbChecked)
                         //{
@@ -1505,8 +1655,11 @@ namespace PSCBioIdentification
                 }
                 else
                 {
-                    pb.Image = null;
-                    this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0].Text = "";
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        pb.Image = null;
+                        this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0].Text = "";
+                    }), null);
 
                     //if (pb.Enabled)
                     //    pb.Enabled = false;
@@ -1528,7 +1681,10 @@ namespace PSCBioIdentification
                     if (cb.Checked)
                     {
                         var m = System.Text.RegularExpressions.Regex.Match(cb.Name, @"\d+$");
-                        fingerChanged(Int32.Parse(m.Value) - 1, false);
+                        this.BeginInvoke((Action)(() =>
+                        {
+                            fingerChanged(Int32.Parse(m.Value) - 1, false);
+                        }), null);
                     }
                 }
             }
@@ -1546,15 +1702,23 @@ namespace PSCBioIdentification
                     status = _biometricClient.CreateTemplate(subject);
 					if (status != NBiometricStatus.Ok)
 					{
-                        lb.Text = string.Format("Q: {0:P0}", 0);
-                        lb.ForeColor = Color.Red;
+                        this.BeginInvoke((Action)(() =>
+                        {
+                            lb.Text = string.Format("Q: {0:P0}", 0);
+                            lb.ForeColor = Color.Red;
+                        }), null);
+
                         return 0;
 					}
 				}
 				catch (Exception)
 				{
-                    lb.Text = string.Format("Q: {0:P0}", 0);
-                    lb.ForeColor = Color.Red;
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        lb.Text = string.Format("Q: {0:P0}", 0);
+                        lb.ForeColor = Color.Red;
+                    }), null);
+
                     return 0;
 				}
 				finally
@@ -1562,13 +1726,16 @@ namespace PSCBioIdentification
 					if (status == NBiometricStatus.Ok)
 					{
                         percent = subject.Fingers[0].Objects.First().Quality;
-                        lb.Text = string.Format("Q: {0:P0}", percent / 100.0);
-                        if (percent > 80)
-                            lb.ForeColor = Color.GreenYellow;
-                        else if (percent > 50)
-                            lb.ForeColor = Color.Orange;
-                        else
-                            lb.ForeColor = Color.Red;
+                        this.BeginInvoke((Action)(() =>
+                        {
+                            lb.Text = string.Format("Q: {0:P0}", percent / 100.0);
+                            if (percent > 80)
+                                lb.ForeColor = Color.GreenYellow;
+                            else if (percent > 50)
+                                lb.ForeColor = Color.Orange;
+                            else
+                                lb.ForeColor = Color.Red;
+                        }), null);
                     }
 				}
 
@@ -1814,16 +1981,19 @@ namespace PSCBioIdentification
             if (sender.GetType().Name == "CheckBox")
                 return;
 
+            //if ((sender as ButtonBase).Text == "")
+            //    return;
+
             if (_fingersCollection == null || _fingersCollection.Count == 0)
                 return;
 
-            this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+            //this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
 
             Mode = ProgramMode.PreEnrolled;
             //setMode(mode);
             //setModeRadioButtons(mode);
 
-            clearLog();
+            //clearLog();
 
             //RadioButton rb = sender as RadioButton;
             var rb = sender as ButtonBase;
@@ -1931,6 +2101,32 @@ namespace PSCBioIdentification
                     fingerView2.ShownImage = ShownImage.Original;
             }
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            stopCapturing();
+
+            if (backgroundWorkerDataService.IsBusy)
+            {
+                backgroundWorkerDataService.CancelAsync();
+
+                while (backgroundWorkerDataService.IsBusy)
+                {
+                    Thread.Sleep(0);
+                    Application.DoEvents();
+                }
+            }
+
+            if (_device.IsAvailable)
+            {
+                //_deviceManager.DisconnectFromDevice(_device);
+                Neurotec.Gui.NGui.InvokeAsync(((NBiometricDevice)_device).Cancel);
+            }
+
+            if (_biometricClient != null)
+                _biometricClient.Cancel();
+        }
+
     }
 
     [Serializable]
