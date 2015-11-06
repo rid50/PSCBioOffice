@@ -78,7 +78,7 @@ namespace PSCBioIdentification
             //Application.DoEvents();
 
             //MessageBox.Show(toolStripProgressBar.Value.ToString());
-            stopProgressBar();
+            //stopProgressBar();
 
             if (e.Error != null)
             {
@@ -87,12 +87,24 @@ namespace PSCBioIdentification
             }
             else
             {
+                //if (Mode == ProgramMode.PreEnrolled)
+                //{
+                //    if (processEnrolledData(e.Result as byte[]))
+                //    {
+                //        if (radioButtonIdentify.Checked)
+                //        {
+                //            Mode = ProgramMode.Identification;
+                //            startDataServiceProcess();          // go for a photo
+                //        }
+                //    }
+                //}
+
                 if (Mode == ProgramMode.PreEnrolled && radioButtonIdentify.Checked)
                 {
                     Mode = ProgramMode.Identification;
                     startDataServiceProcess();          // go for a photo
                 }
-                else
+                else if (Mode != ProgramMode.PreEnrolled)
                 {
                     using (var ms = new MemoryStream(e.Result as byte[]))
                     {
