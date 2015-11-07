@@ -18,14 +18,23 @@
 #include <malloc.h>
 
 #include <string>
-#include <iostream>
+#include <iostream>     // std::streambuf, std::cout
 #include <memory>
 #include <map>
+#include <sstream>		// std::stringstream
 
-#include <NFExtractor.h>
-#include <NMatcher.h>
-#include <NImage.h>
-#include <NImageFile.h>
+//#include <NFExtractor.h>
+//#include <NMatcher.h>
+//#include <NImage.h>
+//#include <NImageFile.h>
+
+#include <Core/NObject.h>
+#include <NLicensing.h>
+#include <NBiometricClient.h>
+
+//#include <NBiometricClient.hpp>
+//#include <NGui.hpp>
+//#include <NBiometricGui.hpp>
 
 //#include <mutex>
 //#include <thread>
@@ -80,9 +89,12 @@ namespace Nomad
 			//private:
 
 		private:
-			NResult		result;
+			NResult				result;
+			HNBiometricClient	hBiometricClient;
+			HNMatchingResult	hMatchingResults;
+
 			//HNFExtractor hExtractor;
-			HNMatcher	hMatcher;
+			//HNMatcher	hMatcher;
 			//HNImageFile hImageFile;
 			//HNImageFile hImageFile2;
 			//HNImage		hImage;
@@ -139,10 +151,18 @@ namespace Nomad
 			//	//return result;
 			//}
 
-			inline void printStatusStatement(char * statusStatement) {
+			inline void printStatusStatement(const char * statusStatement) {
 #ifdef _DEBUG
 				//sprintf_s (Matcher::statusStatement, statusStatement);
 				std::cout << statusStatement << std::endl;
+#endif
+			}
+
+			inline void printStatusStatement(const char * statusStatement, NResult result) {
+#ifdef _DEBUG
+				std::stringstream stmt;
+				stmt << statusStatement << result;
+				printStatusStatement(stmt.str().c_str());
 #endif
 			}
 

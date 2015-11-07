@@ -1,7 +1,10 @@
 //#include "stdafx.h"
 
-#include "Utils.h"
+//#include "Utils.h"
 #include "Matcher.h"
+
+using namespace Neurotec;
+using namespace Neurotec::Licensing;
 
 //using namespace std;
 
@@ -25,7 +28,7 @@
 //	NResult result;
 //	const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
 //	const NChar * LicensesBSS[] = { L"FingersBSS" };
-
+//
 //	result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
 //	if (NFailed(result))
 //	{
@@ -42,27 +45,27 @@
 //	{
 //		printStatusStatement("Licenses for extractor and/or matcher obtained");
 //	}
-
+//
 //	result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
 //	if (NSucceeded(result))
 //	{
 //		printStatusStatement("Licenses for BSS obtained");
 //	}
-
+//
 //	result = NfeCreate(&hExtractor);
-
+//
 //	if (result != N_OK) {
 //		printStatusStatement("Error creating the Extractor");
 //		return;
 //	}
-
+//
 //	result = NMCreate(&hMatcher);
-
+//
 //	if (result != N_OK) {
 //		printStatusStatement("Error creating the Matcher");
 //		return;
 //	}
-
+//
 //}
 
 //inline void printStatusStatement(char * statusStatement) {
@@ -95,44 +98,52 @@ namespace Nomad
 			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(prescannedTemplate, prescannedTemplateSize);
 		}
 
-		//void match(void *buffer2, int size);
-		License::License() {
-			const NChar * LicensesMain[] = { L"FingersExtractor", L"FingersMatcher" };
-			const NChar * LicensesBSS[] = { L"FingersBSS" };
+		////void match(void *buffer2, int size);
+		//License::License() {
+		//	const NChar * LicensesMain[] = { L"Biometrics.FingerMatching" };
+		//	//const NChar * LicensesBSS[] = { L"FingersBSS" };
 
-			result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
-			if (NFailed(result))
-			{
-				if (result == N_E_FAILED)
-				{
-					printStatusStatement("Failed to obtain licenses for extractor and/or matcher");
-				}
-				else
-				{
-					printStatusStatement("Licensing manager is not running");
-				}
-			}
-			else
-			{
-				printStatusStatement("Licenses for extractor and/or matcher obtained");
-			}
+		//	result = obtainLicense(LicensesMain, sizeof(LicensesMain)/sizeof(LicensesMain[0]));
+		//	if (NFailed(result))
+		//	{
+		//		if (result == N_E_FAILED)
+		//		{
+		//			printStatusStatement("Failed to obtain licenses for extractor and/or matcher");
+		//		}
+		//		else
+		//		{
+		//			printStatusStatement("Licensing manager is not running");
+		//		}
+		//	}
+		//	else
+		//	{
+		//		printStatusStatement("Licenses for extractor and/or matcher obtained");
+		//	}
 
-			result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
-			if (NSucceeded(result))
-			{
-				printStatusStatement("Licenses for BSS obtained");
-			}
-		}
+		//	result = obtainLicense(LicensesBSS, sizeof(LicensesBSS)/sizeof(LicensesBSS[0]));
+		//	if (NSucceeded(result))
+		//	{
+		//		printStatusStatement("Licenses for BSS obtained");
+		//	}
+		//}
 
 
 		NSizeType	Matcher::enrolledTemplateSize = 0;
 		void		*Matcher::enrolledTemplate = 0;
 
+		const NChar * components = N_T("Biometrics.FingerExtraction,Biometrics.FingerMatching");
+
 		Matcher::~Matcher() {
+			NObjectSet(NULL, &hProbeSubject);
+			NObjectSet(NULL, &hGallerySubject);
+			NObjectSet(NULL, &hMatchingResults);
+			NLicenseReleaseComponents(components);
+
+
 			//if (hExtractor != NULL)
 			//	NObjectFree(hExtractor);
-			if (hMatcher != NULL)
-				NObjectFree(hMatcher);
+			//if (hMatcher != NULL)
+			//	NObjectFree(hMatcher);
 
 			//if (imageMap[1] != NULL)
 			//	NObjectFree(imageMap[1]);
@@ -155,7 +166,7 @@ namespace Nomad
 			//hRecord2 = NULL;
 
 			//hExtractor = 0;
-			hMatcher = 0;
+			//hMatcher = 0;
 
 			//int i = 5;
 			//printStatusStatement("Kuku");
@@ -194,14 +205,32 @@ namespace Nomad
 			//	return;
 			//}
 
-			static License license;
+			//try {
+			//	NLicense::ObtainComponents("/local", "5000", "Biometrics.FingerMatching");
+			//}
+			//catch(NError& ex)
+			//{
+			//	std::stringstream stmt;
+			//	stmt << "Failed to obtain licenses for components:" << (std::string)ex.ToString();
 
-			result = NMCreate(&hMatcher);
+			//	printStatusStatement(stmt.str().c_str());
+			//}
+			
+			NBool available = NFalse;
 
-			if (result != N_OK) {
-				printStatusStatement("Error creating the Matcher");
-				return;
+			result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+			if (NFailed(result))
+			{
+				printStatusStatement("Failed to obtain licenses for components:", result);
 			}
+			//static License license;
+
+			//result = NMCreate(&hMatcher);
+
+			//if (result != N_OK) {
+			//	printStatusStatement("Error creating the Matcher");
+			//	return;
+			//}
 		}
 
 
@@ -327,22 +356,75 @@ namespace Nomad
 		}
 
 		bool Matcher::match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize) {
-
-			NInt score;
-			NMMatchDetails **ppMatchDetails = NULL;
+			NInt matchScore = 0;
+			hBiometricClient = NULL;
+			hMatchingResults = NULL;
+			NBiometricStatus biometricStatus = nbsNone;
+			//NMMatchDetails **ppMatchDetails = NULL;
 			NSizeType packedSize2 = prescannedTemplateSize;
 
-			//TimedRun([this, buffer2, packedSize2, ppMatchDetails, &score](){NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);}, "Matching: Time elapsed");
-			result = NMVerify(hMatcher, enrolledTemplate, (NSizeType)enrolledTemplateSize, prescannedTemplate, (NSizeType)prescannedTemplateSize, ppMatchDetails, &score);
-			//result = N_OK;
 
-			if (result != N_OK) {
-				printStatusStatement("Error matching the records");
-				//clean();
+			NInt matchingThreshold = 48;
+			NMatchingSpeed matchingSpeed = nmsLow;
+			//NMatchingSpeed matchingSpeed = nmsHigh;
+
+			// set matching threshold
+			result = NObjectSetPropertyP(hBiometricClient, N_T("Matching.Threshold"), N_TYPE_OF(NInt32), naNone, &matchingThreshold, sizeof(matchingThreshold), 1, NTrue);
+			if (NFailed(result))
+			{
+				printStatusStatement("Error setting matching threshold:", result);
 				return false;
 			}
 
-			if (score > 0)
+			// set matching speed
+			result = NObjectSetPropertyP(hBiometricClient, N_T("Fingers.MatchingSpeed"), N_TYPE_OF(NMatchingSpeed), naNone, &matchingSpeed, sizeof(matchingSpeed), 1, NTrue);
+			if (NFailed(result))
+			{
+				printStatusStatement("Error setting matching speed:", result);
+				return false;
+			}
+
+			//TimedRun([this, buffer2, packedSize2, ppMatchDetails, &score](){NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);}, "Matching: Time elapsed");
+			//result = NMVerify(hMatcher, enrolledTemplate, (NSizeType)enrolledTemplateSize, prescannedTemplate, (NSizeType)prescannedTemplateSize, ppMatchDetails, &score);
+			result = NBiometricEngineVerifyOffline(hBiometricClient, hProbeSubject, hGallerySubject, &biometricStatus);
+			if (NFailed(result) || biometricStatus != nbsOk)
+			{
+				printStatusStatement("Error matching the records:", result);
+				return false;
+			}
+			else
+			{
+				// retrieve matching results from hProbeSubject
+				result = NSubjectGetMatchingResult(hProbeSubject, 0, &hMatchingResults);
+				if (NFailed(result))
+				{
+					printStatusStatement("Error retrieve matching results from hProbeSubject:", result);
+					return false;
+				}
+
+				// retrieve matching score from matching results
+				result = NMatchingResultGetScore(hMatchingResults, &matchScore);
+				if (NFailed(result))
+				{
+					printStatusStatement("Error retrieve matching score from matching results:", result);
+					return false;
+				}
+
+				//printf(N_T("\nimage scored %d, verification.. "), matchScore);
+
+				//if (matchScore > 0)
+				//	printf(N_T("succeeded\n"));
+				//else
+				//	printf(N_T("failed\n"));
+			}
+
+			//if (result != N_OK) {
+			//	printStatusStatement("Error matching the records");
+			//	//clean();
+			//	return false;
+			//}
+
+			if (matchScore > 0)
 			{
 				return true;
 				//matchingStatus = true;
