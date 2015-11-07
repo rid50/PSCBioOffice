@@ -67,8 +67,8 @@ namespace PSCBioIdentification
         //private int availableCount = 0;
         //private NGrayscaleImage image;
         //private NGrayscaleImage resultImage;
-        private NFRecord template;
-        private NFRecord enrolledTemplate;
+        //private NFRecord template;
+        //private NFRecord enrolledTemplate;
         //private FPScannerMan scannerMan;
 
         //private NImage _image;
@@ -106,13 +106,13 @@ namespace PSCBioIdentification
 
         private const string appName = "Public Services Company (Kuwait) - ";
 
-        public NFRecord Template
-        {
-            get
-            {
-                return template;
-            }
-        }
+        //public NFRecord Template
+        //{
+        //    get
+        //    {
+        //        return template;
+        //    }
+        //}
 
  //       public NDevice Device
  //       {
@@ -292,12 +292,13 @@ namespace PSCBioIdentification
         {
             buttonRequest.Enabled = enable;
             buttonScan.Enabled = fingerView1.Finger != null;
-            //groupBoxMode.Enabled = enable;
-            radioButtonVerify.Enabled = enable;
-            radioButtonIdentify.Enabled = enable;
+            groupBoxMode.Enabled = enable;
+            panel2.Enabled = enable;
+            //radioButtonVerify.Enabled = enable;
+            //radioButtonIdentify.Enabled = enable;
 
             //Thread.Sleep(0);
-            Application.DoEvents();
+            //Application.DoEvents();
             
             //pictureBoxCheckMark.Image = null;
             //pictureBoxPhoto.Image = null;
@@ -348,6 +349,8 @@ namespace PSCBioIdentification
                 _isCapturing = true;
                 EnableSemaphorControls(true);
                 EnableControls(false);
+                pictureBoxCheckMark.Image = null;
+                pictureBoxPhoto.Image = null;
 
                 buttonScan.Text = "Cancel";
 
@@ -967,7 +970,7 @@ namespace PSCBioIdentification
         //        private void doEnroll(int id, NImage image)
         private void doPreEnroll()
         {
-            this.enrolledTemplate = this.template;
+            //this.enrolledTemplate = this.template;
 
             //ProgramMode mode = ProgramMode.Verify;
 
@@ -1596,7 +1599,7 @@ namespace PSCBioIdentification
                     {
                         //ms = new MemoryStream(wsqImage.Content);
                         //bm = new Bitmap(ms);
-                        nImage = NImage.FromMemory(wsqImage.Content);
+                        nImage = NImage.FromMemory(wsqImage.Content, NImageFormat.Wsq);
 
                         //File.WriteAllBytes(saveFileDialog.FileName, _subject.GetTemplateBuffer().ToArray());
 

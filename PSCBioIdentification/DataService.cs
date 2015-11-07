@@ -114,6 +114,7 @@ namespace PSCBioIdentification
                             pictureBoxPhoto.Image = null;
                     }
 
+                    EnableControls(true);
 //                    BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
                 }
                 //int i = 0;
