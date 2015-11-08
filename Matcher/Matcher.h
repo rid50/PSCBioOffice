@@ -31,7 +31,8 @@
 #include <Core/NObject.h>
 #include <NLicensing.h>
 #include <NBiometricClient.h>
-
+#include <NBiometrics.h>
+#include <NMedia.h>
 //#include <NBiometricClient.hpp>
 //#include <NGui.hpp>
 //#include <NBiometricGui.hpp>
@@ -92,6 +93,9 @@ namespace Nomad
 			NResult				result;
 			HNBiometricClient	hBiometricClient;
 			HNMatchingResult	hMatchingResults;
+
+			HNSubject hProbeSubject;
+			HNSubject hGallerySubject;
 
 			//HNFExtractor hExtractor;
 			//HNMatcher	hMatcher;

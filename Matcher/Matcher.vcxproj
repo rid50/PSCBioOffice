@@ -95,8 +95,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Neurotechnology\VeriFinger 6.2\Lib\Win32_x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NCore.dll.lib;NImages.dll.lib;NTemplates.dll.lib;NExtractors.dll.lib;NMatchers.dll.lib;NLicensing.dll.lib;NDeviceManager.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK\Lib\Win32_x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>NCore.dll.lib;NMedia.dll.lib;NBiometricClient.dll.lib;NBiometrics.dll.lib;NLicensing.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -114,8 +114,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Neurotechnology\VeriFinger 6.2\Lib\Win64_x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NCore.dll.lib;NImages.dll.lib;NTemplates.dll.lib;NExtractors.dll.lib;NMatchers.dll.lib;NLicensing.dll.lib;NDeviceManager.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK\Lib\Win64_x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>NCore.dll.lib;NMedia.dll.lib;NBiometricClient.dll.lib;NBiometrics.dll.lib;NLicensing.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

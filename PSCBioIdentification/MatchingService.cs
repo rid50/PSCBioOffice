@@ -50,7 +50,7 @@ namespace PSCBioIdentification
             //record.size = (UInt32)template.GetSize();
             //record.template = template.Save();
             record.size = (UInt32)(e.Argument as NFRecord).GetSize();
-//!!!!!!!!!!!!!!            record.template = (e.Argument as NFRecord).Save();
+            record.template = (e.Argument as NFRecord).Save().ToArray();
             record.errorMessage = new System.Text.StringBuilder(512);
 
             var ar = new System.Collections.ArrayList();

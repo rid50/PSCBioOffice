@@ -3,8 +3,8 @@
 //#include "Utils.h"
 #include "Matcher.h"
 
-using namespace Neurotec;
-using namespace Neurotec::Licensing;
+//using namespace Neurotec;
+//using namespace Neurotec::Licensing;
 
 //using namespace std;
 
@@ -134,9 +134,9 @@ namespace Nomad
 		const NChar * components = N_T("Biometrics.FingerExtraction,Biometrics.FingerMatching");
 
 		Matcher::~Matcher() {
-			NObjectSet(NULL, &hProbeSubject);
-			NObjectSet(NULL, &hGallerySubject);
-			NObjectSet(NULL, &hMatchingResults);
+			NObjectSet(NULL, (HNObject *)&hProbeSubject);
+			NObjectSet(NULL, (HNObject *)&hGallerySubject);
+			NObjectSet(NULL, (HNObject *)&hMatchingResults);
 			NLicenseReleaseComponents(components);
 
 
@@ -222,6 +222,15 @@ namespace Nomad
 			if (NFailed(result))
 			{
 				printStatusStatement("Failed to obtain licenses for components:", result);
+				throw std::runtime_error("Biometrics: Failed to obtain licenses");
+			}
+
+			if (!available)
+			{
+				std::stringstream stmt;
+				stmt << "Biometrics: Licenses for " << components << " are not available";
+				printStatusStatement(stmt.str().c_str());
+				throw std::runtime_error(stmt.str().c_str());
 			}
 			//static License license;
 
@@ -360,9 +369,21 @@ namespace Nomad
 			hBiometricClient = NULL;
 			hMatchingResults = NULL;
 			NBiometricStatus biometricStatus = nbsNone;
-			//NMMatchDetails **ppMatchDetails = NULL;
-			NSizeType packedSize2 = prescannedTemplateSize;
 
+			hProbeSubject = NULL;
+			hGallerySubject = NULL;
+
+			//NMMatchDetails **ppMatchDetails = NULL;
+			//NSizeType packedSize2 = prescannedTemplateSize;
+
+
+			// create biometric client
+			result = NBiometricClientCreate(&hBiometricClient);
+			if (NFailed(result))
+			{
+				printStatusStatement("Biometric client creation failed:", result);
+				throw std::runtime_error("Biometric client creation failed");
+			}
 
 			NInt matchingThreshold = 48;
 			NMatchingSpeed matchingSpeed = nmsLow;
@@ -373,7 +394,7 @@ namespace Nomad
 			if (NFailed(result))
 			{
 				printStatusStatement("Error setting matching threshold:", result);
-				return false;
+				throw std::runtime_error("Biometrics: Error setting matching threshold");
 			}
 
 			// set matching speed
@@ -381,25 +402,41 @@ namespace Nomad
 			if (NFailed(result))
 			{
 				printStatusStatement("Error setting matching speed:", result);
-				return false;
+				throw std::runtime_error("Biometrics: Error setting matching speed");
 			}
+
+			NSizeType pSize = 0;
+			result = NSubjectCreateFromMemory(enrolledTemplate, (NSizeType)enrolledTemplateSize, 0, &pSize, &hProbeSubject);
+			if (NFailed(result))
+			{
+				printStatusStatement("Error creating a subject for enrolled template:", result);
+				throw std::runtime_error("Biometrics: Error creating a subject for enrolled template");
+			}
+
+			NSizeType pSize2 = 0;
+			result = NSubjectCreateFromMemory(prescannedTemplate, (NSizeType)prescannedTemplateSize, 0, &pSize2, &hGallerySubject);
+			if (NFailed(result))
+			{
+				printStatusStatement("Error creating a subject for prescanned template:", result);
+				throw std::runtime_error("Biometrics: Error creating a subject for prescanned template");
+			}
+
 
 			//TimedRun([this, buffer2, packedSize2, ppMatchDetails, &score](){NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);}, "Matching: Time elapsed");
 			//result = NMVerify(hMatcher, enrolledTemplate, (NSizeType)enrolledTemplateSize, prescannedTemplate, (NSizeType)prescannedTemplateSize, ppMatchDetails, &score);
 			result = NBiometricEngineVerifyOffline(hBiometricClient, hProbeSubject, hGallerySubject, &biometricStatus);
-			if (NFailed(result) || biometricStatus != nbsOk)
+			//if (NFailed(result) || biometricStatus != nbsOk)
+			if (NFailed(result))
 			{
-				printStatusStatement("Error matching the records:", result);
-				return false;
-			}
-			else
-			{
+				printStatusStatement("Error matching records:", result);
+				throw std::runtime_error("Biometrics: Error matching records");
+			} else if (biometricStatus == nbsOk) {
 				// retrieve matching results from hProbeSubject
 				result = NSubjectGetMatchingResult(hProbeSubject, 0, &hMatchingResults);
 				if (NFailed(result))
 				{
-					printStatusStatement("Error retrieve matching results from hProbeSubject:", result);
-					return false;
+					printStatusStatement("Error retrieve matching results from emrolled template:", result);
+					throw std::runtime_error("Biometrics: Error retrieve matching results from emrolled template");
 				}
 
 				// retrieve matching score from matching results
@@ -407,7 +444,7 @@ namespace Nomad
 				if (NFailed(result))
 				{
 					printStatusStatement("Error retrieve matching score from matching results:", result);
-					return false;
+					throw std::runtime_error("Biometrics: Error retrieve matching score from matching results");
 				}
 
 				//printf(N_T("\nimage scored %d, verification.. "), matchScore);
@@ -416,7 +453,8 @@ namespace Nomad
 				//	printf(N_T("succeeded\n"));
 				//else
 				//	printf(N_T("failed\n"));
-			}
+			} else
+				return false;
 
 			//if (result != N_OK) {
 			//	printStatusStatement("Error matching the records");

@@ -572,7 +572,8 @@ namespace PSCBioIdentification
                     if (radioButtonIdentify.Checked)
                     {
                         Mode = ProgramMode.Identification;
-                        startDataServiceProcess();          // go to get a photo
+                        BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+                        //startDataServiceProcess();          // go to get a photo
                     }
                     else if (radioButtonVerify.Checked)
                     {
@@ -1411,6 +1412,7 @@ namespace PSCBioIdentification
 
                         personId.ReadOnly = true;
                         buttonRequest.Hide();
+                        buttonScan.Enabled = true;
                         ShowRadioHideCheckButtons(false);
 
                         //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
@@ -1624,6 +1626,39 @@ namespace PSCBioIdentification
 
                         //var subject = new NSubject();
                         _subject.Fingers.Add(finger);
+                        switch ((control[i] as RadioButton).Tag as string)
+                        {
+                            case "li":
+                                finger.Position = NFPosition.LeftIndex;
+                                break;
+                            case "lm":
+                                finger.Position = NFPosition.LeftMiddle;
+                                break;
+                            case "lr":
+                                finger.Position = NFPosition.LeftRing;
+                                break;
+                            case "ll":
+                                finger.Position = NFPosition.LeftLittle;
+                                break;
+                            case "ri":
+                                finger.Position = NFPosition.RightIndex;
+                                break;
+                            case "rm":
+                                finger.Position = NFPosition.RightMiddle;
+                                break;
+                            case "rr":
+                                finger.Position = NFPosition.RightRing;
+                                break;
+                            case "rl":
+                                finger.Position = NFPosition.RightLittle;
+                                break;
+                            case "lt":
+                                finger.Position = NFPosition.LeftThumb;
+                                break;
+                            case "rt":
+                                finger.Position = NFPosition.RightThumb;
+                                break;
+                        }
 
                         //int q = GetImageQuality(subject, this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
 
@@ -1699,12 +1734,12 @@ namespace PSCBioIdentification
                 }
                 else
                 {
-                    var finger = new NFinger {};
-                    //if (subject.Fingers.Count > 0)
-                    //    subject.Fingers.RemoveAt(0);
-
-                    //var subject = new NSubject();
-                    _subject.Fingers.Add(finger);
+                    //var finger = new NFinger {};
+                    ////if (subject.Fingers.Count > 0)
+                    ////    subject.Fingers.RemoveAt(0);
+                    
+                    ////var subject = new NSubject();
+                    //_subject.Fingers.Add(finger);
 
                     this.Invoke((Action)(() =>
                     {
@@ -1719,14 +1754,15 @@ namespace PSCBioIdentification
 
             //int bestQualityImage = GetImageQuality(_subject);
             _sw = System.Diagnostics.Stopwatch.StartNew();
-            try
-            {
-                _biometricClient.BeginCreateTemplate(_subject, OnExtractionCompleted, null);
-            }
-            catch (Exception ex)
-            {
-                int kk = 0;
-            }
+            _biometricClient.BeginCreateTemplate(_subject, OnExtractionCompleted, null);
+            //try
+            //{
+            //    _biometricClient.BeginCreateTemplate(_subject, OnExtractionCompleted, null);
+            //}
+            //catch (Exception ex)
+            //{
+            //    int kk = 0;
+            //}
             //subject = null;
 
             //if (radioButtonVerify.Checked)
@@ -1801,6 +1837,9 @@ namespace PSCBioIdentification
                         foreach (Label lb in lbs)
                         {
                             indx++;
+                            if (_subject.Fingers.Count == indx)
+                                break;
+
                             if (_subject.Fingers[indx].Objects.First().Status == NBiometricStatus.Ok)
                             {
                                 pct = _subject.Fingers[indx].Objects.First().Quality;

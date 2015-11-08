@@ -86,11 +86,11 @@ namespace Nomad {
 
 			unsigned int limit = 10000;
 			unsigned int topindex = rowcount/limit + 1;
-			//topindex = 1;
+			topindex = 1;
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (1) {
+			if (0) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
@@ -100,7 +100,7 @@ namespace Nomad {
 						try {
 							ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
 						} catch (std::exception& e) {
-							errMessage = "ODBC Error: ";
+							errMessage = "Error: ";
 							errMessage += e.what();
 							ret = 0;
 						}
@@ -126,7 +126,7 @@ namespace Nomad {
 					try {
 						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
 					} catch (std::exception& e) {
-						errMessage = "ODBC Error: ";
+						errMessage = "Error: ";
 						errMessage += e.what();
 						retcode = 0;
 					}
