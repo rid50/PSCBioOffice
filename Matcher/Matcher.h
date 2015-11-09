@@ -75,9 +75,9 @@ namespace Nomad
 			NResult		result;
 		public:
 			License();
-			//~License();
+			~License();
 
-			inline void printStatusStatement(char * statusStatement) {
+			inline void printStatusStatement(const char * statusStatement) {
 #ifdef _DEBUG
 				//sprintf_s (Matcher::statusStatement, statusStatement);
 				std::cout << statusStatement << std::endl;
@@ -87,37 +87,18 @@ namespace Nomad
 
 		class Matcher
 		{
-			//private:
-
 		private:
 			NResult				result;
 			HNBiometricClient	hBiometricClient;
 			HNMatchingResult	hMatchingResults;
 
-			HNSubject hProbeSubject;
+			static HNSubject hProbeSubject;
 			HNSubject hGallerySubject;
 
-			//HNFExtractor hExtractor;
-			//HNMatcher	hMatcher;
-			//HNImageFile hImageFile;
-			//HNImageFile hImageFile2;
-			//HNImage		hImage;
-			//HNImage		hImage2;
-			//HNFRecord	hRecord;
-			//HNFRecord	hRecord2;
 			static NSizeType	enrolledTemplateSize;
 			static void			*enrolledTemplate;
-
-			//void		*buffer2;
-			//bool		matchingStatus;
 			//typedef pair <int, HNImage> imageMapPair;
 			//std::map <int, HNImage> imageMap;
-
-		private:
-			//void checkExtractionStatus(const NfeExtractionStatus &extractionStatus);
-			//void printStatusStatement(char * statusStatement);
-			//void clean();
-			//void TimedRun(Func test, string label);
 
 		public:
 			Matcher();

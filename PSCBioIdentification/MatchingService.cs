@@ -30,6 +30,11 @@ namespace PSCBioIdentification
 
         Record record;
 
+        private bool IsMatchingServiceRunning
+        {
+            get { return backgroundWorkerMatchingService.IsBusy; }
+        }
+
         void startMatchingServiceProcess(NFRecord template)
         {
             if (backgroundWorkerMatchingService.IsBusy)
@@ -112,18 +117,19 @@ namespace PSCBioIdentification
                 {
                     pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
-                    stopProgressBar();
-
                     if (record.errorMessage.Length != 0)
                     {
                         //retcode = false;
                         ShowErrorMessage("ERROR!!!");
                         System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
                     }
-                    else
-                    {
-                        this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
-                    }
+                    stopProgressBar();
+                    EnableControls(true);
+                    
+                    //else
+                    //{
+                    //    this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
+                    //}
                 }
 
                 //if (score > 0)

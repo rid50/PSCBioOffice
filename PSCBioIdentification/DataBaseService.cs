@@ -26,6 +26,7 @@ namespace DataSourceServices
             SqlDataReader reader = null;
 
             byte[] buffer = new byte[0];
+            byte[] buffer2 = new byte[0];
 
             try
             {
@@ -55,7 +56,7 @@ namespace DataSourceServices
                                 }
                 */
                 if (IMAGE_TYPE.wsq == imageType)
-                    cmd.CommandText = "SELECT " + dbFingerColumn + " FROM " + dbFingerTable + " WHERE " + dbIdColumn + " = @id";
+                    cmd.CommandText = "SELECT " + dbFingerColumn + ", li FROM " + dbFingerTable + " WHERE " + dbIdColumn + " = @id";
                 else
                     cmd.CommandText = "SELECT " + dbPictureColumn + " FROM " + dbPictureTable + " WHERE " + dbIdColumn + " = @id";
 
@@ -100,7 +101,11 @@ namespace DataSourceServices
                                                 }
                         */
                         if (IMAGE_TYPE.wsq == imageType)
+                        {
                             buffer = (byte[])reader[dbFingerColumn];  //(byte[])reader["AppWsq"];
+                            buffer2 = (byte[])reader["li"];  //(byte[])reader["li"];
+
+                        }
                         else
                             buffer = (byte[])reader[dbPictureColumn]; //(byte[])reader["AppImage"];
 

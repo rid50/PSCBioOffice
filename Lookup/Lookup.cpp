@@ -25,6 +25,11 @@ namespace Nomad {
 		//	return true;
 		//}
 
+		void __stdcall terminateMatchingService() {
+			Nomad::Data::Odbc::terminateLoop = true;
+			//Nomad::Data::Odbc::terminate();
+		}
+
 		unsigned __int32 __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize,
 			unsigned char *record, unsigned __int32 size, char *errorMessage, __int32 messageSize) {
 
@@ -78,7 +83,8 @@ namespace Nomad {
 			delete odbcPtr;
 			//return retcode;
 			//odbcPtr->enroll(record, size);
-			Nomad::Data::Odbc::terminate(false);
+			//Nomad::Data::Odbc::terminate(false);
+			Nomad::Data::Odbc::terminateLoop = false;
 			Nomad::Data::Odbc::enroll(record, size);
 
 			LARGE_INTEGER begin, end, freq;
@@ -107,11 +113,13 @@ namespace Nomad {
 
 						if (ret > 0) {
 							retcode = ret;
-							Nomad::Data::Odbc::terminate(true);
+							Nomad::Data::Odbc::terminateLoop = true;
+							//Nomad::Data::Odbc::terminate();
 							tg.cancel();
 						} else if (ret == 0 && errMessage.length() != 0) {
 							retcode = 0;
-							Nomad::Data::Odbc::terminate(true);
+							Nomad::Data::Odbc::terminateLoop = true;
+							//Nomad::Data::Odbc::terminate();
 							tg.cancel();
 						}
 
@@ -158,7 +166,7 @@ namespace Nomad {
 
 			std::stringstream ss; 
 			ss << result << " sec";
-			Data::Log(ss.str());
+			Data::Log(ss.str(), false);
 #endif
 			//OutputDebugString(ss.str().c_str());
 

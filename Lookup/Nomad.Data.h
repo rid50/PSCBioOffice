@@ -52,16 +52,16 @@ namespace Nomad
 			MatcherFacade();
 			~MatcherFacade();
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			static void terminateLoop(bool terminateLoop);
+			//static void terminateLoop();
 			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 		};
 	}
 
 	namespace Data
 	{
-		inline void Log(std::string str)
+		inline void Log(std::string str, bool file)
 		{
-			if (1) {
+			if (file) {
 				std::streambuf *psbuf, *backup;
 				std::ofstream filestr;
 				filestr.open("error.txt", std::fstream::app | std::fstream::out);
@@ -86,7 +86,6 @@ namespace Nomad
 		private:
 			//Nomad::Bio::MatcherFacade matcherFacade;
 			Nomad::Bio::MatcherFacade	*matcherFacadePtr;
-			static bool	terminateLoop;
 
 			//void *buffer;
 			//void *buffer2;
@@ -114,13 +113,16 @@ namespace Nomad
 			SQLRETURN rc;
 
 		public:
+			static bool	terminateLoop;
+
+		public:
 			Odbc();
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
 			unsigned __int32 exec(unsigned long int, unsigned int, char *arrOfFingers[], __int32 arrOfFingersSize, std::string *errorMessage);
 			static void enroll(unsigned char *record, unsigned __int32 size);
-			static void terminate(bool terminateLoop);
+			//static void terminate();
 			void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);

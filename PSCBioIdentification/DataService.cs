@@ -64,7 +64,8 @@ namespace PSCBioIdentification
 
                 if (Mode == ProgramMode.PreEnrolled)
                 {
-                    processEnrolledData(e.Result as byte[]);
+                    if (!processEnrolledData(e.Result as byte[]))
+                        EnableControls(true);
                 }
             }
             catch (Exception ex)
@@ -114,7 +115,10 @@ namespace PSCBioIdentification
                             pictureBoxPhoto.Image = null;
                     }
 
+
                     EnableControls(true);
+                    stopProgressBar();
+
 //                    BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
                 }
                 //int i = 0;

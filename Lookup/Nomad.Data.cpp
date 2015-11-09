@@ -21,10 +21,10 @@ namespace Nomad
 			Nomad::Bio::MatcherFacade::enroll(record, size);
 		}
 
-		void Odbc::terminate(bool terminate) {
-			//matcherFacadePtr->enroll(record, size);
-			terminateLoop = terminate;
-		}
+		//void Odbc::terminate() {
+		//	//matcherFacadePtr->enroll(record, size);
+		//	terminateLoop = true;
+		//}
 
 		bool Odbc::terminateLoop = false;
 
@@ -327,15 +327,28 @@ namespace Nomad
 
 							if (f->fInd != SQL_NULL_DATA && f->fInd != 0) {
 								try {
+									if (i == 2327) {
+										continue;
+										//int kk = 0;
+
+									}
+
 									//matched = matcherFacadePtr->match(RecordStructArray[i].li, static_cast<unsigned __int32>(RecordStructArray[i].liInd));
 									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(*index));
 									matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
 									if (matched) {
-										std::stringstream ss; 
-										ss << "Matched: " << j << " : " << i;
-										Log(ss.str());
+										//std::stringstream ss; 
+										//ss << "Not Matched: " << j << " : " << i;
+										//Log(ss.str(), false);
 										numOfMatches++;
 									}
+
+									if (1) {
+										std::stringstream ss; 
+										ss << "Not Matched: " << j << " : " << i;
+										Log(ss.str(), false);
+									}
+
 								} catch (std::exception& e) {
 									*errorMessage = e.what();
 									delete[] RowStatus;
@@ -345,6 +358,15 @@ namespace Nomad
 									return 0;							
 								}
 							}
+						} else if (RowStatus[i] == SQL_ROW_SUCCESS_WITH_INFO) {
+							f = &Record[0].F1 + j + (i * numOfFieldsInRecord);
+
+							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
+							delete[] RowStatus;
+							delete[] Record;
+							FreeStmtHandle(hStmt);
+							delete matcherFacadePtr;
+							return 0;				
 						} else if (RowStatus[i] == SQL_ROW_ERROR) {
 							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;
