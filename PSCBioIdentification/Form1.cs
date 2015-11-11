@@ -268,6 +268,8 @@ namespace PSCBioIdentification
 
             //personId.Text = "123"; 20010235
             personId.Text = "20095423";
+            //personId.Text = "20002346";            
+
             //buttonRequest.Focus();
             //buttonScan.Enabled = false;
             //if (!initFingerMatcher())
@@ -575,7 +577,8 @@ namespace PSCBioIdentification
 
                 if (status == NBiometricStatus.Ok)
                 {
-                    this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+                    //this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
+                    stopCapturing();
 
                     string text = string.Format("Template extracted {0}. Size: {1}",
                         string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality),
@@ -614,7 +617,6 @@ namespace PSCBioIdentification
                 }
                 else
                 {
-
                     string text = string.Format("Extraction failed: {0}", status);
                     ShowErrorMessage(text);
                     LogLine(text, true);
@@ -710,6 +712,11 @@ namespace PSCBioIdentification
 
                 _subject = new NSubject();
                 _subject.Fingers.Add(finger);
+
+
+                //_subject.Fingers[0].Image.Save("leftIndex.wsq");
+                //_biometricClient.CreateTemplate(_subject);
+                //File.WriteAllBytes("leftIndex.template", _subject.GetTemplateBuffer().ToArray());
 
                 //_subjectFinger = new NFinger { Image = image };
                 //_subject = new NSubject();
@@ -1530,7 +1537,7 @@ namespace PSCBioIdentification
                 formatter.Binder = new GenericBinder<WsqImage>();
                 _fingersCollection = formatter.Deserialize(ms) as ArrayList;
             }
-            catch (SerializationException ex)
+            catch (SerializationException)
             {
                 this.Invoke((Action)(() =>
                 {
@@ -1561,7 +1568,7 @@ namespace PSCBioIdentification
             //, pbChecked = false;
 
             _biometricClient.FingersTemplateSize = NTemplateSize.Small;
-            //_biometricClient.FingersFastExtraction = true;
+            _biometricClient.FingersFastExtraction = false;
 
             //TimeSpan ts;
             //string elapsedTime;
@@ -1913,34 +1920,10 @@ namespace PSCBioIdentification
 
             try
             {
-                //var sw = System.Diagnostics.Stopwatch.StartNew();
-                var sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-                _biometricClient.CreateTemplate(subject);
-                sw.Stop();
-                TimeSpan ts = sw.Elapsed;
-                string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
-                Console.WriteLine("RunTime " + elapsedTime);
-            }
-            catch (Exception)
-            {
-                this.Invoke((Action)(() =>
-                {
-                    foreach (Label lb in lbs)
-                    {
-                        lb.Text = string.Format("Q: {0:P0}", 0);
-                        lb.ForeColor = Color.Red;
-                    }
-                }), null);
-
-                return 0;
-            }
-            finally
-            {
-                int ii = -1, pct = 0, bestQuality = 0;
+                int pct = 0, bestQuality = 0;
                 Label lb = null;
                 //foreach (Label lb in lbs)
-                for (int i = 0; i < subject.Fingers.Count; i++ )
+                for (int i = 0; i < subject.Fingers.Count; i++)
                 {
                     //i++;
                     switch (subject.Fingers[i].Position)
@@ -1980,6 +1963,9 @@ namespace PSCBioIdentification
                     if (subject.Fingers[i].Objects.First().Status == NBiometricStatus.Ok)
                     {
                         pct = subject.Fingers[i].Objects.First().Quality;
+                        if (pct == 254)
+                            pct = 0;
+
                         if (bestQuality < pct)
                         {
                             bestQuality = pct;
@@ -2006,6 +1992,30 @@ namespace PSCBioIdentification
                         }), null);
                     }
                 }
+                //var sw = System.Diagnostics.Stopwatch.StartNew();
+                //var sw = new System.Diagnostics.Stopwatch();
+                //sw.Start();
+                //_biometricClient.CreateTemplate(subject);
+                //sw.Stop();
+                //TimeSpan ts = sw.Elapsed;
+                //string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
+                //Console.WriteLine("RunTime " + elapsedTime);
+            }
+            catch (Exception)
+            {
+                this.Invoke((Action)(() =>
+                {
+                    foreach (Label lb in lbs)
+                    {
+                        lb.Text = string.Format("Q: {0:P0}", 0);
+                        lb.ForeColor = Color.Red;
+                    }
+                }), null);
+
+                return 0;
+            }
+            finally
+            {
             }
 
             return bestQualityImage;

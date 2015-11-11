@@ -140,7 +140,7 @@ namespace Nomad
 		}
 
 		struct FIELDSTRUCT {
-			SQLCHAR f[10000];
+			SQLCHAR f[20000];
 			SQLLEN fInd;
 		};
 
@@ -231,16 +231,16 @@ namespace Nomad
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_STATUS_PTR, RowStatus, SQL_IS_POINTER);
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROWS_FETCHED_PTR, &NumRowsFetched, 0);
 
-			SQLBindCol(hStmt, 1, SQL_C_BINARY, &Record[0].F1.f, 10000, &Record[0].F1.fInd);
-			SQLBindCol(hStmt, 2, SQL_C_BINARY, &Record[0].F2.f, 10000, &Record[0].F2.fInd);
-			SQLBindCol(hStmt, 3, SQL_C_BINARY, &Record[0].F3.f, 10000, &Record[0].F3.fInd);
-			SQLBindCol(hStmt, 4, SQL_C_BINARY, &Record[0].F4.f, 10000, &Record[0].F4.fInd);
-			SQLBindCol(hStmt, 5, SQL_C_BINARY, &Record[0].F5.f, 10000, &Record[0].F5.fInd);
-			SQLBindCol(hStmt, 6, SQL_C_BINARY, &Record[0].F6.f, 10000, &Record[0].F6.fInd);
-			SQLBindCol(hStmt, 7, SQL_C_BINARY, &Record[0].F7.f, 10000, &Record[0].F7.fInd);
-			SQLBindCol(hStmt, 8, SQL_C_BINARY, &Record[0].F8.f, 10000, &Record[0].F8.fInd);
-			SQLBindCol(hStmt, 9, SQL_C_BINARY, &Record[0].F9.f, 10000, &Record[0].F9.fInd);
-			SQLBindCol(hStmt, 10, SQL_C_BINARY, &Record[0].F10.f, 10000, &Record[0].F10.fInd);
+			SQLBindCol(hStmt, 1, SQL_C_BINARY, &Record[0].F1.f, limit, &Record[0].F1.fInd);
+			SQLBindCol(hStmt, 2, SQL_C_BINARY, &Record[0].F2.f, limit, &Record[0].F2.fInd);
+			SQLBindCol(hStmt, 3, SQL_C_BINARY, &Record[0].F3.f, limit, &Record[0].F3.fInd);
+			SQLBindCol(hStmt, 4, SQL_C_BINARY, &Record[0].F4.f, limit, &Record[0].F4.fInd);
+			SQLBindCol(hStmt, 5, SQL_C_BINARY, &Record[0].F5.f, limit, &Record[0].F5.fInd);
+			SQLBindCol(hStmt, 6, SQL_C_BINARY, &Record[0].F6.f, limit, &Record[0].F6.fInd);
+			SQLBindCol(hStmt, 7, SQL_C_BINARY, &Record[0].F7.f, limit, &Record[0].F7.fInd);
+			SQLBindCol(hStmt, 8, SQL_C_BINARY, &Record[0].F8.f, limit, &Record[0].F8.fInd);
+			SQLBindCol(hStmt, 9, SQL_C_BINARY, &Record[0].F9.f, limit, &Record[0].F9.fInd);
+			SQLBindCol(hStmt, 10, SQL_C_BINARY, &Record[0].F10.f, limit, &Record[0].F10.fInd);
 
 			std::stringstream stmt;
 			//stmt << "SELECT AppID, AppImage FROM Egy_T_AppPers WITH (NOLOCK) WHERE datalength(AppImage) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
@@ -262,6 +262,7 @@ namespace Nomad
 				stmt << arrOfFingers[i];
 			}
 			stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppImage) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 			//}
 
 /*
@@ -327,9 +328,14 @@ namespace Nomad
 
 							if (f->fInd != SQL_NULL_DATA && f->fInd != 0) {
 								try {
-									if (i == 2327) {
+									if (i == 1983) {
 										continue;
 										//int kk = 0;
+
+									}
+									if (i == 2327) {
+										//continue;
+										int kk = 0;
 
 									}
 
@@ -361,12 +367,12 @@ namespace Nomad
 						} else if (RowStatus[i] == SQL_ROW_SUCCESS_WITH_INFO) {
 							f = &Record[0].F1 + j + (i * numOfFieldsInRecord);
 
-							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
+/*							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;
 							delete[] Record;
 							FreeStmtHandle(hStmt);
 							delete matcherFacadePtr;
-							return 0;				
+							return 0;			*/	
 						} else if (RowStatus[i] == SQL_ROW_ERROR) {
 							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;

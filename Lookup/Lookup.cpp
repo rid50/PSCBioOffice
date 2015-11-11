@@ -90,9 +90,9 @@ namespace Nomad {
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
-			unsigned int limit = 10000;
+			unsigned int limit = 20000;
 			unsigned int topindex = rowcount/limit + 1;
-			topindex = 1;
+			//topindex = 3;
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;

@@ -176,11 +176,11 @@ namespace Nomad
 
 			//TimedRun([this, buffer2, packedSize2, ppMatchDetails, &score](){NMVerify(hMatcher, buffer, packedSize, buffer2, packedSize2, ppMatchDetails, &score);}, "Matching: Time elapsed");
 			//result = NMVerify(hMatcher, enrolledTemplate, (NSizeType)enrolledTemplateSize, prescannedTemplate, (NSizeType)prescannedTemplateSize, ppMatchDetails, &score);
-			result = NBiometricEngineVerifyOffline(hBiometricClient, hProbeSubject, hGallerySubject, &biometricStatus);
-			//} catch (std::exception& e) {
-			//	throw std::runtime_error("Biometrics Exception");
-
-			//}
+			__try {
+				result = NBiometricEngineVerifyOffline(hBiometricClient, hProbeSubject, hGallerySubject, &biometricStatus);
+			} __except(EXCEPTION_EXECUTE_HANDLER) {
+				throw std::runtime_error("Biometrics Exception");
+			}
 
 			if (NFailed(result))
 			{
