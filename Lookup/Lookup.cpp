@@ -90,7 +90,7 @@ namespace Nomad {
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
-			unsigned int limit = 20000;
+			unsigned int limit = BUFFERLEN;
 			unsigned int topindex = rowcount/limit + 1;
 			//topindex = 3;
 			//limit = 5;

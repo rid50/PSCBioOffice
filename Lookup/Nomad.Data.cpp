@@ -94,7 +94,8 @@ namespace Nomad
 			SQLHSTMT hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-				rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
+				rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL", SQL_NTS);
+				//rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
 				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
 					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
 						SQLGetData(hStmt, 1, SQL_C_SLONG, rowcount, sizeof(unsigned __int32), 0);
@@ -140,7 +141,7 @@ namespace Nomad
 		}
 
 		struct FIELDSTRUCT {
-			SQLCHAR f[20000];
+			SQLCHAR f[BUFFERLEN];
 			SQLLEN fInd;
 		};
 
@@ -261,8 +262,8 @@ namespace Nomad
 
 				stmt << arrOfFingers[i];
 			}
-			stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
-			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppImage) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 			//}
 
 /*

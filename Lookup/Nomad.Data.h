@@ -31,6 +31,8 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Matcher.lib")
 
+#define BUFFERLEN	10000
+
 //using namespace std;
 
 //void getLicenses();
