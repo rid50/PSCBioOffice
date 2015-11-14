@@ -120,7 +120,7 @@ namespace Nomad
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
 				std::stringstream stmt;
-				stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
 				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
 				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
 					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
@@ -329,12 +329,11 @@ namespace Nomad
 
 							if (f->fInd != SQL_NULL_DATA && f->fInd != 0) {
 								try {
-									if (i == 1983) {
-										continue;
-										//int kk = 0;
 
-									}
-									if (i == 2327) {
+									if (i == 705)
+										continue;
+
+									if (i == 708 || i == 5012) {
 										//continue;
 										int kk = 0;
 

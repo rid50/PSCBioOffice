@@ -128,7 +128,7 @@ namespace Nomad {
 				});
 			} else {
 				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
-				for (unsigned int i = 0; i < topindex; i++) {
+				for (unsigned int i = 9; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
 					try {
