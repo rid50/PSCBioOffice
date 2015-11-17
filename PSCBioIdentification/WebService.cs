@@ -18,7 +18,7 @@ namespace DataSourceServices
 {
     class WebService : DataSource
     {
-        public override byte[] GetImage(IMAGE_TYPE imageType, int id)
+        public override byte[][] GetImage(IMAGE_TYPE imageType, int id)
         {
             String url;
             if (imageType == IMAGE_TYPE.picture)
@@ -32,7 +32,7 @@ namespace DataSourceServices
             request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
 
-            byte[] bytes = null;
+            byte[][] bytes = null;
             using (Stream sm = request.GetResponse().GetResponseStream())
             {
                 try
@@ -56,12 +56,12 @@ namespace DataSourceServices
                                 if (imageType == IMAGE_TYPE.picture)
                                 {
                                     if (result[0].picture != null)
-                                        bytes = System.Convert.FromBase64String(result[0].picture);
+                                        bytes[0] = System.Convert.FromBase64String(result[0].picture);
                                 }
                                 else
                                 {
                                     if (result[0].wsq != null)
-                                        bytes = System.Convert.FromBase64String(result[0].wsq);
+                                        bytes[0] = System.Convert.FromBase64String(result[0].wsq);
                                 }
                             }
                             catch (Exception ex) { throw new Exception(ex.Message); }

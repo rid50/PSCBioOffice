@@ -13,6 +13,6 @@ namespace DataSourceServices
             wsq = 1
         }
 
-        public abstract byte[] GetImage(IMAGE_TYPE imageType, int id);
+        public abstract byte[][] GetImage(IMAGE_TYPE imageType, int id);
     }
 }

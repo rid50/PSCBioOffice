@@ -64,7 +64,7 @@ namespace PSCBioIdentification
 
                 if (Mode == ProgramMode.PreEnrolled)
                 {
-                    if (!processEnrolledData(e.Result as byte[]))
+                    if (!processEnrolledData(e.Result as byte[][]))
                         EnableControls(true);
                 }
             }
@@ -107,7 +107,8 @@ namespace PSCBioIdentification
                 }
                 else if (Mode != ProgramMode.PreEnrolled)
                 {
-                    using (var ms = new MemoryStream(e.Result as byte[]))
+                    //byte[][] b = e.Result as byte[][];
+                    using (var ms = new MemoryStream((e.Result as byte[][])[0]))
                     {
                         if (ms.Length != 0)
                             pictureBoxPhoto.Image = Image.FromStream(ms);

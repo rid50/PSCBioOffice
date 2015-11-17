@@ -307,6 +307,11 @@ namespace Nomad
 					throw std::runtime_error((*errorMessage).c_str());
 					return 0;
 				}
+				//if (rc == SQL_SUCCESS_WITH_INFO) {
+				//	std::stringstream ss; 
+				//	ss << "Oversized template:";
+				//	Log(ss.str(), false);
+				//}
 
 				if (terminateLoop)
 					break;
@@ -330,10 +335,8 @@ namespace Nomad
 							if (f->fInd != SQL_NULL_DATA && f->fInd != 0) {
 								try {
 
-									if (i == 705)
-										continue;
-
-									if (i == 708 || i == 5012) {
+									//if (i == 708 || i == 5012) {
+									if (i == 708 || i == 58) {
 										//continue;
 										int kk = 0;
 
@@ -349,11 +352,11 @@ namespace Nomad
 										numOfMatches++;
 									}
 
-									if (1) {
-										std::stringstream ss; 
-										ss << "Not Matched: " << j << " : " << i;
-										Log(ss.str(), false);
-									}
+									//if (1) {
+									//	std::stringstream ss; 
+									//	ss << "Not Matched: " << j << " : " << i << " from: " << from;
+									//	Log(ss.str(), true);
+									//}
 
 								} catch (std::exception& e) {
 									*errorMessage = e.what();
@@ -365,7 +368,14 @@ namespace Nomad
 								}
 							}
 						} else if (RowStatus[i] == SQL_ROW_SUCCESS_WITH_INFO) {
+							//if (i == 146 || i == 171) {
+							//	int kk = 0;
+							//}
+
 							f = &Record[0].F1 + j + (i * numOfFieldsInRecord);
+							std::stringstream ss; 
+							ss << "Oversized template:" << (f->fInd) << " : " << j << " : " << i << " from: " << from;
+							Log(ss.str(), false);
 
 /*							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;

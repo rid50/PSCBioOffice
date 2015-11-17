@@ -16,17 +16,22 @@ namespace DataSourceServices
         string dbIdColumn = System.Configuration.ConfigurationManager.AppSettings["dbIdColumn"];
         string dbPictureColumn = System.Configuration.ConfigurationManager.AppSettings["dbPictureColumn"];
         string dbFingerColumn = System.Configuration.ConfigurationManager.AppSettings["dbFingerColumn"];
+        string fingerFields = "li,lm,lr,ll,ri,rm,rr,rl,lt,rt";
 
-        public override byte[] GetImage(IMAGE_TYPE imageType, System.Int32 id)
+        public override byte[][] GetImage(IMAGE_TYPE imageType, System.Int32 id)
         {
             //throw new Exception(getConnectionString());
+            //char[] sep = new char[] {','};
+            //string[] sep = new string[] { "," };
+
+            //string[] fingerFields = " li,lm,lr,ll,ri,rm,rr,rl,lt,rt ".Split(sep, StringSplitOptions.RemoveEmptyEntries);
 
             SqlConnection conn = null;
             SqlCommand cmd = null;
             SqlDataReader reader = null;
 
-            byte[] buffer = new byte[0];
-            byte[] buffer2 = new byte[0];
+            byte[][] buffer = new byte[11][];
+//            byte[][] buffer2 = new byte[10][];
 
             try
             {
@@ -56,7 +61,7 @@ namespace DataSourceServices
                                 }
                 */
                 if (IMAGE_TYPE.wsq == imageType)
-                    cmd.CommandText = "SELECT " + dbFingerColumn + ", li FROM " + dbFingerTable + " WHERE " + dbIdColumn + " = @id";
+                    cmd.CommandText = "SELECT " + dbFingerColumn + "," + fingerFields + " FROM " + dbFingerTable + " WHERE " + dbIdColumn + " = @id";
                 else
                     cmd.CommandText = "SELECT " + dbPictureColumn + " FROM " + dbPictureTable + " WHERE " + dbIdColumn + " = @id";
 
@@ -102,12 +107,17 @@ namespace DataSourceServices
                         */
                         if (IMAGE_TYPE.wsq == imageType)
                         {
-                            buffer = (byte[])reader[dbFingerColumn];  //(byte[])reader["AppWsq"];
-                            buffer2 = (byte[])reader["li"];  //(byte[])reader["li"];
+                            buffer[0] = (byte[])reader[dbFingerColumn];  //(byte[])reader["AppWsq"];
 
+                            string[] result = fingerFields.Split(new char[] { ',' });
+
+                            int i = 1;
+                            foreach (string s in result) {
+                                buffer[i++] = (byte[])reader[s];  //(byte[])reader["li"];
+                            }
                         }
                         else
-                            buffer = (byte[])reader[dbPictureColumn]; //(byte[])reader["AppImage"];
+                            buffer[0] = (byte[])reader[dbPictureColumn]; //(byte[])reader["AppImage"];
 
                         //buffer = (byte[])reader["AppImage"];
                         //int maxSize = 200000;

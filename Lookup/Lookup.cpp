@@ -96,7 +96,7 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (0) {
+			if (1) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {

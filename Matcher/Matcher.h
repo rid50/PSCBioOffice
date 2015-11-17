@@ -69,6 +69,10 @@ namespace Nomad
 			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 		};
 
+			NResult		result;
+			void LicenseRelease();
+			void LicenseObtain();
+
 		class License
 		{
 		private:
@@ -76,7 +80,6 @@ namespace Nomad
 		public:
 			License();
 			~License();
-
 			inline void printStatusStatement(const char * statusStatement) {
 #ifdef _DEBUG
 				//sprintf_s (Matcher::statusStatement, statusStatement);

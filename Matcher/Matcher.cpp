@@ -8,21 +8,23 @@
 
 //using namespace std;
 
-//BOOL APIENTRY DllMain(HANDLE hModule, 
-//                    DWORD  ul_reason_for_call, 
-//                    LPVOID lpReserved)
-//{
-//	switch( ul_reason_for_call ) {
-//		case DLL_THREAD_ATTACH:
-//			getLicenses();
-//		case DLL_THREAD_DETACH:
-//			break;
-//		case DLL_PROCESS_ATTACH:
-//		case DLL_PROCESS_DETACH:
-//			break;
-//	}
-//	return TRUE;
-//}
+BOOL APIENTRY DllMain(HANDLE hModule, 
+                    DWORD  ul_reason_for_call, 
+                    LPVOID lpReserved)
+{
+	switch( ul_reason_for_call ) {
+		case DLL_THREAD_ATTACH:
+		case DLL_THREAD_DETACH:
+			break;
+		case DLL_PROCESS_ATTACH:
+			//Nomad::Bio::LicenseObtain();
+			break;
+		case DLL_PROCESS_DETACH:
+			//Nomad::Bio::LicenseRelease();
+			break;
+	}
+	return TRUE;
+}
 
 
 //inline void printStatusStatement(char * statusStatement) {
@@ -38,7 +40,6 @@ namespace Nomad
 	{
 		MatcherFacade::~MatcherFacade() {
 			delete static_cast<Nomad::Bio::Matcher*>(matcherPtr);
-			//std::cout << "Kuku3" << std::endl;
 		};
 
 		MatcherFacade::MatcherFacade() {
@@ -57,7 +58,8 @@ namespace Nomad
 
 		const NChar * components = N_T("Biometrics.FingerExtraction,Biometrics.FingerMatching");
 
-		License::License() {
+		//License::License() {
+		void LicenseObtain() {
 			NBool available = NFalse;
 
 			result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
@@ -75,15 +77,23 @@ namespace Nomad
 				//printStatusStatement(stmt.str().c_str());
 				throw std::runtime_error(stmt.str().c_str());
 			}
+			OutputDebugString(" ************************  License constructor ************************************** ");
+
 		}
 
-		License::~License() {
+		//License::~License() {
+		void LicenseRelease() {
+			OutputDebugString(" ************************  License ************************************** ");
 			result = NLicenseReleaseComponents(components);
+			OutputDebugString(" ************************  License2 ************************************** ");
 			if (NFailed(result))
 			{
+			OutputDebugString(" ************************  License3 ************************************** ");
 				//printStatusStatement("Error releasing license components");
 				throw std::runtime_error("Biometrics: Error releasing license components");
 			}
+			OutputDebugString(" ************************  License4 ************************************** ");
+
 		}
 
 		NSizeType	Matcher::enrolledTemplateSize = 0;
@@ -106,13 +116,15 @@ namespace Nomad
 			}
 		};
 
+		//License license;
+
 		Matcher::Matcher() {
 			hBiometricClient = NULL;
-			NInt				matchingThreshold = 48;
+			NInt				matchingThreshold = 40;
 			NMatchingSpeed		matchingSpeed =	nmsLow;
 			//NMatchingSpeed matchingSpeed = nmsHigh;
 
-			static License license;
+			//License license;
 
 			// create biometric client
 			result = NBiometricClientCreate(&hBiometricClient);
@@ -121,7 +133,7 @@ namespace Nomad
 				//printStatusStatement("Biometric client creation failed:", result);
 				throw std::runtime_error("Biometric client creation failed");
 			}
-
+			
 			// set matching threshold
 			result = NObjectSetPropertyP(hBiometricClient, N_T("Matching.Threshold"), N_TYPE_OF(NInt32), naNone, &matchingThreshold, sizeof(matchingThreshold), 1, NTrue);
 			if (NFailed(result))
@@ -192,7 +204,7 @@ namespace Nomad
 				if (NFailed(result))
 				{
 					//printStatusStatement("Error retrieve matching results from emrolled template:", result);
-					throw std::runtime_error("Biometrics: Error retrieve matching results from emrolled template");
+					throw std::runtime_error("Biometrics: Error retrieving matching results from emrolled template");
 				}
 
 				// retrieve matching score from matching results
@@ -200,7 +212,7 @@ namespace Nomad
 				if (NFailed(result))
 				{
 					//printStatusStatement("Error retrieve matching score from matching results:", result);
-					throw std::runtime_error("Biometrics: Error retrieve matching score from matching results");
+					throw std::runtime_error("Biometrics: Error retrieving matching score from matching results");
 				}
 
 				result = NObjectSet(NULL, (HNObject *)&hMatchingResults);
