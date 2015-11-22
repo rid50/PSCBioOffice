@@ -42,7 +42,8 @@ namespace PSCBioIdentification
             // This method will run on a thread other than the UI thread.
             // Be sure not to manipulate any Windows Forms controls created
             // on the UI thread from this method.
-            backgroundWorkerProgressBar.ReportProgress(0, "Working...");
+            //backgroundWorkerProgressBar.ReportProgress(0, "Working...");
+            backgroundWorkerProgressBar.ReportProgress(0);
             while (true)
             {
                 for (int i = 1; i < _max; i++)
@@ -51,7 +52,8 @@ namespace PSCBioIdentification
                     System.Threading.Thread.Sleep(50);
                     //backgroundWorkerProgressBar.ReportProgress((int)((float)(100 * i) / (float)_max), "Working...");
                     //(sender as BackgroundWorker).ReportProgress((int)((float)(100 * i) / (float)_max), "WorkingAAAAAAAA...");
-                    (sender as BackgroundWorker).ReportProgress((100 * i) / _max, "Working...");
+                    //(sender as BackgroundWorker).ReportProgress((100 * i) / _max, "Working...");
+                    (sender as BackgroundWorker).ReportProgress((100 * i) / _max);
                     //(sender as BackgroundWorker).ReportProgress(i, "Working...");
 
                     if (backgroundWorkerProgressBar.CancellationPending)
@@ -83,7 +85,7 @@ namespace PSCBioIdentification
         private void backgroundWorkerProgressBar_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             toolStripProgressBar.Value = 0;
-            toolStripStatusLabelError.Text = "";
+            //toolStripStatusLabelError.Text = "";
 
             //toolStripProgressBar.Enabled = false;
         }

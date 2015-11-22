@@ -85,7 +85,7 @@ namespace DataSourceServices
                 {
                     //if (!reader.IsDBNull(0))
                     //    id = reader.GetInt32(0);
-                    if (!reader.IsDBNull(0))
+                    if (!reader.IsDBNull(0) && ((byte[])reader[0]).Length != 1)
                     {
                         //binary = reader.GetSqlBinary(1);
                         //if (id != 20031448)

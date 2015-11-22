@@ -33,6 +33,8 @@
 #include <NBiometricClient.h>
 #include <NBiometrics.h>
 #include <NMedia.h>
+#include <NCore.h>
+
 //#include <NBiometricClient.hpp>
 //#include <NGui.hpp>
 //#include <NBiometricGui.hpp>
@@ -62,11 +64,12 @@ namespace Nomad
 		{
 		public:
 			void* matcherPtr;
+			//Nomad::Bio::Matcher* matcherPtr;
 		public:
 			MatcherFacade();
 			~MatcherFacade();
-			static void enroll(unsigned char *record, unsigned __int32 size);
-			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
+			void enroll(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);
+			bool match(void *galleryTemplate, unsigned __int32 galleryTemplateSize);
 		};
 
 			NResult		result;
@@ -93,13 +96,12 @@ namespace Nomad
 		private:
 			NResult				result;
 			HNBiometricClient	hBiometricClient;
-			HNMatchingResult	hMatchingResults;
 
-			static HNSubject hProbeSubject;
-			HNSubject hGallerySubject;
+			HNSubject	hProbeSubject;
+			HNSubject	hGallerySubject;
 
-			static NSizeType	enrolledTemplateSize;
-			static void			*enrolledTemplate;
+			//static NSizeType	enrolledTemplateSize;
+			//static void			*enrolledTemplate;
 			//typedef pair <int, HNImage> imageMapPair;
 			//std::map <int, HNImage> imageMap;
 
@@ -108,7 +110,7 @@ namespace Nomad
 			~Matcher();
 			//bool readImages(wchar_t * szFileName, wchar_t * szFileName2);
 			//int extract(HNImage nImage, NfeExtractionStatus* extractionStatus, HNFRecord* hRecord);
-			static void enroll(unsigned char *record, unsigned __int32 size);
+			void enroll(unsigned char *enrolledTemplate, unsigned __int32 enrolledTemplateSize);
 			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
 			//void __declspec(dllexport) enroll(void);
 			//void __declspec(dllexport) match(void *buffer2, int size);

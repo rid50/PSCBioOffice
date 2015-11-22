@@ -53,9 +53,9 @@ namespace Nomad
 		public:
 			MatcherFacade();
 			~MatcherFacade();
-			static void enroll(unsigned char *record, unsigned __int32 size);
+			void enroll(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);
 			//static void terminateLoop();
-			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
+			bool match(void *galleryTemplate, unsigned __int32 galleryTemplateSize);
 		};
 	}
 
@@ -97,7 +97,7 @@ namespace Nomad
 
 		private:
 			//void printStatusStatement(char * statusStatement);
-			void FreeStmtHandle(SQLHSTMT hStmt);
+			//void FreeStmtHandle(SQLHSTMT hStmt);
 			//void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type);
 			void extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type, std::string *errorMessage);
 			//void clean();
@@ -107,7 +107,7 @@ namespace Nomad
 
 			SQLHENV hEnv;
 			SQLHDBC hDBC;
-			//SQLHSTMT hStmt;
+			SQLHSTMT hStmt;
 			//char ConnStrIn[MAXBUFLEN];
 			SQLCHAR ConnStrIn[MAXBUFLEN];
 			SQLCHAR ConnStrOut[MAXBUFLEN];
@@ -118,14 +118,14 @@ namespace Nomad
 			static bool	terminateLoop;
 
 		public:
-			Odbc();
+			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);		//probe template
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
 			unsigned __int32 exec(unsigned long int, unsigned int, char *arrOfFingers[], __int32 arrOfFingersSize, std::string *errorMessage);
-			static void enroll(unsigned char *record, unsigned __int32 size);
+			//static void enroll(unsigned char *record, unsigned __int32 size);
 			//static void terminate();
-			void disconnect();
+			//void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);
 			//void run();

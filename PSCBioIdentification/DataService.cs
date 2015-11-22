@@ -64,8 +64,18 @@ namespace PSCBioIdentification
 
                 if (Mode == ProgramMode.PreEnrolled)
                 {
-                    if (!processEnrolledData(e.Result as byte[][]))
+                    if ((e.Result as byte[][])[0] != null)
+                    {
+                        if (!processEnrolledData(e.Result as byte[][]))
+                            EnableControls(true);
+                    }
+                    else
+                    {
+                        stopProgressBar();
+                        LogLine("ID is not valid", true);
+                        ShowErrorMessage("ID is not valid");
                         EnableControls(true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -85,6 +95,8 @@ namespace PSCBioIdentification
             {
                 LogLine("Data service: " + e.Error.Message, true);
                 ShowErrorMessage(e.Error.Message);
+                EnableControls(true);
+                stopProgressBar();
             }
             else
             {
@@ -108,13 +120,16 @@ namespace PSCBioIdentification
                 else if (Mode != ProgramMode.PreEnrolled)
                 {
                     //byte[][] b = e.Result as byte[][];
-                    using (var ms = new MemoryStream((e.Result as byte[][])[0]))
-                    {
-                        if (ms.Length != 0)
-                            pictureBoxPhoto.Image = Image.FromStream(ms);
-                        else
-                            pictureBoxPhoto.Image = null;
-                    }
+                    if ((e.Result as byte[][])[0] != null) {
+                        using (var ms = new MemoryStream((e.Result as byte[][])[0]))
+                        {
+                            if (ms.Length != 0)
+                                pictureBoxPhoto.Image = Image.FromStream(ms);
+                            else
+                                pictureBoxPhoto.Image = null;
+                        }
+                    } else
+                        pictureBoxPhoto.Image = null;
 
 
                     EnableControls(true);

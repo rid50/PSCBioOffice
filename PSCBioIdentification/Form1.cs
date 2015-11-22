@@ -37,7 +37,9 @@ namespace PSCBioIdentification
         public static extern UInt32 match(
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             string[] arrOfFingers, int arrOffingersSize,
-            byte[] template, UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            byte[] template,
+            UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void terminateMatchingService();
@@ -367,6 +369,8 @@ namespace PSCBioIdentification
         private delegate NFinger CaptureFingersDelegate(NFinger finger, short numberOfFingers);
         private NFinger CaptureFingers(NFinger finger, short numberOfFingers)
         {
+            finger.ImpressionType = NFImpressionType.LiveScanPlain;
+
             switch (numberOfFingers)
             {
                 case 1:
@@ -458,7 +462,7 @@ namespace PSCBioIdentification
                     _subject2.Fingers.RemoveAt(0);
 
                 var finger = new NFinger();
-                finger.ImpressionType = NFImpressionType.LiveScanPlain;
+                //finger.ImpressionType = NFImpressionType.LiveScanPlain;
                 //finger.CaptureOptions = NBiometricCaptureOptions.None;
                 //finger.PropertyChanged += OnAttributesPropertyChanged;
 
@@ -608,7 +612,7 @@ namespace PSCBioIdentification
             AsyncResult result = (AsyncResult)iar;
             CaptureFingersDelegate caller = (CaptureFingersDelegate)result.AsyncDelegate;
             var fingers = (NFinger)caller.EndInvoke(result);
-            
+
             var obj = fingers.Objects[0];
             if (obj.Status == NBiometricStatus.Ok)
             {
@@ -621,20 +625,29 @@ namespace PSCBioIdentification
                 //subject.Fingers[0].Image.Save(subject.Fingers[0].Position + ".png");
                 _biometricClient.CreateTemplate(_subject2);
 
-                string text = string.Format("Template extracted {0}. Size: {1}",
-                    string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality),
-                    _subject2.Fingers[0].Objects[0].Template.GetSize());
-
-                this.Invoke((Action)(() =>
+                if (_subject2.Fingers[0].Objects[0].Template != null)
                 {
-                    LogLine(text, true);
-                }), null);
+                    string text = string.Format("Template extracted {0}. Size: {1}",
+                        string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality),
+                        _subject2.Fingers[0].Objects[0].Template.GetSize());
 
+                    this.Invoke((Action)(() =>
+                    {
+                        LogLine(text, true);
+                    }), null);
 
-                Mode = ProgramMode.Identification;
-                BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+                    //File.WriteAllBytes("TwoFingersTemplate.temp", _subject2.Fingers[0].Objects[0].Template.Save().ToArray());
+
+                    Mode = ProgramMode.Identification;
+                    BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+                }
+                else
+                {
+                    obj.Status = NBiometricStatus.BadObject;
+                }
             }
-            else
+
+            if (obj.Status != NBiometricStatus.Ok)
             {
                 _subject2 = null;
 
@@ -889,7 +902,7 @@ namespace PSCBioIdentification
                 string text = string.Format("Error creating image retrieved from database {0}", ex.Message);
                 ShowErrorMessage(text);
 
-                return false;
+                //return false;
             }
             finally
             {
@@ -1050,7 +1063,16 @@ namespace PSCBioIdentification
                 _biometricClient.MatchingWithDetails = true;
                 fingerView1.MatedMinutiae = null;
                 fingerView2.MatedMinutiae = null;
+
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                sw.Start();
+
                 var status = _biometricClient.Verify(_subject, _subject2);
+
+                sw.Stop();
+                TimeSpan ts = sw.Elapsed;
+                string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
+                LogLine("Matched in " + elapsedTime, true);
 
                 LogLine(string.Format("Verification status: {0}", status), true);
 

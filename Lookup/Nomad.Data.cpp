@@ -16,10 +16,10 @@ namespace Nomad
 {
 	namespace Data
 	{
-		void Odbc::enroll(unsigned char *record, unsigned __int32 size) {
-			//matcherFacadePtr->enroll(record, size);
-			Nomad::Bio::MatcherFacade::enroll(record, size);
-		}
+		//void Odbc::enroll(unsigned char *record, unsigned __int32 size) {
+		//	//matcherFacadePtr->enroll(record, size);
+		//	Nomad::Bio::MatcherFacade::enroll(record, size);
+		//}
 
 		//void Odbc::terminate() {
 		//	//matcherFacadePtr->enroll(record, size);
@@ -29,12 +29,42 @@ namespace Nomad
 		bool Odbc::terminateLoop = false;
 
 		Odbc::~Odbc() {
-			disconnect();
+			//disconnect();
+			if (hStmt != NULL) {
+				SQLCloseCursor(hStmt);
+				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+			}
+
+			if (hDBC != NULL) {
+				SQLDisconnect(hDBC);
+				SQLFreeHandle( SQL_HANDLE_DBC, hDBC );
+			}
+			
+			if (hEnv != NULL)
+				SQLFreeHandle( SQL_HANDLE_ENV, hEnv );
+
+			if (matcherFacadePtr != NULL)
+				delete matcherFacadePtr;
+
 		}
 
-		Odbc::Odbc() {
+		//Odbc::Odbc() {
+		//	hEnv = SQL_NULL_HENV;
+		//	hDBC = SQL_NULL_HDBC;
+		//	strncpy_s((char *)ConnStrIn, sizeof(ConnStrIn) - 1, 
+		//					"DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=MCCS_Egy;Trusted_Connection=yes;Mars_Connection=yes;",
+		//					sizeof(ConnStrIn) - 1);		
+		//}
+
+		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize) {
+			matcherFacadePtr = NULL;
 			//buffer = NULL;
 			//buffer2 = NULL;
+
+			if (probeTemplate != NULL) {
+				matcherFacadePtr = new Nomad::Bio::MatcherFacade;
+				matcherFacadePtr->enroll(probeTemplate, probeTemplateSize);
+			}
 
 			hEnv = SQL_NULL_HENV;
 			hDBC = SQL_NULL_HDBC;
@@ -91,7 +121,7 @@ namespace Nomad
 
 		bool Odbc::getRowCount(unsigned __int32 *rowcount, std::string *errorMessage) {
 			bool retcode = false;
-			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+			hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
 				rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL", SQL_NTS);
@@ -108,7 +138,7 @@ namespace Nomad
 					extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
 				}
 
-				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+				//SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 			}
 
 			return retcode;
@@ -116,7 +146,7 @@ namespace Nomad
 
 		bool Odbc::getAppId(unsigned __int32 *appid, std::string *errorMessage) {
 			bool retcode = false;
-			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+			hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
 				std::stringstream stmt;
@@ -134,7 +164,7 @@ namespace Nomad
 					extract_error("SQLExecDirect", hStmt, SQL_HANDLE_STMT, errorMessage);
 				}
 
-				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+				//SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 			}
 
 			return retcode;
@@ -159,8 +189,7 @@ namespace Nomad
 		};
 
 		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *arrOfFingers[], __int32 numOfFieldsToMatch, std::string *errorMessage) {
-
-			SQLHSTMT hStmt = SQL_NULL_HSTMT;
+			hStmt = SQL_NULL_HSTMT;
 
 			SQLULEN			NumRowsFetched;
 			SQLUSMALLINT*	RowStatus;
@@ -191,7 +220,7 @@ namespace Nomad
 			//} IMAGESTRUCT;
 			//IMAGESTRUCT ImageStruct;
 
-			matcherFacadePtr = new Nomad::Bio::MatcherFacade;
+//			matcherFacadePtr = new Nomad::Bio::MatcherFacade;
 
 			//std::string from = "0", to = "100000";
 			/*
@@ -221,8 +250,8 @@ namespace Nomad
 				Record = new RECORDSTRUCT[limit];
 			} catch (std::bad_alloc& e) {
 				*errorMessage = e.what();
-				FreeStmtHandle(hStmt);
-				delete matcherFacadePtr;
+				//FreeStmtHandle(hStmt);
+				//delete matcherFacadePtr;
 				return 0;							
 			}
 
@@ -288,8 +317,8 @@ namespace Nomad
 				extract_error("SQLExecute", hStmt, SQL_HANDLE_STMT, errorMessage);
 				delete[] RowStatus;
 				delete[] Record;
-				FreeStmtHandle(hStmt);
-				delete matcherFacadePtr;
+				//FreeStmtHandle(hStmt);
+				//delete matcherFacadePtr;
 				return 0;
 			}
 
@@ -302,8 +331,8 @@ namespace Nomad
 					extract_error("SQLExecute", hStmt, SQL_HANDLE_STMT, errorMessage);
 					delete[] RowStatus;
 					delete[] Record;
-					FreeStmtHandle(hStmt);
-					delete matcherFacadePtr;
+					//FreeStmtHandle(hStmt);
+					//delete matcherFacadePtr;
 					throw std::runtime_error((*errorMessage).c_str());
 					return 0;
 				}
@@ -336,34 +365,32 @@ namespace Nomad
 								try {
 
 									//if (i == 708 || i == 5012) {
-									if (i == 708 || i == 58) {
-										//continue;
-										int kk = 0;
+									//if (i == 708 || i == 58) {
+									//	//continue;
+									//	int kk = 0;
 
-									}
+									//}
 
 									//matched = matcherFacadePtr->match(RecordStructArray[i].li, static_cast<unsigned __int32>(RecordStructArray[i].liInd));
 									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(*index));
+
 									matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
 									if (matched) {
-										//std::stringstream ss; 
-										//ss << "Not Matched: " << j << " : " << i;
-										//Log(ss.str(), false);
 										numOfMatches++;
 									}
 
 									//if (1) {
 									//	std::stringstream ss; 
-									//	ss << "Not Matched: " << j << " : " << i << " from: " << from;
-									//	Log(ss.str(), true);
+									//	ss << "r: " << j << " : " << i << " from: " << from;
+									//	Log(ss.str(), false);
 									//}
 
 								} catch (std::exception& e) {
 									*errorMessage = e.what();
 									delete[] RowStatus;
 									delete[] Record;
-									FreeStmtHandle(hStmt);
-									delete matcherFacadePtr;
+									//FreeStmtHandle(hStmt);
+									//delete matcherFacadePtr;
 									return 0;							
 								}
 							}
@@ -372,23 +399,24 @@ namespace Nomad
 							//	int kk = 0;
 							//}
 
-							f = &Record[0].F1 + j + (i * numOfFieldsInRecord);
-							std::stringstream ss; 
-							ss << "Oversized template:" << (f->fInd) << " : " << j << " : " << i << " from: " << from;
-							Log(ss.str(), false);
+							//f = &Record[0].F1 + j + (i * numOfFieldsInRecord);
+							//std::stringstream ss; 
+							//ss << "Oversized template:" << (f->fInd) << " : " << j << " : " << i << " from: " << from;
+							//Log(ss.str(), false);
 
 /*							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;
 							delete[] Record;
 							FreeStmtHandle(hStmt);
 							delete matcherFacadePtr;
-							return 0;			*/	
+							return 0;
+*/	
 						} else if (RowStatus[i] == SQL_ROW_ERROR) {
 							*errorMessage = "An error retrieving the row from the data source with SQLFetch";
 							delete[] RowStatus;
 							delete[] Record;
-							FreeStmtHandle(hStmt);
-							delete matcherFacadePtr;
+							//FreeStmtHandle(hStmt);
+							//delete matcherFacadePtr;
 							return 0;				
 						}
 					}
@@ -471,33 +499,33 @@ namespace Nomad
 
 			delete[] RowStatus;
 			delete[] Record;
-			FreeStmtHandle(hStmt);
-			delete matcherFacadePtr;
+			//FreeStmtHandle(hStmt);
+			//delete matcherFacadePtr;
 
 			return RowNumber;
 		}
 
-		void Odbc::FreeStmtHandle(SQLHSTMT hStmt) {
-			if (hStmt != NULL) {
-				SQLCloseCursor(hStmt);
-				SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
-			}
-		}
+		//void Odbc::FreeStmtHandle(SQLHSTMT hStmt) {
+		//	if (hStmt != NULL) {
+		//		SQLCloseCursor(hStmt);
+		//		SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		//	}
+		//}
 
-		void Odbc::disconnect() {
-			//if (hStmt != NULL) {
-			//	SQLCloseCursor(hStmt);
-			//	SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
-			//}
+		//void Odbc::disconnect() {
+		//	//if (hStmt != NULL) {
+		//	//	SQLCloseCursor(hStmt);
+		//	//	SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		//	//}
 
-			if (hDBC != NULL) {
-				SQLDisconnect(hDBC);
-				SQLFreeHandle( SQL_HANDLE_DBC, hDBC );
-			}
-			
-			if (hEnv != NULL)
-				SQLFreeHandle( SQL_HANDLE_ENV, hEnv );
-		}
+		//	if (hDBC != NULL) {
+		//		SQLDisconnect(hDBC);
+		//		SQLFreeHandle( SQL_HANDLE_DBC, hDBC );
+		//	}
+		//	
+		//	if (hEnv != NULL)
+		//		SQLFreeHandle( SQL_HANDLE_ENV, hEnv );
+		//}
 
 		//void Odbc::extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type)
 		//{

@@ -31,14 +31,14 @@ namespace Nomad {
 		}
 
 		unsigned __int32 __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize,
-			unsigned char *record, unsigned __int32 size, char *errorMessage, __int32 messageSize) {
+			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *errorMessage, __int32 messageSize) {
 
 			unsigned __int32 retcode = 0;
 
 			
 			//std::cout << errorMessage << endl;
 			try {
-				odbcPtr = new Nomad::Data::Odbc();
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL);
 			} catch (std::exception& e) {
 				if (static_cast<unsigned __int32>(messageSize) < strlen(e.what()) + 1) {
 					char *pchar = const_cast<char *>(e.what());
@@ -85,14 +85,14 @@ namespace Nomad {
 			//odbcPtr->enroll(record, size);
 			//Nomad::Data::Odbc::terminate(false);
 			Nomad::Data::Odbc::terminateLoop = false;
-			Nomad::Data::Odbc::enroll(record, size);
+			//Nomad::Data::Odbc::enroll(record, size);
 
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
 			unsigned int limit = BUFFERLEN;
 			unsigned int topindex = rowcount/limit + 1;
-			//topindex = 3;
+			//topindex = 1;
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
@@ -101,7 +101,7 @@ namespace Nomad {
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
 						unsigned __int32 ret = 0;
-						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
+						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize);
 						//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 						try {
 							ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
@@ -127,12 +127,12 @@ namespace Nomad {
 					});
 				});
 			} else {
-				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc();
-				for (unsigned int i = 9; i < topindex; i++) {
+				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize);
+				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
 					try {
-						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+						retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, arrOfFingers, arrOfFingersSize, &errMessage);
 					} catch (std::exception& e) {
 						errMessage = "Error: ";
 						errMessage += e.what();
@@ -172,7 +172,7 @@ namespace Nomad {
 
 			if (retcode > 0) {
 				retcode--;
-				odbcPtr = new Nomad::Data::Odbc();
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL);
 				//std::string errMessage;
 				if (!odbcPtr->getAppId(&retcode, &errMessage))
 					retcode = 0;
