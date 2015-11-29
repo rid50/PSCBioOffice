@@ -118,7 +118,7 @@ namespace Nomad
 			static bool	terminateLoop;
 
 		public:
-			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);		//probe template
+			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[]);		//probe template
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);

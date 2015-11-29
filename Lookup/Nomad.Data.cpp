@@ -11,6 +11,7 @@
 //using std::cout;
 //using std::endl;
 //using std::string;
+//using namespace System;
 
 namespace Nomad
 {
@@ -56,7 +57,7 @@ namespace Nomad
 		//					sizeof(ConnStrIn) - 1);		
 		//}
 
-		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize) {
+		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[]) {
 			matcherFacadePtr = NULL;
 			//buffer = NULL;
 			//buffer2 = NULL;
@@ -65,6 +66,10 @@ namespace Nomad
 				matcherFacadePtr = new Nomad::Bio::MatcherFacade;
 				matcherFacadePtr->enroll(probeTemplate, probeTemplateSize);
 			}
+
+
+			//String^ dbFingerTable = Configuration::ConfigurationManager::AppSettings["dbFingerTable"];
+
 
 			hEnv = SQL_NULL_HENV;
 			hDBC = SQL_NULL_HDBC;
@@ -242,12 +247,13 @@ namespace Nomad
 			//sprintf(x, "%s %s > %s", a.c_str(), b.c_str(), c.c_str() );
 
 			rc = SQLAllocHandle(SQL_HANDLE_STMT, hDBC, &hStmt);
-			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_CURSOR_TYPE, (SQLPOINTER)SQL_CURSOR_FORWARD_ONLY, SQL_IS_INTEGER);
-			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_CONCURRENCY, (SQLPOINTER)SQL_CONCUR_READ_ONLY, SQL_IS_INTEGER);
-			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_ARRAY_SIZE, (SQLPOINTER)limit, SQL_IS_INTEGER);
+			rc = SQLSetStmtAttr(hStmt, SQL_SOPT_SS_CURSOR_OPTIONS, (SQLPOINTER)SQL_CO_FFO, SQL_IS_INTEGER);
+			//rc = SQLSetStmtAttr(hStmt, SQL_ATTR_CURSOR_TYPE, (SQLPOINTER)SQL_CURSOR_FORWARD_ONLY, SQL_IS_INTEGER);
+			//rc = SQLSetStmtAttr(hStmt, SQL_ATTR_CONCURRENCY, (SQLPOINTER)SQL_CONCUR_READ_ONLY, SQL_IS_INTEGER);
+			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_ARRAY_SIZE, (SQLPOINTER)(limit + 1), SQL_IS_INTEGER);
 
 			try {
-				Record = new RECORDSTRUCT[limit];
+				Record = new RECORDSTRUCT[limit + 1];
 			} catch (std::bad_alloc& e) {
 				*errorMessage = e.what();
 				//FreeStmtHandle(hStmt);
@@ -255,7 +261,7 @@ namespace Nomad
 				return 0;							
 			}
 
-			RowStatus = new SQLUSMALLINT[limit];
+			RowStatus = new SQLUSMALLINT[limit + 1];
 
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_BIND_TYPE, (SQLPOINTER)sizeof(RECORDSTRUCT), SQL_IS_UINTEGER);
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_STATUS_PTR, RowStatus, SQL_IS_POINTER);
@@ -379,11 +385,11 @@ namespace Nomad
 										numOfMatches++;
 									}
 
-									//if (1) {
-									//	std::stringstream ss; 
-									//	ss << "r: " << j << " : " << i << " from: " << from;
-									//	Log(ss.str(), false);
-									//}
+									if (1) {
+										std::stringstream ss; 
+										ss << "r: " << j << " : " << i << " from: " << from;
+										Log(ss.str(), false);
+									}
 
 								} catch (std::exception& e) {
 									*errorMessage = e.what();

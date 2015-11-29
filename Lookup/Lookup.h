@@ -9,8 +9,9 @@ namespace Nomad {
 		Nomad::Data::Odbc *odbcPtr;
 
 		extern "C" 
-		unsigned __int32 __declspec(dllexport) __stdcall match(char *arrOffingers[], __int32 arrOfFingersSize, 
-														unsigned char *record, unsigned __int32 size, 
+		unsigned __int32 __declspec(dllexport) __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize, 
+														unsigned char *record, unsigned __int32 size,
+														char *appSettings[],
 														char *errorMessage, __int32 messageSize);
 
 		extern "C" void __declspec(dllexport) __stdcall terminateMatchingService();

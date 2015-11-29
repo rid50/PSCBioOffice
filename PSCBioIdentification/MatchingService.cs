@@ -22,7 +22,9 @@ namespace PSCBioIdentification
             public byte[]   template;
             public string[] arrOfFingers;
             public int      arrOfFingersSize;
+            public string[] appSettings;
             public System.Text.StringBuilder errorMessage;
+
             //public String errorMessage;
             //public String[] errorMessage = new String[1];
 
@@ -73,12 +75,21 @@ namespace PSCBioIdentification
             //record.arrOfFingers = new string[ar.Count];
             record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
 
+            ar.Clear();
+
+            //record.appSettings = new System.Text.StringBuilder(4);
+            ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+            ar.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+            ar.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+            ar.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+            record.appSettings = ar.ToArray(typeof(string)) as string[];
+
             //UInt32 score = 0;
             unsafe
             {
                 fixed (UInt32* ptr = &record.size)
                 {
-                    e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
+                    e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                 }
             }
         }

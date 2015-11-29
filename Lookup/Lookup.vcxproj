@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -145,8 +146,16 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Lookup.cpp" />
-    <ClCompile Include="Nomad.Data.cpp" />
+    <ClCompile Include="Lookup.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MinimalRebuild>
+    </ClCompile>
+    <ClCompile Include="Nomad.Data.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MinimalRebuild>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Sync</ExceptionHandling>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lookup.h" />

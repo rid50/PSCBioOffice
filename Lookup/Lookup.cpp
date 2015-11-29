@@ -31,14 +31,14 @@ namespace Nomad {
 		}
 
 		unsigned __int32 __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize,
-			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *errorMessage, __int32 messageSize) {
+			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *appSettings[], char *errorMessage, __int32 messageSize) {
 
 			unsigned __int32 retcode = 0;
 
 			
 			//std::cout << errorMessage << endl;
 			try {
-				odbcPtr = new Nomad::Data::Odbc(NULL, NULL);
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings);
 			} catch (std::exception& e) {
 				if (static_cast<unsigned __int32>(messageSize) < strlen(e.what()) + 1) {
 					char *pchar = const_cast<char *>(e.what());
@@ -101,7 +101,7 @@ namespace Nomad {
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
 						unsigned __int32 ret = 0;
-						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize);
+						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 						//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 						try {
 							ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
@@ -127,7 +127,7 @@ namespace Nomad {
 					});
 				});
 			} else {
-				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize);
+				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
@@ -172,7 +172,7 @@ namespace Nomad {
 
 			if (retcode > 0) {
 				retcode--;
-				odbcPtr = new Nomad::Data::Odbc(NULL, NULL);
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings);
 				//std::string errMessage;
 				if (!odbcPtr->getAppId(&retcode, &errMessage))
 					retcode = 0;

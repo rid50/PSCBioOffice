@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Text;
-using System.Configuration;
+//using System.Configuration;
 //using System.Data.SqlClient;
 using System.Data;
 //using System.Data.SqlServerCe;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
+using PSCBioIdentification;
 
 namespace DataSourceServices
 {
     class DataBaseService : DataSource
     {
-        string dbPictureTable = System.Configuration.ConfigurationManager.AppSettings["dbPictureTable"];
-        string dbFingerTable = System.Configuration.ConfigurationManager.AppSettings["dbFingerTable"];
-        string dbIdColumn = System.Configuration.ConfigurationManager.AppSettings["dbIdColumn"];
-        string dbPictureColumn = System.Configuration.ConfigurationManager.AppSettings["dbPictureColumn"];
-        string dbFingerColumn = System.Configuration.ConfigurationManager.AppSettings["dbFingerColumn"];
+
+        string dbPictureTable = MyConfigurationSettings.AppSettings["dbPictureTable"];
+        string dbFingerTable = MyConfigurationSettings.AppSettings["dbFingerTable"];
+        string dbIdColumn = MyConfigurationSettings.AppSettings["dbIdColumn"];
+        string dbPictureColumn = MyConfigurationSettings.AppSettings["dbPictureColumn"];
+        string dbFingerColumn = MyConfigurationSettings.AppSettings["dbFingerColumn"];
         string fingerFields = "li,lm,lr,ll,ri,rm,rr,rl,lt,rt";
 
         public override byte[][] GetImage(IMAGE_TYPE imageType, System.Int32 id)
@@ -263,7 +265,7 @@ namespace DataSourceServices
 */
         private SqlConnection buildConnectionString()
         {
-            String serverName = ConfigurationManager.AppSettings["ServerName"];
+            String serverName = MyConfigurationSettings.AppSettings["ServerName"];
             if (serverName.Length == 0)
                 serverName = "Data Source=" + decrypt(PSCBioIdentification.Credentials.Default.ServerName, "PSC");
             else
@@ -288,10 +290,19 @@ namespace DataSourceServices
 
         private String getConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
+            string conn = null;
+            try
+            {
+                conn = MyConfigurationSettings.ConnectionStrings["ConnectionString"].ToString();
+            } catch (Exception) {
+                throw new Exception("Connection to a database is not available");
+            }
+
+            return conn;
         }
 
-        private static String decrypt(String strEncrypted, String strKey) {
+        private static String decrypt(String strEncrypted, String strKey)
+        {
             try
             {
                 var objDESCrypto = new TripleDESCryptoServiceProvider();

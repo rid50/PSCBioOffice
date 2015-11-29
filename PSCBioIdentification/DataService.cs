@@ -1,15 +1,9 @@
 using System;
-using System.Configuration;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.ComponentModel;
-using System.Xml;
 using System.IO;
-//using System.Windows.Forms;
 
 using DataSourceServices;
-using System.Windows.Forms;
 
 namespace PSCBioIdentification
 {
@@ -23,9 +17,9 @@ namespace PSCBioIdentification
             buttonRequest.Enabled = false;
 
             string param = String.Empty;
-            if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "dblookup")
-                param = "dblookup";
-            else if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
+            if (MyConfigurationSettings.AppSettings["Enroll"] == "db")
+                param = "db";
+            else if (MyConfigurationSettings.AppSettings["Enroll"] == "service")
                 param = "service";
             else
                 param = "db";
@@ -46,7 +40,7 @@ namespace PSCBioIdentification
 
             try
             {
-                if (e.Argument as string == "dblookup")
+                if (e.Argument as string == "db")
                     ds = new DataBaseService();
                 else if (e.Argument as string == "service")
                     ds = new WebService();

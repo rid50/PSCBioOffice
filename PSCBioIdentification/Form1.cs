@@ -39,7 +39,10 @@ namespace PSCBioIdentification
             string[] arrOfFingers, int arrOffingersSize,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             byte[] template,
-            UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
+            UInt32 size,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] appSettings,
+            System.Text.StringBuilder errorMessage, int messageSize);
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void terminateMatchingService();
@@ -523,7 +526,7 @@ namespace PSCBioIdentification
                 terminateMatchingService();
             }
 
-            if (radioButtonVerify.Checked || mouseclick)
+            if (radioButtonVerify.Checked || (mouseclick && !IsMatchingServiceRunning))
             {
                 EnableControls(true);
 //                buttonScan.Text = "Scan";
@@ -1538,7 +1541,7 @@ namespace PSCBioIdentification
         }
 
         //private void buttonRequest_Click(object sender, EventArgs e)
-        private bool processEnrolledData(byte[][] serializedArrayOfWSQ)
+        private bool processEnrolledData(byte[][] serializedWSQArray)
         {
             bool createTemplatesFromWSQ = false;
 
@@ -1546,7 +1549,7 @@ namespace PSCBioIdentification
             //NSubject[] subjects = new NSubject[10];
 
             ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
-            if (serializedArrayOfWSQ == null)
+            if (serializedWSQArray == null)
             {
                 clearFingerBoxes();
                 this.Invoke((Action)(() =>
@@ -1561,7 +1564,7 @@ namespace PSCBioIdentification
             }
 
 
-            MemoryStream ms = new MemoryStream(serializedArrayOfWSQ[0]);
+            MemoryStream ms = new MemoryStream(serializedWSQArray[0]);
 
             //Assembly.Load(string assemblyString)
             // Construct a BinaryFormatter and use it to deserialize the data to the stream.
@@ -1594,9 +1597,10 @@ namespace PSCBioIdentification
             //byte[] buff = null;
             //System.Object theLock = new System.Object();
 
+			WsqImage wsqImage = null;
             int bestQuality = 0;
             int bestQualityImage = 0;
-            RadioButton rb = null; Label lb = null; WsqImage wsqImage = null;
+            RadioButton rb = null; Label lb = null;
             //Bitmap bm = null;
             //bool rbChecked = false;
             //, pbChecked = false;
@@ -1659,9 +1663,9 @@ namespace PSCBioIdentification
 
                         if (!createTemplatesFromWSQ)
                         {
-                            if (serializedArrayOfWSQ[i + 1].Length != 0)
+                            if (serializedWSQArray[i + 1].Length != 0)
                             {
-                                NFRecord record = new NFRecord(serializedArrayOfWSQ[i + 1]);
+                                NFRecord record = new NFRecord(serializedWSQArray[i + 1]);
                                 pct = record.Quality;
                                 if (pct == 254)
                                     pct = 0;
