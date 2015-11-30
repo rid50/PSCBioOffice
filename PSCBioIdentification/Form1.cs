@@ -173,19 +173,21 @@ namespace PSCBioIdentification
             ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
 
             backgroundWorkerProgressBar = new BackgroundWorker();
-            backgroundWorkerProgressBar.WorkerSupportsCancellation = true;
             backgroundWorkerProgressBar.WorkerReportsProgress = true;
             backgroundWorkerProgressBar.DoWork += new DoWorkEventHandler(backgroundWorkerProgressBar_DoWork);
             backgroundWorkerProgressBar.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerProgressBar_RunWorkerCompleted);
             backgroundWorkerProgressBar.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerProgressBar_ProgressChanged);
+            backgroundWorkerProgressBar.WorkerSupportsCancellation = true;
 
             backgroundWorkerDataService = new BackgroundWorker();
             backgroundWorkerDataService.DoWork += new DoWorkEventHandler(backgroundWorkerDataService_DoWork);
             backgroundWorkerDataService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerDataService_RunWorkerCompleted);
+            backgroundWorkerDataService.WorkerSupportsCancellation = true;
 
             backgroundWorkerMatchingService = new BackgroundWorker();
             backgroundWorkerMatchingService.DoWork += new DoWorkEventHandler(backgroundWorkerMatchingService_DoWork);
             backgroundWorkerMatchingService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerMatchingService_RunWorkerCompleted);
+            backgroundWorkerMatchingService.WorkerSupportsCancellation = true;
 
             //Data.NFExtractor = new NFExtractor();
             //Data.UpdateNfe();

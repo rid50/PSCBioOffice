@@ -66,7 +66,7 @@ namespace Nomad
 			if (file) {
 				std::streambuf *psbuf, *backup;
 				std::ofstream filestr;
-				filestr.open("error.txt", std::fstream::app | std::fstream::out);
+				filestr.open("c:\\temp\\error.txt", std::fstream::app | std::fstream::out);
 				backup = std::cout.rdbuf();     // back up cout's streambuf
 				psbuf = filestr.rdbuf();        // get file's streambuf
 				std::cout.rdbuf(psbuf);         // assign streambuf to cout
@@ -113,6 +113,8 @@ namespace Nomad
 			SQLCHAR ConnStrOut[MAXBUFLEN];
 			SQLSMALLINT cbConnStrOut;
 			SQLRETURN rc;
+
+			std::string dbSettings[4];
 
 		public:
 			static bool	terminateLoop;

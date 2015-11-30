@@ -78,7 +78,10 @@ namespace PSCBioIdentification
             ar.Clear();
 
             //record.appSettings = new System.Text.StringBuilder(4);
-            ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+            //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+            //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
+
+            ar.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
             ar.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
             ar.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
             ar.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
@@ -89,7 +92,15 @@ namespace PSCBioIdentification
             {
                 fixed (UInt32* ptr = &record.size)
                 {
-                    e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                    if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                    {
+                        e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                    }
+                    else
+                    {
+                        var configurationServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient();
+                        e.Result = configurationServiceClient.match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                    }
                 }
             }
         }
@@ -104,6 +115,8 @@ namespace PSCBioIdentification
             {
                 LogLine("Matching service: " + e.Error.Message, true);
                 ShowErrorMessage(e.Error.Message);
+                stopProgressBar();
+                EnableControls(true);
             }
             else
             {

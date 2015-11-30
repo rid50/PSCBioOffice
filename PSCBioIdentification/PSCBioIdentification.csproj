@@ -160,6 +160,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\MatchingService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -209,8 +214,28 @@
     <None Include="Service References\ConfigurationService\ConfigurationService1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\MatchingService\MatchingService.wsdl" />
+    <None Include="Service References\MatchingService\MatchingService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MatchingService\MatchingService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MatchingService\MatchingService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MatchingService\MatchingService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\MatchingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MatchingService\configuration.svcinfo" />
+    <None Include="Service References\MatchingService\configuration91.svcinfo" />
+    <None Include="Service References\MatchingService\MatchingService.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService21.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -249,6 +274,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ConfigurationService\" />
+    <WCFMetadataStorage Include="Service References\MatchingService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -58,6 +58,8 @@ namespace Nomad
 		//}
 
 		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[]) {
+			hEnv = SQL_NULL_HENV;
+			hDBC = SQL_NULL_HDBC;
 			matcherFacadePtr = NULL;
 			//buffer = NULL;
 			//buffer2 = NULL;
@@ -67,15 +69,23 @@ namespace Nomad
 				matcherFacadePtr->enroll(probeTemplate, probeTemplateSize);
 			}
 
+			for(int i = 0; i < 4; i++) {
+				dbSettings[i] = appSettings[i];
+			}
 
-			//String^ dbFingerTable = Configuration::ConfigurationManager::AppSettings["dbFingerTable"];
+			//if (appSettings[0] == ".")
+			//	dbSettings[0] = "(local)";
 
+			//"DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=MCCS_Egy;Trusted_Connection=yes;Mars_Connection=yes;"
+			//std::stringstream stmt;
+			//stmt << "DRIVER=ODBC Driver 11 for SQL Server;SERVER=" << appSettings[0] << ";DATABASE=" << appSettings[1] << ";Trusted_Connection=yes;Mars_Connection=yes;";
 
-			hEnv = SQL_NULL_HENV;
-			hDBC = SQL_NULL_HDBC;
-			strncpy_s((char *)ConnStrIn, sizeof(ConnStrIn) - 1, 
-							"DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=MCCS_Egy;Trusted_Connection=yes;Mars_Connection=yes;",
-							sizeof(ConnStrIn) - 1);
+			strncpy_s((char*)ConnStrIn, sizeof(ConnStrIn) - 1, appSettings[0], sizeof(ConnStrIn) - 1);
+			//strncpy_s((char*)ConnStrIn, sizeof(ConnStrIn) - 1, (char*)stmt.str().c_str(), sizeof(ConnStrIn) - 1);
+
+			//strncpy_s((char *)ConnStrIn, sizeof(ConnStrIn) - 1, 
+			//				"DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=MCCS_Egy;Trusted_Connection=yes;Mars_Connection=yes;",
+			//				sizeof(ConnStrIn) - 1);
 
 			//ConnStrIn = "DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=Northwind;Trusted_Connection=yes";
 			//cbConnStrOut = 0;
@@ -129,7 +139,25 @@ namespace Nomad
 			hStmt = SQL_NULL_HSTMT;
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-				rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL", SQL_NTS);
+
+			//std::stringstream stmt;
+			//stmt << "SELECT count(*) FROM ";
+			//for (int i = 0; i < numOfFieldsToMatch; i++) {
+			//	if (i != 0)
+			//		stmt << ",";
+
+			//	stmt << arrOfFingers[i];
+			//}
+
+			////stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+
+				//"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL"
+				std::stringstream stmt;
+				stmt << "SELECT count(*) FROM " << dbSettings[1] << " WHERE datalength(" << dbSettings[3] << ") IS NOT NULL";
+
+				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
+				//rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL", SQL_NTS);
 				//rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_AppPers", SQL_NTS);
 				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
 					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
@@ -155,7 +183,8 @@ namespace Nomad
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
 				std::stringstream stmt;
-				stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				stmt << "SELECT " << dbSettings[2] << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " <<  dbSettings[2] << " ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				//stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
 				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
 				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
 					if ((rc = SQLFetch(hStmt)) == SQL_SUCCESS) {
@@ -297,8 +326,11 @@ namespace Nomad
 
 				stmt << arrOfFingers[i];
 			}
+
+			stmt << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " << dbSettings[2] << " ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+
 			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
-			stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 			//}
 
 /*
@@ -385,11 +417,11 @@ namespace Nomad
 										numOfMatches++;
 									}
 
-									if (1) {
-										std::stringstream ss; 
-										ss << "r: " << j << " : " << i << " from: " << from;
-										Log(ss.str(), false);
-									}
+									//if (1) {
+									//	std::stringstream ss; 
+									//	ss << "r: " << j << " : " << i << " from: " << from;
+									//	Log(ss.str(), false);
+									//}
 
 								} catch (std::exception& e) {
 									*errorMessage = e.what();

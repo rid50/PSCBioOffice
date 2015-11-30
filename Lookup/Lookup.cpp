@@ -35,7 +35,10 @@ namespace Nomad {
 
 			unsigned __int32 retcode = 0;
 
-			
+			//std::stringstream ss2; 
+			//ss2 << "1------------------------------------:";
+			//Data::Log(ss2.str(), true);
+
 			//std::cout << errorMessage << endl;
 			try {
 				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings);
@@ -49,6 +52,10 @@ namespace Nomad {
 
 				return 0;
 			}
+
+			//ss2.clear();
+			//ss2 << "2------------------------------------:";
+			//Data::Log(ss2.str(), true);
 
 			unsigned __int32 rowcount = 0;
 
@@ -96,34 +103,37 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (1) {
+			if (0) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
-						unsigned __int32 ret = 0;
-						Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
-						//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
-						try {
-							ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
-						} catch (std::exception& e) {
-							errMessage = "Error: ";
-							errMessage += e.what();
-							ret = 0;
-						}
+						if (!Nomad::Data::Odbc::terminateLoop) {
+							unsigned __int32 ret = 0;
+							Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
+							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
+							try {
+								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+							} catch (std::exception& e) {
+								errMessage = "Error: ";
+								errMessage += e.what();
+								ret = 0;
+							}
 
-						if (ret > 0) {
-							retcode = ret;
-							Nomad::Data::Odbc::terminateLoop = true;
-							//Nomad::Data::Odbc::terminate();
-							tg.cancel();
-						} else if (ret == 0 && errMessage.length() != 0) {
-							retcode = 0;
-							Nomad::Data::Odbc::terminateLoop = true;
-							//Nomad::Data::Odbc::terminate();
-							tg.cancel();
-						}
+							if (ret > 0) {
+								retcode = ret;
+								Nomad::Data::Odbc::terminateLoop = true;
+								//Nomad::Data::Odbc::terminate();
+								tg.cancel();
+							} else if (ret == 0 && errMessage.length() != 0) {
+								retcode = 0;
+								Nomad::Data::Odbc::terminateLoop = true;
+								//Nomad::Data::Odbc::terminate();
+								tg.cancel();
+							}
 
-						delete odbcPtr;
+							delete odbcPtr;
+						} else
+							tg.cancel();
 					});
 				});
 			} else {
