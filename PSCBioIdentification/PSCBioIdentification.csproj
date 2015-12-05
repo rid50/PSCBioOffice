@@ -214,6 +214,9 @@
     <None Include="Service References\ConfigurationService\ConfigurationService1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ConfigurationService\ConfigurationService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\MatchingService\MatchingService.wsdl" />
     <None Include="Service References\MatchingService\MatchingService.xsd">
       <SubType>Designer</SubType>
@@ -229,16 +232,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\MatchingService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\MatchingService\configuration.svcinfo" />
-    <None Include="Service References\MatchingService\configuration91.svcinfo" />
-    <None Include="Service References\MatchingService\MatchingService.disco" />
-    <None Include="Service References\ConfigurationService\ConfigurationService21.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ConfigurationService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -246,6 +239,13 @@
     <None Include="Service References\ConfigurationService\configuration.svcinfo" />
     <None Include="Service References\ConfigurationService\configuration91.svcinfo" />
     <None Include="Service References\ConfigurationService\ConfigurationService.disco" />
+    <None Include="Service References\MatchingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MatchingService\configuration.svcinfo" />
+    <None Include="Service References\MatchingService\configuration91.svcinfo" />
+    <None Include="Service References\MatchingService\MatchingService.disco" />
     <None Include="Resources\red_light.png" />
     <None Include="Resources\66.png" />
     <Content Include="Resources\checkmark.png" />

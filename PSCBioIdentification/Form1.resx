@@ -313,10 +313,10 @@
     <value>3</value>
   </data>
   <data name="personId.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 107</value>
+    <value>18, 98</value>
   </data>
   <data name="personId.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 20</value>
+    <value>125, 20</value>
   </data>
   <data name="personId.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -340,7 +340,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblPersonId.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 91</value>
+    <value>15, 82</value>
   </data>
   <data name="lblPersonId.Size" type="System.Drawing.Size, System.Drawing">
     <value>55, 13</value>
@@ -367,7 +367,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonScan.Location" type="System.Drawing.Point, System.Drawing">
-    <value>76, 7</value>
+    <value>72, 7</value>
   </data>
   <data name="buttonScan.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 23</value>
@@ -1512,6 +1512,12 @@
   <data name="&gt;&gt;pictureBoxCheckMark.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="radioButtonIdentify.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="radioButtonIdentify.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
   <data name="radioButtonIdentify.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -1519,10 +1525,10 @@
     <value>NoControl</value>
   </data>
   <data name="radioButtonIdentify.Location" type="System.Drawing.Point, System.Drawing">
-    <value>69, 17</value>
+    <value>62, 17</value>
   </data>
   <data name="radioButtonIdentify.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 17</value>
+    <value>51, 23</value>
   </data>
   <data name="radioButtonIdentify.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1542,6 +1548,12 @@
   <data name="&gt;&gt;radioButtonIdentify.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="radioButtonVerify.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="radioButtonVerify.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
   <data name="radioButtonVerify.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -1549,10 +1561,10 @@
     <value>NoControl</value>
   </data>
   <data name="radioButtonVerify.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 17</value>
+    <value>13, 17</value>
   </data>
   <data name="radioButtonVerify.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 17</value>
+    <value>43, 23</value>
   </data>
   <data name="radioButtonVerify.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1573,10 +1585,10 @@
     <value>1</value>
   </data>
   <data name="groupBoxMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 32</value>
+    <value>18, 23</value>
   </data>
   <data name="groupBoxMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 44</value>
+    <value>125, 48</value>
   </data>
   <data name="groupBoxMode.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -1606,7 +1618,7 @@
     <value>8</value>
   </data>
   <data name="gbResults.Text" xml:space="preserve">
-    <value>Identification Panel</value>
+    <value>Control Panel</value>
   </data>
   <data name="&gt;&gt;gbResults.Name" xml:space="preserve">
     <value>gbResults</value>
