@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Configuration;
+using Neurotec.Licensing;
 
 namespace PassportReaderNS
 {
@@ -16,11 +17,33 @@ namespace PassportReaderNS
         {
             //ToggleConfigEncryption("PassportReader.exe");
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-        }
+            //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ";
+            //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Images.WSQ";
+            const string Components = "Images.WSQ";
 
+            try
+            {
+                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    NLicense.ObtainComponents("/local", "5000", component);
+                }
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1());
+            }
+            catch (Exception ex)
+            {
+			    while ((ex is AggregateException) && (ex.InnerException != null))
+				    ex = ex.InnerException;
+
+			    MessageBox.Show(ex.ToString(), null, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                NLicense.ReleaseComponents(Components);
+            }
+        }
 
         static void ToggleConfigEncryption(string exeConfigName)
         {

@@ -7,15 +7,16 @@ using System.ComponentModel;
 using System.Text;
 using PassportReaderNS.GEPIRReference;
 using System.Collections;
-using System.Media;
 using System.Drawing.Printing;
 using System.Drawing.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 
-using DBHelper;
+//using DBHelper;
 using System.Collections.Generic;
 using System.Configuration;
+using DBHelper;
+using Neurotec.Images;
 
 namespace PassportReaderNS
 {
@@ -1147,13 +1148,14 @@ namespace PassportReaderNS
             Application.DoEvents();
 
             //Dim fingersCollection As ArrayList
-            byte[][] buff = null;
+            byte[][] buffer = null;
+            //ArrayList _fingersCollection = null;
             try
             {
                 if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
                 {
                     var db = new DBUtil();
-                    buff[0] = db.GetImageFromWebService(IMAGE_TYPE.wsq, id);
+                    buffer[0] = db.GetImageFromWebService(IMAGE_TYPE.wsq, id);
                 } 
                 else
                 {
@@ -1169,69 +1171,95 @@ namespace PassportReaderNS
                     }
 
                     var db = new DAO.Database(settings);
-                    buff = db.GetImage(DAO.IMAGE_TYPE.wsq, id);
+                    buffer = db.GetImage(DAO.IMAGE_TYPE.wsq, id);
+                    if (buffer[0] == null || buffer[0].Length == 0)
+                    {
+                        toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
+                        toolStripStatusLabelError.ForeColor = Color.Red;
+                        return;
+                    }
+
+                    //var biometricService = new WSQImageServiceClient();
+                    //_fingersCollection = biometricService.processEnrolledData(buffer);
+
+                    var bioProcessor = new BioProcessor.BioProcessor();
+                    bioProcessor.processEnrolledData(buffer, out _fingersCollection);
+
+                    //ArrayList fingersCollection = null;
+                    //bioProcessor.DeserializeWSQArray(buffer[0], out fingersCollection);
+                    ////WsqSerializationBinder.WsqImage wsqImage = fingersCollection[0] as WsqSerializationBinder.WsqImage;
+                    //WsqSerializationBinder.WsqImage wsqImage = (WsqSerializationBinder.WsqImage)fingersCollection[0];
+
+
+                    //MemoryStream ms2 = null;
+                    //ms2 = new MemoryStream(buffer[0]);
+                    //var formatter = new BinaryFormatter();
+                    //formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
+                    //fingersCollection = formatter.Deserialize(ms2) as ArrayList;
+                    //WsqImage wsqImage = (WsqImage)fingersCollection[0];
+                    //ms2.Close();
+                    //NImage nImage = NImage.FromMemory(wsqImage.Content, NImageFormat.Wsq);
+
                 }
 
 
                     //buff = db.GetImage(IMAGE_TYPE.wsq, id);
 
-                if (buff[0] == null || buff[0].Length == 0)
-                {
-                    toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
-                    toolStripStatusLabelError.ForeColor = Color.Red;
-                    return;
-                }
-
                 MemoryStream ms = null;
 
-                ms = new MemoryStream(buff[0]);
-                //Construct a BinaryFormatter and use it to deserialize the data to the stream.
-                var formatter = new BinaryFormatter();
-                //'_fingersCollection = New ArrayList(10)
+                //ms = new MemoryStream(buffer[0]);
+                ////Construct a BinaryFormatter and use it to deserialize the data to the stream.
+                //var formatter = new BinaryFormatter();
+                ////'_fingersCollection = New ArrayList(10)
 
-                try
-                {
-                    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
-                    _fingersCollection = formatter.Deserialize(ms) as ArrayList;
-                }
-                catch (SerializationException ex)
-                {
-                    toolStripStatusLabelError.ForeColor = Color.Red;
-                    toolStripStatusLabelError.Text = ex.Message;
-                }
-                finally
-                {
-                    ms.Close();
-                }
+                //try
+                //{
+                //    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
+                //    _fingersCollection = formatter.Deserialize(ms) as ArrayList;
+                //}
+                //catch (SerializationException ex)
+                //{
+                //    toolStripStatusLabelError.ForeColor = Color.Red;
+                //    toolStripStatusLabelError.Text = ex.Message;
+                //}
+                //finally
+                //{
+                //    ms.Close();
+                //}
 
                 PictureBox pb;
-                System.Object theLock = new System.Object();
+                //System.Object theLock = new System.Object();
 
                 for (int i = 0; i <= 9; i++)
                 {
                     pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
                     if (_fingersCollection[i] != null)
                     {
-                        WsqImage wsq = _fingersCollection[i] as WsqImage;
+                        ms = new MemoryStream(_fingersCollection[i] as byte[]);
+                        pb.Image = Image.FromStream(ms);
+                        pb.SizeMode = PictureBoxSizeMode.Zoom;
+                        ms.Close();
 
-                        lock (theLock)
-                        {
-                            buff[0] = ARHScanner.ConvertWSQToBmp(wsq);
-                            ARHScanner.DisposeWSQImage();
-                        }
+                        //WsqImage wsq = _fingersCollection[i] as WsqImage;
 
-                        if (buff[0] != null)
-                            if (buff[0].Length == 1)
-                                continue;
+                        //lock (theLock)
+                        //{
+                        //    buffer[0] = ARHScanner.ConvertWSQToBmp(wsq);
+                        //    ARHScanner.DisposeWSQImage();
+                        //}
 
-                        if (buff[0] == null)
-                            pb.Image = null;
-                        else
-                        {
-                            ms = new MemoryStream(buff[0]);
-                            pb.Image = Image.FromStream(ms);
-                            pb.SizeMode = PictureBoxSizeMode.Zoom;
-                        }
+                        //if (buffer[0] != null)
+                        //    if (buffer[0].Length == 1)
+                        //        continue;
+
+                        //if (buffer[0] == null)
+                        //    pb.Image = null;
+                        //else
+                        //{
+                        //    ms = new MemoryStream(buffer[0]);
+                        //    pb.Image = Image.FromStream(ms);
+                        //    pb.SizeMode = PictureBoxSizeMode.Zoom;
+                        //}
                     }
                     else
                     {
