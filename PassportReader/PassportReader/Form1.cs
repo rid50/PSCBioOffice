@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using DBHelper;
 using Neurotec.Images;
+using Neurotec.Biometrics;
+using System.Drawing.Drawing2D;
 
 namespace PassportReaderNS
 {
@@ -1148,6 +1150,8 @@ namespace PassportReaderNS
             Application.DoEvents();
 
             //Dim fingersCollection As ArrayList
+            BioProcessor.BioProcessor bioProcessor = null;
+
             byte[][] buffer = null;
             //ArrayList _fingersCollection = null;
             try
@@ -1176,14 +1180,22 @@ namespace PassportReaderNS
                     {
                         toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
                         toolStripStatusLabelError.ForeColor = Color.Red;
+                        PictureBox pbox;
+                        for (int i = 0; i < 10; i++)
+                        {
+                            pbox = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
+                            pbox.Image = null;
+                        }
                         return;
                     }
+                    //NFRecord record = new NFRecord(buffer[1]);
+                    //int pct = record.Quality;
 
                     //var biometricService = new WSQImageServiceClient();
                     //_fingersCollection = biometricService.processEnrolledData(buffer);
 
-                    var bioProcessor = new BioProcessor.BioProcessor();
-                    bioProcessor.processEnrolledData(buffer, out _fingersCollection);
+                    bioProcessor = new BioProcessor.BioProcessor();
+                    //bioProcessor.processEnrolledData(buffer, out _fingersCollection);
 
                     //ArrayList fingersCollection = null;
                     //bioProcessor.DeserializeWSQArray(buffer[0], out fingersCollection);
@@ -1203,63 +1215,170 @@ namespace PassportReaderNS
                 }
 
 
+/*
+                if (fingersCollection[i] != null)
+                {
+                    wsqImage = fingersCollection[i] as WsqImage;
+                    try
+                    {
+                        NImage nImage = NImage.FromMemory(wsqImage.Content, NImageFormat.Wsq);
+                        if (serializedWSQArray[i + 1].Length != 0)
+                        {
+                            NFRecord record = new NFRecord(serializedWSQArray[i + 1]);
+                            pct = record.Quality;
+                            if (pct == 254)
+                                pct = 0;
+                        }
+                        else
+                            pct = 0;
+
+                        //verify(nImage);
+
+                        string label = ""; Brush brush = Brushes.Transparent;
+
+                        if (pct > 0) {
+                            label = string.Format("Q: {0:P0}", pct / 100.0);
+                            if (pct > 79)
+                                brush = Brushes.Green;
+                            else if (pct > 39)
+                                brush = Brushes.Orange;
+                            else
+                                brush = Brushes.Red;
+                        } else {
+                            label = string.Format("q: {0:P0}", 0);
+                            brush = Brushes.Red;
+                        }
+
+                        //Bitmap bmp = new Bitmap(nImage.ToBitmap(), new Size(65, 95));
+                        Bitmap bmp = new Bitmap(nImage.ToBitmap(), new Size(100, 120));
+                        //RectangleF rectf = new RectangleF(0.0f, 2.0f, 65.0f, 40.0f);
+                        RectangleF rectf = new RectangleF(0.0f, 2.0f, 90.0f, 60.0f);
+                        Graphics g = Graphics.FromImage(bmp);
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                        g.DrawString(label, new Font("Areal", 13), brush, rectf);
+                        g.Flush();
+
+                        using(var ms = new MemoryStream())
+                        {
+                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                            fingersCollection[i] = ms.ToArray();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new Exception(ex.Message);
+                        fingersCollection[i] = getEmptyBitmap();
+
+                        continue;
+                    }
+*/
+
+
                     //buff = db.GetImage(IMAGE_TYPE.wsq, id);
 
                 MemoryStream ms = null;
+                ms = new MemoryStream(buffer[0]);
+                //Construct a BinaryFormatter and use it to deserialize the data to the stream.
+                var formatter = new BinaryFormatter();
 
-                //ms = new MemoryStream(buffer[0]);
-                ////Construct a BinaryFormatter and use it to deserialize the data to the stream.
-                //var formatter = new BinaryFormatter();
-                ////'_fingersCollection = New ArrayList(10)
-
-                //try
-                //{
-                //    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
-                //    _fingersCollection = formatter.Deserialize(ms) as ArrayList;
-                //}
-                //catch (SerializationException ex)
-                //{
-                //    toolStripStatusLabelError.ForeColor = Color.Red;
-                //    toolStripStatusLabelError.Text = ex.Message;
-                //}
-                //finally
-                //{
-                //    ms.Close();
-                //}
+                try
+                {
+                    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
+                    _fingersCollection = formatter.Deserialize(ms) as ArrayList;
+                }
+                catch (SerializationException ex)
+                {
+                    toolStripStatusLabelError.ForeColor = Color.Red;
+                    toolStripStatusLabelError.Text = ex.Message;
+                }
+                finally
+                {
+                    ms.Close();
+                }
 
                 PictureBox pb;
-                //System.Object theLock = new System.Object();
+                System.Object theLock = new System.Object();
 
+                string label = ""; Brush brush = Brushes.Transparent;
+                int pct = 0;
                 for (int i = 0; i <= 9; i++)
                 {
                     pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
                     if (_fingersCollection[i] != null)
                     {
-                        ms = new MemoryStream(_fingersCollection[i] as byte[]);
-                        pb.Image = Image.FromStream(ms);
-                        pb.SizeMode = PictureBoxSizeMode.Zoom;
-                        ms.Close();
+                        WsqImage wsq = _fingersCollection[i] as WsqImage;
 
-                        //WsqImage wsq = _fingersCollection[i] as WsqImage;
+                        lock (theLock)
+                        {
+                            buffer[0] = ARHScanner.ConvertWSQToBmp(wsq);
+                            ARHScanner.DisposeWSQImage();
+                        }
 
-                        //lock (theLock)
-                        //{
-                        //    buffer[0] = ARHScanner.ConvertWSQToBmp(wsq);
-                        //    ARHScanner.DisposeWSQImage();
-                        //}
+                        if (buffer[0] != null && buffer[0].Length < 2)
+                            continue;
 
-                        //if (buffer[0] != null)
-                        //    if (buffer[0].Length == 1)
-                        //        continue;
+                        if (buffer[0] == null)
+                            pb.Image = null;
+                        else
+                        {
+                            using (var ms2 = new MemoryStream(buffer[0]))
+                            {
+                                if (bioProcessor != null)
+                                {
+                                    if (buffer[i + 1] != null && buffer[i + 1].Length != 0)
+                                        pct = bioProcessor.getImageQuality(buffer[i + 1]);
+                                    else
+                                        pct = 0;
 
-                        //if (buffer[0] == null)
-                        //    pb.Image = null;
-                        //else
-                        //{
-                        //    ms = new MemoryStream(buffer[0]);
-                        //    pb.Image = Image.FromStream(ms);
-                        //    pb.SizeMode = PictureBoxSizeMode.Zoom;
-                        //}
+                                    if (pct > 0)
+                                    {
+                                        label = string.Format("Q: {0:P0}", pct / 100.0);
+                                        if (pct > 79)
+                                            brush = Brushes.Green;
+                                        else if (pct > 39)
+                                            brush = Brushes.Orange;
+                                        else
+                                            brush = Brushes.Red;
+                                    }
+                                    else
+                                    {
+                                        label = string.Format("q: {0:P0}", 0);
+                                        brush = Brushes.Red;
+                                    }
+
+                                    //Bitmap bmp = new Bitmap(nImage.ToBitmap(), new Size(65, 95));
+                                    //Bitmap bmp2 = new Bitmap(nImage.ToBitmap(), new Size(100, 120));
+                                    //Bitmap bmp2 = new Bitmap(pb.Image, new Size(100, 120));
+                                    //Bitmap bmp = new Bitmap(Image.FromStream(ms2), new Size(100, 120));
+                                    Bitmap bmp = new Bitmap(Image.FromStream(ms2));
+
+                                    //RectangleF rectf = new RectangleF(0.0f, 2.0f, 65.0f, 40.0f);
+                                    RectangleF rectf = new RectangleF(0.0f, 8.0f, 390.0f, 260.0f);
+                                    Graphics g = Graphics.FromImage(bmp);
+                                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                                    g.DrawString(label, new Font("Areal", 46, FontStyle.Bold), brush, rectf);
+                                    g.Flush();
+
+                                    using (var ms3 = new MemoryStream())
+                                    {
+                                        bmp.Save(ms3, System.Drawing.Imaging.ImageFormat.Bmp);
+                                        pb.Image = Image.FromStream(ms3);
+                                    }
+                                }
+                                else
+                                {
+                                    pb.Image = Image.FromStream(ms2);
+                                }
+
+                                pb.SizeMode = PictureBoxSizeMode.Zoom;
+                            }
+                        }
                     }
                     else
                     {
