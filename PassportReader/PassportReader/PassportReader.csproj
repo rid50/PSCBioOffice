@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -145,14 +145,6 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\PSCBioOfficeWeb\DAO\bin\DAO.dll</HintPath>
     </Reference>
-    <Reference Include="fpsdotnet7, Version=1.2.1.14, Culture=neutral, PublicKeyToken=4020ef1cb3f1980b">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Windows\assembly\GAC\fpsdotnet7\1.2.1.14__4020ef1cb3f1980b\fpsdotnet7.dll</HintPath>
-    </Reference>
-    <Reference Include="gxdotnet7, Version=7.2.10.0, Culture=neutral, PublicKeyToken=5785895c728cac85">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Windows\assembly\GAC\gxdotnet7\7.2.10.0__5785895c728cac85\gxdotnet7.dll</HintPath>
-    </Reference>
     <Reference Include="Neurotec">
       <HintPath>..\..\dotNET32\Neurotec.dll</HintPath>
     </Reference>
@@ -168,9 +160,8 @@
     <Reference Include="Neurotec.Media">
       <HintPath>..\..\dotNET32\Neurotec.Media.dll</HintPath>
     </Reference>
-    <Reference Include="prdotnet7, Version=2.1.5.19, Culture=neutral, PublicKeyToken=4020ef1cb3f1980b">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Windows\assembly\GAC\prdotnet7\2.1.5.19__4020ef1cb3f1980b\prdotnet7.dll</HintPath>
+    <Reference Include="PrFps22">
+      <HintPath>bin\PrFps22.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

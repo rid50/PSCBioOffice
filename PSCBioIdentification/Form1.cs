@@ -24,6 +24,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Runtime.Remoting.Messaging;
+using System.ServiceModel;
 
 namespace PSCBioIdentification
 {
@@ -96,7 +97,7 @@ namespace PSCBioIdentification
         
         private bool _isCapturing = false;
 
-        System.Diagnostics.Stopwatch _sw;
+        //System.Diagnostics.Stopwatch _sw;
 
         //private NDeviceManager scannerMan;
 //        private string selectedScannerModules = string.Empty;
@@ -636,10 +637,10 @@ namespace PSCBioIdentification
                         string.Format(". Quality: {0}", _subject2.Fingers[0].Objects[0].Quality),
                         _subject2.Fingers[0].Objects[0].Template.GetSize());
 
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<string>)((txt) =>
                     {
-                        LogLine(text, true);
-                    }), null);
+                        LogLine(txt, true);
+                    }), text);
 
                     //File.WriteAllBytes("TwoFingersTemplate.temp", _subject2.Fingers[0].Objects[0].Template.Save().ToArray());
 
@@ -658,12 +659,12 @@ namespace PSCBioIdentification
 
                 string text = string.Format("Extraction failed: {0}", obj.Status);
 
-                this.Invoke((Action)(() =>
+                this.Invoke((Action<string>)((txt) =>
                 {
-                    ShowErrorMessage(text);
-                    LogLine(text, true);
+                    ShowErrorMessage(txt);
+                    LogLine(txt, true);
                     EnableControls(true);
-                }), null);
+                }), text);
 
             }
         }
@@ -806,12 +807,12 @@ namespace PSCBioIdentification
         //    OnImage((NGrayscaleImage)ea.Image.Clone());
         //}
 
-        private bool enrollFromWSQ(WsqImage wsqImage)
+        private void enrollFromWSQ(WsqImage wsqImage)
         {
             //string fileName = "lindex.wsq";
 
-            if (!isUserIdValid())
-                return false;
+            //if (!isUserIdValid())
+            //    return;
 
             //DBHelper.DBUtil db = new DBHelper.DBUtil();
             //byte[] serializedArrayOfWSQ = db.GetImage(this.userId, true);
@@ -938,7 +939,7 @@ namespace PSCBioIdentification
             //BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
 
-            return true;
+            //return true;
         }
 
         //private void clearView()
@@ -1550,12 +1551,12 @@ namespace PSCBioIdentification
             PictureBox pb;
             //NSubject[] subjects = new NSubject[10];
 
-            ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
             if (serializedWSQArray == null)
             {
                 clearFingerBoxes();
                 this.Invoke((Action)(() =>
                 {
+                    ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
                     string text = rm.GetString("msgThePersonHasNotYetBeenEnrolled"); // "The person has not yet been enrolled"
                     LogLine(text, true);
                     ShowErrorMessage(text);
@@ -1565,8 +1566,10 @@ namespace PSCBioIdentification
                 return false;
             }
 
-
             MemoryStream ms = new MemoryStream(serializedWSQArray[0]);
+
+            if (_fingersCollection != null)
+                _fingersCollection.Clear();
 
             //Assembly.Load(string assemblyString)
             // Construct a BinaryFormatter and use it to deserialize the data to the stream.
@@ -1607,7 +1610,7 @@ namespace PSCBioIdentification
             //bool rbChecked = false;
             //, pbChecked = false;
 
-            _biometricClient.FingersTemplateSize = NTemplateSize.Small;
+            _biometricClient.FingersTemplateSize = NTemplateSize.Large;
             _biometricClient.FingersFastExtraction = false;
 
             //TimeSpan ts;
@@ -1627,19 +1630,19 @@ namespace PSCBioIdentification
                 wsqImage = _fingersCollection[i] as WsqImage;
                 if (wsqImage == null)
                 {
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<RadioButton, Label>)((rbutton, lab) =>
                     {
-                        rb.Enabled = false;
-                        lb.Enabled = false;
-                    }), null);
+                        rbutton.Enabled = false;
+                        lab.Enabled = false;
+                    }), rb, lb);
                 }
                 else
                 {
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<RadioButton, Label>)((rbutton, lab) =>
                     {
-                        rb.Enabled = true;
-                        lb.Enabled = true;
-                    }), null);
+                        rbutton.Enabled = true;
+                        lab.Enabled = true;
+                    }), rb, lb);
                 }
 
                 pb = this.Controls.Find("fpPictureBox" + (i + 1).ToString(), true)[0] as PictureBox;
@@ -1681,18 +1684,17 @@ namespace PSCBioIdentification
                                 bestQualityImage = i;
                             }
 
-                            this.Invoke((Action)(() =>
+                            this.Invoke((Action<int, int>)((percent, indx) =>
                             {
-                                var lbf = (this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
-
-                                lbf.Text = string.Format("Q: {0:P0}", pct / 100.0);
+                                var lbf = (this.Controls.Find("lbFinger" + (indx + 1).ToString(), true)[0] as Label);
+                                lbf.Text = string.Format("Q: {0:P0}", percent / 100.0);
                                 if (pct > 79)
                                     lbf.ForeColor = Color.GreenYellow;
                                 else if (pct > 39)
                                     lbf.ForeColor = Color.Orange;
                                 else
                                     lbf.ForeColor = Color.Red;
-                            }), null);
+                            }), pct, i);
                         }
                         else
                         {
@@ -1810,23 +1812,26 @@ namespace PSCBioIdentification
                 }
                 else
                 {
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<PictureBox, int>)((pbox, idx) =>
                     {
-                        pb.Image = null;
-                        this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0].Text = "";
-                    }), null);
+                        pbox.Image = null;
+                        this.Controls.Find("lbFinger" + (idx + 1).ToString(), true)[0].Text = "";
+                    }), pb, i);
                 }
             }
+
+
+            //serializedWSQArray.
 
             if (!createTemplatesFromWSQ)
             {
                 if (radioButtonVerify.Checked)
                 {
-                    var rb2 = this.Controls.Find("radioButton" + (bestQualityImage + 1).ToString(), true)[0] as RadioButton;
-                    this.BeginInvoke((Action)(() =>
+                    this.BeginInvoke((Action<int>)((best) =>
                     {
+                        var rb2 = this.Controls.Find("radioButton" + (best + 1).ToString(), true)[0] as RadioButton;
                         BeginInvoke(new MethodInvoker(delegate() { checkRadioButton(rb2.Name); }));
-                    }), null);
+                    }), bestQualityImage);
                 }
                 else if (radioButtonIdentify.Checked)
                 {
@@ -1836,18 +1841,24 @@ namespace PSCBioIdentification
                         cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                         if (cb.Checked)
                         {
-                            var m = System.Text.RegularExpressions.Regex.Match(cb.Name, @"\d+$");
-                            this.BeginInvoke((Action)(() =>
+                            this.BeginInvoke((Action<CheckBox>)((cbox) =>
                             {
+                                var m = System.Text.RegularExpressions.Regex.Match(cbox.Name, @"\d+$");
                                 fingerChanged(Int32.Parse(m.Value) - 1, false);
-                            }), null);
+                            }), cb);
                         }
                     }
+                }
+
+                if (_subject != null)
+                {
+                    _subject.Dispose();
+                    _subject = null;
                 }
             }
             else
             {
-                _sw = System.Diagnostics.Stopwatch.StartNew();
+                //_sw = System.Diagnostics.Stopwatch.StartNew();
                 _biometricClient.BeginCreateTemplate(_subject, OnExtractionCompleted, null);
             }
 
@@ -1912,25 +1923,23 @@ namespace PSCBioIdentification
             }
             else
             {
-                _sw.Stop();
-                TimeSpan ts = _sw.Elapsed;
-                string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
-                LogLine("Total template creation time " + elapsedTime, true);
-                //sConsole.WriteLine("RunTime " + elapsedTime);
-
-                //return;
+                //_sw.Stop();
+                //TimeSpan ts = _sw.Elapsed;
+                //string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
+                //LogLine("Total template creation time " + elapsedTime, true);
 
                 var lbs = new List<Label>();
                 for (int i = 0; i < _fingersCollection.Count; i++)
                 {
                     //lbs.Add(this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
-                    var lb = (this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
-                    //this.Invoke((Action)(() =>
-                    //{
-                    //    lb.Text = "";
-                    //}), null);
+                    //var lb = (this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
+                    this.Invoke((Action<List<Label>, int>)((list, indx) =>
+                    {
+                        var lb = (this.Controls.Find("lbFinger" + (indx + 1).ToString(), true)[0] as Label);
+                        list.Add(lb);
+                    }), lbs, i);
 
-                    lbs.Add(lb);
+                    //lbs.Add(lb);
                 }
 
                 try
@@ -1939,14 +1948,14 @@ namespace PSCBioIdentification
                 }
                 catch (Exception)
                 {
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<List<Label>>)((lbss) =>
                     {
-                        foreach (Label lb in lbs)
+                        foreach (Label lb in lbss)
                         {
                             lb.Text = string.Format("Q: {0:P0}", 0);
                             lb.ForeColor = Color.Red;
                         }
-                    }), null);
+                    }), lbs);
                 }
                 finally
                 {
@@ -1956,11 +1965,11 @@ namespace PSCBioIdentification
 
                     if (radioButtonVerify.Checked)
                     {
-                        var rb = this.Controls.Find("radioButton" + (bestQualityImage + 1).ToString(), true)[0] as RadioButton;
-                        this.BeginInvoke((Action)(() =>
+                        this.BeginInvoke((Action<int>)((best) =>
                         {
+                            var rb = this.Controls.Find("radioButton" + (best + 1).ToString(), true)[0] as RadioButton;
                             BeginInvoke(new MethodInvoker(delegate() { checkRadioButton(rb.Name); }));
-                        }), null);
+                        }), bestQualityImage);
                     }
                     else if (radioButtonIdentify.Checked)
                     {
@@ -1970,13 +1979,19 @@ namespace PSCBioIdentification
                             cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                             if (cb.Checked)
                             {
-                                var m = System.Text.RegularExpressions.Regex.Match(cb.Name, @"\d+$");
-                                this.BeginInvoke((Action)(() =>
+                                this.BeginInvoke((Action<CheckBox>)((cbox) =>
                                 {
+                                    var m = System.Text.RegularExpressions.Regex.Match(cbox.Name, @"\d+$");
                                     fingerChanged(Int32.Parse(m.Value) - 1, false);
-                                }), null);
+                                }), cb);
                             }
                         }
+                    }
+
+                    if (_subject != null)
+                    {
+                        _subject.Dispose();
+                        _subject = null;
                     }
                     //}), null);
                 }
@@ -1991,13 +2006,13 @@ namespace PSCBioIdentification
             for (int i = 0; i < _fingersCollection.Count; i++)
             {
                 //lbs.Add(this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
-                var lb = (this.Controls.Find("lbFinger" + (i + 1).ToString(), true)[0] as Label);
-                this.Invoke((Action)(() =>
+                this.Invoke((Action<List<Label>, int>)((list, indx) =>
                 {
+                    var lb = (this.Controls.Find("lbFinger" + (indx + 1).ToString(), true)[0] as Label);
                     lb.Text = "";
-                }), null);
+                    list.Add(lb);
+                }), lbs, i);
 
-                lbs.Add(lb);
             }
 
             try
@@ -2054,24 +2069,24 @@ namespace PSCBioIdentification
                             bestQualityImage = i;
                         }
 
-                        this.Invoke((Action)(() =>
+                        this.Invoke((Action<int, Label>)((percent, lab) =>
                         {
-                            lb.Text = string.Format("Q: {0:P0}", pct / 100.0);
+                            lab.Text = string.Format("Q: {0:P0}", percent / 100.0);
                             if (pct > 79)
-                                lb.ForeColor = Color.GreenYellow;
+                                lab.ForeColor = Color.GreenYellow;
                             else if (pct > 39)
-                                lb.ForeColor = Color.Orange;
+                                lab.ForeColor = Color.Orange;
                             else
-                                lb.ForeColor = Color.Red;
-                        }), null);
+                                lab.ForeColor = Color.Red;
+                        }), pct, lb);
                     }
                     else
                     {
-                        this.Invoke((Action)(() =>
+                        this.Invoke((Action<Label>)((lab) =>
                         {
-                            lb.Text = string.Format("Q: {0:P0}", 0);
-                            lb.ForeColor = Color.Red;
-                        }), null);
+                            lab.Text = string.Format("Q: {0:P0}", 0);
+                            lab.ForeColor = Color.Red;
+                        }), lb);
                     }
                 }
                 //var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -2085,19 +2100,16 @@ namespace PSCBioIdentification
             }
             catch (Exception)
             {
-                this.Invoke((Action)(() =>
+                this.Invoke((Action<List<Label>>)((list) =>
                 {
-                    foreach (Label lb in lbs)
+                    foreach (Label lb in list)
                     {
                         lb.Text = string.Format("Q: {0:P0}", 0);
                         lb.ForeColor = Color.Red;
                     }
-                }), null);
+                }), lbs);
 
                 return 0;
-            }
-            finally
-            {
             }
 
             return bestQualityImage;
@@ -2122,22 +2134,22 @@ namespace PSCBioIdentification
 
                 if (status != NBiometricStatus.Ok)
                 {
-                    this.Invoke((Action)(() =>
+                    this.Invoke((Action<Label>)((lab) =>
                     {
-                        lb.Text = string.Format("Q: {0:P0}", 0);
-                        lb.ForeColor = Color.Red;
-                    }), null);
+                        lab.Text = string.Format("Q: {0:P0}", 0);
+                        lab.ForeColor = Color.Red;
+                    }), lb);
 
                     return 0;
                 }
             }
             catch (Exception)
             {
-                this.Invoke((Action)(() =>
+                this.Invoke((Action<Label>)((lab) =>
                 {
-                    lb.Text = string.Format("Q: {0:P0}", 0);
-                    lb.ForeColor = Color.Red;
-                }), null);
+                    lab.Text = string.Format("Q: {0:P0}", 0);
+                    lab.ForeColor = Color.Red;
+                }), lb);
 
                 return 0;
             }
@@ -2145,18 +2157,18 @@ namespace PSCBioIdentification
             {
                 if (status == NBiometricStatus.Ok)
                 {
-                    this.Invoke((Action)(() =>
-                    {
-                        pct = subject.Fingers[0].Objects.First().Quality;
+                    pct = subject.Fingers[0].Objects.First().Quality;
 
-                        lb.Text = string.Format("Q: {0:P0}", pct / 100.0);
+                    this.Invoke((Action<int, Label>)((percent, lab) =>
+                    {
+                        lab.Text = string.Format("Q: {0:P0}", percent / 100.0);
                         if (pct > 80)
-                            lb.ForeColor = Color.GreenYellow;
+                            lab.ForeColor = Color.GreenYellow;
                         else if (pct > 50)
-                            lb.ForeColor = Color.Orange;
+                            lab.ForeColor = Color.Orange;
                         else
-                            lb.ForeColor = Color.Red;
-                    }), null);
+                            lab.ForeColor = Color.Red;
+                    }), pct, lb);
                 }
             }
 
@@ -2392,10 +2404,12 @@ namespace PSCBioIdentification
 
             //int rbNumber = "radioButton".Length;
             //rbNumber = Int32.Parse(rb.Name.Substring(rbNumber));
-            WsqImage wsqImage = _fingersCollection[Int32.Parse(m.Value) - 1] as WsqImage;
+            //WsqImage wsqImage = _fingersCollection[Int32.Parse(m.Value) - 1] as WsqImage;
             //WsqImage wsqImage = _fingersCollection[rbNumber - 1] as WsqImage;
+
             fingerChanged(Int32.Parse(m.Value) - 1, true);
 
+            WsqImage wsqImage = _fingersCollection[Int32.Parse(m.Value) - 1] as WsqImage;
             enrollFromWSQ(wsqImage);
         }
 
@@ -2403,6 +2417,8 @@ namespace PSCBioIdentification
         {
             toolStripStatusLabelError.ForeColor = Color.Black;
             toolStripStatusLabelError.Text = message;
+            //this.Controls.SetChildIndex(statusStrip1, 0);
+
             Application.DoEvents();
         }
 
@@ -2502,7 +2518,7 @@ namespace PSCBioIdentification
                 }
             }
 
-            if (_device.IsAvailable)
+            if (_device != null && _device.IsAvailable)
             {
                 //_deviceManager.DisconnectFromDevice(_device);
                 Neurotec.Gui.NGui.InvokeAsync(((NBiometricDevice)_device).Cancel);
@@ -2510,6 +2526,25 @@ namespace PSCBioIdentification
 
             if (_biometricClient != null)
                 _biometricClient.Cancel();
+        }
+
+        private void fillAppFabricCache_Click(object sender, EventArgs e)
+        {
+            var client = new AppFabricCacheService.PopulateCacheServiceClient();
+            try
+            {
+                client.Run(new string[] { "0" });
+            }
+            catch (FaultException ex)
+            {
+                MessageBox.Show(ex.Message);
+                //ShowErrorMessage(ex.Message);
+            }
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    //ShowErrorMessage(ex.Message);
+            //}
         }
     }
 

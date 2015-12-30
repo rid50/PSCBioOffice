@@ -29,6 +29,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PassportReaderClientVB", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pscpr", "PassportReader\pscpr\pscpr.csproj", "{6AA8399B-D6E2-48C9-B37A-547D1C6054BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FillAppFabricCache", "FillAppFabricCache\FillAppFabricCache.csproj", "{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,8 +203,8 @@ Global
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|x64.ActiveCfg = Debug|x86
-		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|x64.Build.0 = Debug|x86
+		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|x64.ActiveCfg = Debug|x64
+		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|x64.Build.0 = Debug|x64
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC61337A-4FF4-446F-97C8-F3F6E31B933D}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -243,6 +245,24 @@ Global
 		{6AA8399B-D6E2-48C9-B37A-547D1C6054BF}.Release|x64.ActiveCfg = Release|x86
 		{6AA8399B-D6E2-48C9-B37A-547D1C6054BF}.Release|x86.ActiveCfg = Release|x86
 		{6AA8399B-D6E2-48C9-B37A-547D1C6054BF}.Release|x86.Build.0 = Release|x86
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|Win32.ActiveCfg = Debug|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|x64.ActiveCfg = Debug|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|x64.Build.0 = Debug|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|x86.ActiveCfg = Debug|x86
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Debug|x86.Build.0 = Debug|x86
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|Mixed Platforms.Build.0 = Release|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|Win32.ActiveCfg = Release|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|x64.ActiveCfg = Release|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|x64.Build.0 = Release|x64
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|x86.ActiveCfg = Release|x86
+		{AD9A45A1-990E-42D9-BC4F-50F6DDFDD6C9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

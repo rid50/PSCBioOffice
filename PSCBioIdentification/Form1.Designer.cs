@@ -100,6 +100,7 @@
             this.lbFinger4 = new System.Windows.Forms.Label();
             this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
             this.scannersListBox = new System.Windows.Forms.ListBox();
+            this.fillAppFabricCache = new System.Windows.Forms.Button();
             this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
             this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
@@ -713,6 +714,13 @@
             this.scannersListBox.Name = "scannersListBox";
             this.scannersListBox.SelectedIndexChanged += new System.EventHandler(this.ScannersListBoxSelectedIndexChanged);
             // 
+            // fillAppFabricCache
+            // 
+            resources.ApplyResources(this.fillAppFabricCache, "fillAppFabricCache");
+            this.fillAppFabricCache.Name = "fillAppFabricCache";
+            this.fillAppFabricCache.UseVisualStyleBackColor = true;
+            this.fillAppFabricCache.Click += new System.EventHandler(this.fillAppFabricCache_Click);
+            // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Active = false;
@@ -828,6 +836,7 @@
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
+            this.Controls.Add(this.fillAppFabricCache);
             this.Controls.Add(this.scannersListBox);
             this.Controls.Add(this.pictureBoxCompanyLogo);
             this.Controls.Add(this.gbResults);
@@ -965,6 +974,7 @@
         private Neurotec.Biometrics.Gui.NFingerView fingerView2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button fillAppFabricCache;
 
     }
 }

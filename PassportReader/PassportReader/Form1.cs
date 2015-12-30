@@ -130,7 +130,8 @@ namespace PassportReaderNS
 
             if (sc != null && ErrorCode == 0)
             {
-                if (sc.DeviceState == (int)pr.PR_TESTDOC.PR_TD_OUT && !_noOut)
+                //if (sc.DeviceState == (int)pr.PR_TESTDOC.PR_TD_OUT && !_noOut)
+                if (sc.DeviceState == (int)Pr22.Util.PresenceState.Empty && !_noOut)
                 {
                     _noOut = true;
 
@@ -143,7 +144,8 @@ namespace PassportReaderNS
                     button1.Enabled = true;
                     button1.Focus();
                 }
-                else if (sc.DeviceState == (int)pr.PR_TESTDOC.PR_TD_NOMOVE && !_noMove)
+                //else if (sc.DeviceState == (int)pr.PR_TESTDOC.PR_TD_NOMOVE && !_noMove)
+                else if (sc.DeviceState == (int)Pr22.Util.PresenceState.NoMove && !_noMove)
                 {
                     _noMove = true;
                     _noOut = false;
@@ -321,7 +323,8 @@ namespace PassportReaderNS
                         */
                     }
                 }
-                else if (sc.DeviceState != (int)pr.PR_TESTDOC.PR_TD_NOMOVE)
+                //else if (sc.DeviceState != (int)pr.PR_TESTDOC.PR_TD_NOMOVE)
+                else if (sc.DeviceState != (int)Pr22.Util.PresenceState.NoMove)
                     _noMove = false;
 
                 stopProgressBar();
@@ -957,7 +960,7 @@ namespace PassportReaderNS
         private void saveWsqInDatabase(int id, byte[] buffer)
         {
             //FileStream fs = null;
-
+            return;
             try
             {
                 //  fs = new FileStream("lindex.wsq", FileMode.Open);
@@ -968,7 +971,7 @@ namespace PassportReaderNS
                 {
                     DBUtil db = new DBUtil();
                     db.UploadImage(IMAGE_TYPE.wsq, id, ref buffer);
-                } 
+                }
                 else
                 {
                     var bioProcessor = new BioProcessor.BioProcessor();
@@ -990,6 +993,11 @@ namespace PassportReaderNS
 
 
                 //db.SaveTemplate(id, buffer);
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabelError.ForeColor = Color.Red;
+                toolStripStatusLabelError.Text = ex.Message;
             }
             finally
             {
