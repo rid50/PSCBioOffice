@@ -127,6 +127,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallbackFromAppFabricCacheService.cs" />
     <Compile Include="ConfigurationSettings.cs" />
     <Compile Include="MatchingService.cs">
       <SubType>Form</SubType>

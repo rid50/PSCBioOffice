@@ -2413,10 +2413,11 @@ namespace PSCBioIdentification
             enrollFromWSQ(wsqImage);
         }
 
-        void ShowStatusMessage(string message)
+        public void ShowStatusMessage(string message)
         {
             toolStripStatusLabelError.ForeColor = Color.Black;
             toolStripStatusLabelError.Text = message;
+            //toolStripProgressBar.Visible = false;
             //this.Controls.SetChildIndex(statusStrip1, 0);
 
             Application.DoEvents();
@@ -2528,9 +2529,24 @@ namespace PSCBioIdentification
                 _biometricClient.Cancel();
         }
 
+
+        void MyEvent(object sender, MyEventArgs e)
+        {
+            if (e.Error.Length == 0)
+                ShowStatusMessage(e.Message);
+            else
+                MessageBox.Show(e.Error);
+                //ShowErrorMessage(e.Error);
+        }
+
         private void fillAppFabricCache_Click(object sender, EventArgs e)
         {
-            var client = new AppFabricCacheService.PopulateCacheServiceClient();
+            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+            callback.MyEvent += MyEvent;
+            InstanceContext context = new InstanceContext(callback);
+
+            var client = new AppFabricCacheService.PopulateCacheServiceClient(context);
+
             try
             {
                 client.Run(new string[] { "0" });
@@ -2540,12 +2556,30 @@ namespace PSCBioIdentification
                 MessageBox.Show(ex.Message);
                 //ShowErrorMessage(ex.Message);
             }
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    //ShowErrorMessage(ex.Message);
-            //}
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                //ShowErrorMessage(ex.Message);
+            }
         }
+
+
+        //class CallbackFromAppFabricCacheService : AppFabricCacheService.IPopulateCacheServiceCallback
+        //{
+        //    public void Respond(String str)
+        //    {
+
+        //        toolStripStatusLabelError.ForeColor = Color.Black;
+        //        toolStripStatusLabelError.Text = message;
+        //        ////this.Controls.SetChildIndex(statusStrip1, 0);
+
+        //        //Application.DoEvents();
+
+        //        Form1.ShowStatusMessage(str);
+        //        //MessageBox.Show(str);
+        //    }
+        //}    
+    
     }
 
     [Serializable]
