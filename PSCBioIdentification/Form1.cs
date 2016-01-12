@@ -68,6 +68,7 @@ namespace PSCBioIdentification
         private BackgroundWorker backgroundWorkerProgressBar;
         private BackgroundWorker backgroundWorkerDataService;
         private BackgroundWorker backgroundWorkerMatchingService;
+        private BackgroundWorker backgroundWorkerCachingService;
         
         //private bool enrollMode = true;
         //private NGrayscaleImage[] images = new NGrayscaleImage[0];
@@ -82,6 +83,8 @@ namespace PSCBioIdentification
         //private NFRecord template;
         //private NFRecord enrolledTemplate;
         //private FPScannerMan scannerMan;
+
+        private ManualResetEvent _mre;
 
         //private NImage _image;
         private NDeviceManager _deviceManager;
@@ -189,6 +192,11 @@ namespace PSCBioIdentification
             backgroundWorkerMatchingService.DoWork += new DoWorkEventHandler(backgroundWorkerMatchingService_DoWork);
             backgroundWorkerMatchingService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerMatchingService_RunWorkerCompleted);
             backgroundWorkerMatchingService.WorkerSupportsCancellation = true;
+
+            backgroundWorkerCachingService = new BackgroundWorker();
+            backgroundWorkerCachingService.DoWork += new DoWorkEventHandler(backgroundWorkerCachingService_DoWork);
+            backgroundWorkerCachingService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerCachingService_RunWorkerCompleted);
+            backgroundWorkerCachingService.WorkerSupportsCancellation = true;
 
             //Data.NFExtractor = new NFExtractor();
             //Data.UpdateNfe();
@@ -311,6 +319,7 @@ namespace PSCBioIdentification
 
         private void EnableControls(bool enable)
         {
+            fillAppFabricCache.Enabled = enable;
             buttonRequest.Enabled = enable;
             buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
             groupBoxMode.Enabled = enable;
@@ -2532,35 +2541,46 @@ namespace PSCBioIdentification
 
         void MyEvent(object sender, MyEventArgs e)
         {
-            if (e.Error.Length == 0)
+            if (e == null)
+                _mre.Set();                     //cache service finished cache populating
+            else if (e.Error.Length == 0)
                 ShowStatusMessage(e.Message);
             else
+            {
+                _mre.Set();                     //cache service finished cache populating
+                stopProgressBar();
                 MessageBox.Show(e.Error);
+                EnableControls(true);
+            }
                 //ShowErrorMessage(e.Error);
         }
 
         private void fillAppFabricCache_Click(object sender, EventArgs e)
         {
-            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
-            callback.MyEvent += MyEvent;
-            InstanceContext context = new InstanceContext(callback);
+            _mre = new ManualResetEvent(false);
+            startCachingServiceProcess(_mre);
 
-            var client = new AppFabricCacheService.PopulateCacheServiceClient(context);
+            //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+            //callback.MyEvent += MyEvent;
+            //InstanceContext context = new InstanceContext(callback);
 
-            try
-            {
-                client.Run(new string[] { "0" });
-            }
-            catch (FaultException ex)
-            {
-                MessageBox.Show(ex.Message);
-                //ShowErrorMessage(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                //ShowErrorMessage(ex.Message);
-            }
+            //var client = new AppFabricCacheService.PopulateCacheServiceClient(context);
+
+            //try
+            //{
+            //    client.Run(new string[]{});
+            //    //client.Run(new string[] { "0" });
+            //}
+            //catch (FaultException ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    //ShowErrorMessage(ex.Message);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    //ShowErrorMessage(ex.Message);
+            //}
         }
 
 
