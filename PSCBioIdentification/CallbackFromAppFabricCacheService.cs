@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace PSCBioIdentification
 {
-    class CallbackFromAppFabricCacheService : AppFabricCacheService.IPopulateCacheServiceCallback
+    class CallbackFromAppFabricCacheService : CachePopulateService.IPopulateCacheServiceCallback
     {
         private static int totalRecords;
         private static double runningSum;

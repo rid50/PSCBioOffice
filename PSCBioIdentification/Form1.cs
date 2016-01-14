@@ -222,6 +222,23 @@ namespace PSCBioIdentification
 
             UpdateScannerList();
 
+            var client = new CacheMatchingService.MatchingServiceClient();
+            ArrayList fingerList = client.getFingerList();
+
+            if (fingerList != null)
+            {
+                Label lab; CheckBox cb;
+                for (int i = 1; i < 11; i++)
+                {
+                    lab = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                    if (fingerList.IndexOf(lab.Text) != -1)
+                    {
+                        cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+                        cb.Checked = true;
+                        lab.BackColor = Color.Cyan;
+                    }
+                }
+            }
             //string selectedScannerModules = "Futronic";
             //scannerMan = new FPScannerMan(selectedScannerModules, this);
             ////scannerMan = new NDeviceManager(selectedScannerModules, this);
@@ -273,6 +290,9 @@ namespace PSCBioIdentification
                 lb.Location = new Point(0, pb.Height - 20);
             
             }
+
+
+
 
             AcceptButton = buttonRequest;
  
@@ -2542,14 +2562,30 @@ namespace PSCBioIdentification
         void MyEvent(object sender, MyEventArgs e)
         {
             if (e == null)
+            {
                 _mre.Set();                     //cache service finished cache populating
+            }
             else if (e.Error.Length == 0)
                 ShowStatusMessage(e.Message);
             else
             {
                 _mre.Set();                     //cache service finished cache populating
+                
+                var act = new Action(delegate()
+                {
+                    Label lb;
+                    for (int i = 1; i < 11; i++)
+                    {
+                        lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                        lb.BackColor = Color.Transparent;
+                    }
+                });
+                
                 stopProgressBar();
                 MessageBox.Show(e.Error);
+
+                act();
+                
                 EnableControls(true);
             }
                 //ShowErrorMessage(e.Error);
@@ -2582,7 +2618,6 @@ namespace PSCBioIdentification
             //    //ShowErrorMessage(ex.Message);
             //}
         }
-
 
         //class CallbackFromAppFabricCacheService : AppFabricCacheService.IPopulateCacheServiceCallback
         //{

@@ -223,7 +223,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;nfViewSplitContainer.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>26</value>
   </data>
   <data name="gbMainLog.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom</value>
@@ -1630,13 +1630,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;gbResults.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>23</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>35, 279</value>
   </metadata>
   <data name="toolStripStatusLabelError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>957, 17</value>
+    <value>988, 17</value>
   </data>
   <data name="toolStripStatusLabelError.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1666,7 +1666,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>25</value>
   </data>
   <data name="panel1.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2275,7 +2275,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>24</value>
   </data>
   <data name="pictureBoxCompanyLogo.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2638,7 +2638,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pictureBoxCompanyLogo.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>22</value>
   </data>
   <data name="scannersListBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>770, 666</value>
@@ -2659,13 +2659,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;scannersListBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>21</value>
   </data>
   <data name="fillAppFabricCache.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="fillAppFabricCache.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 677</value>
+    <value>22, 678</value>
   </data>
   <data name="fillAppFabricCache.Size" type="System.Drawing.Size, System.Drawing">
     <value>102, 23</value>
@@ -2674,7 +2674,7 @@
     <value>14</value>
   </data>
   <data name="fillAppFabricCache.Text" xml:space="preserve">
-    <value>Prepare Cache</value>
+    <value>Refresh Cache</value>
   </data>
   <data name="&gt;&gt;fillAppFabricCache.Name" xml:space="preserve">
     <value>fillAppFabricCache</value>
@@ -2686,7 +2686,577 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;fillAppFabricCache.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="checkBoxCache4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>150, 692</value>
+  </data>
+  <data name="checkBoxCache4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache4.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache4.Name" xml:space="preserve">
+    <value>checkBoxCache4</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache4.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache4.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="labCache4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>152, 674</value>
+  </data>
+  <data name="labCache4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>11, 13</value>
+  </data>
+  <data name="labCache4.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="labCache4.Text" xml:space="preserve">
+    <value>ll</value>
+  </data>
+  <data name="&gt;&gt;labCache4.Name" xml:space="preserve">
+    <value>labCache4</value>
+  </data>
+  <data name="&gt;&gt;labCache4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache4.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache4.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="labCache3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>169, 674</value>
+  </data>
+  <data name="labCache3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>12, 13</value>
+  </data>
+  <data name="labCache3.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="labCache3.Text" xml:space="preserve">
+    <value>lr</value>
+  </data>
+  <data name="&gt;&gt;labCache3.Name" xml:space="preserve">
+    <value>labCache3</value>
+  </data>
+  <data name="&gt;&gt;labCache3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache3.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="checkBoxCache3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>168, 692</value>
+  </data>
+  <data name="checkBoxCache3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache3.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache3.Name" xml:space="preserve">
+    <value>checkBoxCache3</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache3.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="labCache2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>185, 674</value>
+  </data>
+  <data name="labCache2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 13</value>
+  </data>
+  <data name="labCache2.TabIndex" type="System.Int32, mscorlib">
+    <value>45</value>
+  </data>
+  <data name="labCache2.Text" xml:space="preserve">
+    <value>lm</value>
+  </data>
+  <data name="&gt;&gt;labCache2.Name" xml:space="preserve">
+    <value>labCache2</value>
+  </data>
+  <data name="&gt;&gt;labCache2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache2.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="checkBoxCache2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>186, 692</value>
+  </data>
+  <data name="checkBoxCache2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache2.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache2.Name" xml:space="preserve">
+    <value>checkBoxCache2</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache2.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="labCache1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>206, 674</value>
+  </data>
+  <data name="labCache1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>11, 13</value>
+  </data>
+  <data name="labCache1.TabIndex" type="System.Int32, mscorlib">
+    <value>47</value>
+  </data>
+  <data name="labCache1.Text" xml:space="preserve">
+    <value>li</value>
+  </data>
+  <data name="&gt;&gt;labCache1.Name" xml:space="preserve">
+    <value>labCache1</value>
+  </data>
+  <data name="&gt;&gt;labCache1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache1.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="checkBoxCache1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>204, 692</value>
+  </data>
+  <data name="checkBoxCache1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache1.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache1.Name" xml:space="preserve">
+    <value>checkBoxCache1</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache1.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="labCache8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>285, 674</value>
+  </data>
+  <data name="labCache8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>12, 13</value>
+  </data>
+  <data name="labCache8.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <data name="labCache8.Text" xml:space="preserve">
+    <value>rl</value>
+  </data>
+  <data name="&gt;&gt;labCache8.Name" xml:space="preserve">
+    <value>labCache8</value>
+  </data>
+  <data name="&gt;&gt;labCache8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache8.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache8.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="checkBoxCache8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>284, 692</value>
+  </data>
+  <data name="checkBoxCache8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache8.TabIndex" type="System.Int32, mscorlib">
+    <value>54</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache8.Name" xml:space="preserve">
+    <value>checkBoxCache8</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache8.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache8.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="labCache7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>267, 674</value>
+  </data>
+  <data name="labCache7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 13</value>
+  </data>
+  <data name="labCache7.TabIndex" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
+  <data name="labCache7.Text" xml:space="preserve">
+    <value>rr</value>
+  </data>
+  <data name="&gt;&gt;labCache7.Name" xml:space="preserve">
+    <value>labCache7</value>
+  </data>
+  <data name="&gt;&gt;labCache7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache7.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache7.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="checkBoxCache7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 692</value>
+  </data>
+  <data name="checkBoxCache7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache7.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache7.Name" xml:space="preserve">
+    <value>checkBoxCache7</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache7.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache7.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="labCache6.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>247, 674</value>
+  </data>
+  <data name="labCache6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>18, 13</value>
+  </data>
+  <data name="labCache6.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="labCache6.Text" xml:space="preserve">
+    <value>rm</value>
+  </data>
+  <data name="&gt;&gt;labCache6.Name" xml:space="preserve">
+    <value>labCache6</value>
+  </data>
+  <data name="&gt;&gt;labCache6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache6.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache6.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="checkBoxCache6.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>248, 692</value>
+  </data>
+  <data name="checkBoxCache6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache6.TabIndex" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache6.Name" xml:space="preserve">
+    <value>checkBoxCache6</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache6.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache6.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="labCache5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>231, 674</value>
+  </data>
+  <data name="labCache5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>12, 13</value>
+  </data>
+  <data name="labCache5.TabIndex" type="System.Int32, mscorlib">
+    <value>49</value>
+  </data>
+  <data name="labCache5.Text" xml:space="preserve">
+    <value>ri</value>
+  </data>
+  <data name="&gt;&gt;labCache5.Name" xml:space="preserve">
+    <value>labCache5</value>
+  </data>
+  <data name="&gt;&gt;labCache5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache5.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache5.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="checkBoxCache5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>230, 692</value>
+  </data>
+  <data name="checkBoxCache5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache5.TabIndex" type="System.Int32, mscorlib">
+    <value>48</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache5.Name" xml:space="preserve">
+    <value>checkBoxCache5</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache5.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache5.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="labCache10.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>329, 674</value>
+  </data>
+  <data name="labCache10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 13</value>
+  </data>
+  <data name="labCache10.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="labCache10.Text" xml:space="preserve">
+    <value>rt</value>
+  </data>
+  <data name="&gt;&gt;labCache10.Name" xml:space="preserve">
+    <value>labCache10</value>
+  </data>
+  <data name="&gt;&gt;labCache10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache10.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache10.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="checkBoxCache10.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>328, 692</value>
+  </data>
+  <data name="checkBoxCache10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache10.TabIndex" type="System.Int32, mscorlib">
+    <value>58</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache10.Name" xml:space="preserve">
+    <value>checkBoxCache10</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache10.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache10.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="labCache9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCache9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCache9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>311, 674</value>
+  </data>
+  <data name="labCache9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>12, 13</value>
+  </data>
+  <data name="labCache9.TabIndex" type="System.Int32, mscorlib">
+    <value>57</value>
+  </data>
+  <data name="labCache9.Text" xml:space="preserve">
+    <value>lt</value>
+  </data>
+  <data name="&gt;&gt;labCache9.Name" xml:space="preserve">
+    <value>labCache9</value>
+  </data>
+  <data name="&gt;&gt;labCache9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCache9.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;labCache9.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="checkBoxCache9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBoxCache9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBoxCache9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>310, 692</value>
+  </data>
+  <data name="checkBoxCache9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="checkBoxCache9.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache9.Name" xml:space="preserve">
+    <value>checkBoxCache9</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache9.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;checkBoxCache9.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2696,6 +3266,9 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>1105, 739</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>912, 556</value>

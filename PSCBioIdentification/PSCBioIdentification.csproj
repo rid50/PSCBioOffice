@@ -159,7 +159,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\AppFabricCacheService\Reference.cs">
+    <Compile Include="Service References\CacheMatchingService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\CachePopulateService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -216,14 +221,24 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\AppFabricCacheService\PopulateCacheService.wsdl" />
-    <None Include="Service References\AppFabricCacheService\PopulateCacheService.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService.wsdl" />
+    <None Include="Service References\CacheMatchingService\MatchingService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\AppFabricCacheService\PopulateCacheService1.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\AppFabricCacheService\PopulateCacheService2.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CachePopulateService\PopulateCacheService.wsdl" />
+    <None Include="Service References\CachePopulateService\PopulateCacheService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CachePopulateService\PopulateCacheService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CachePopulateService\PopulateCacheService2.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ConfigurationService\ConfigurationService.wsdl" />
@@ -251,13 +266,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\AppFabricCacheService\Reference.svcmap">
+    <None Include="Service References\CachePopulateService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\AppFabricCacheService\configuration.svcinfo" />
-    <None Include="Service References\AppFabricCacheService\configuration91.svcinfo" />
-    <None Include="Service References\AppFabricCacheService\PopulateCacheService.disco" />
+    <None Include="Service References\CachePopulateService\configuration.svcinfo" />
+    <None Include="Service References\CachePopulateService\configuration91.svcinfo" />
+    <None Include="Service References\CachePopulateService\PopulateCacheService.disco" />
+    <None Include="Service References\CacheMatchingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CacheMatchingService\configuration.svcinfo" />
+    <None Include="Service References\CacheMatchingService\configuration91.svcinfo" />
+    <None Include="Service References\CacheMatchingService\MatchingService.disco" />
     <None Include="Service References\ConfigurationService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -299,7 +321,8 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\AppFabricCacheService\" />
+    <WCFMetadataStorage Include="Service References\CacheMatchingService\" />
+    <WCFMetadataStorage Include="Service References\CachePopulateService\" />
     <WCFMetadataStorage Include="Service References\ConfigurationService\" />
     <WCFMetadataStorage Include="Service References\MatchingService\" />
   </ItemGroup>
