@@ -8,6 +8,7 @@ using System.Xml;
 using System.IO;
 using Neurotec.Biometrics;
 using System.Windows.Forms;
+using System.Collections;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -42,64 +43,79 @@ namespace PSCBioIdentification
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
-            //buttonRequest.Enabled = false;
-
             backgroundWorkerMatchingService.RunWorkerAsync(template);
         }
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            // This method will run on a thread other than the UI thread.
-            // Be sure not to manipulate any Windows Forms controls created
-            // on the UI thread from this method.
-
-            record = new Record();
-            //record.size = (UInt32)template.GetSize();
-            //record.template = template.Save();
-            record.size = (UInt32)(e.Argument as NFRecord).GetSize();
-            record.template = (e.Argument as NFRecord).Save().ToArray();
-            record.errorMessage = new System.Text.StringBuilder(512);
-
-            var ar = new System.Collections.ArrayList();
-
-            //record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
-            //record.arrOfFingersSize = 3;
-            CheckBox cb;
-            for (int i = 1; i < 11; i++)
+            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
             {
-                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                if (cb.Checked)
-                    ar.Add(cb.Tag);
-            }
-            record.arrOfFingersSize = ar.Count;
-            //record.arrOfFingers = new string[ar.Count];
-            record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+                var fingerList = new ArrayList();
 
-            ar.Clear();
-
-            //record.appSettings = new System.Text.StringBuilder(4);
-            //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
-            //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
-
-            ar.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
-            ar.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
-            ar.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
-            ar.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-            record.appSettings = ar.ToArray(typeof(string)) as string[];
-
-            //UInt32 score = 0;
-            unsafe
-            {
-                fixed (UInt32* ptr = &record.size)
+                CheckBox cb;
+                for (int i = 1; i < 11; i++)
                 {
-                    if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    if (cb.Checked)
+                        fingerList.Add(cb.Tag);
+                }
+
+                byte[] template = (e.Argument as NFRecord).Save().ToArray();
+
+                var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
+                e.Result = matchingServiceClient.match(fingerList, template);
+            }
+            else
+            {
+
+                record = new Record();
+                //record.size = (UInt32)template.GetSize();
+                //record.template = template.Save();
+                record.size = (UInt32)(e.Argument as NFRecord).GetSize();
+                record.template = (e.Argument as NFRecord).Save().ToArray();
+                record.errorMessage = new System.Text.StringBuilder(512);
+
+                var ar = new ArrayList();
+
+                //record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
+                //record.arrOfFingersSize = 3;
+                CheckBox cb;
+                for (int i = 1; i < 11; i++)
+                {
+                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    if (cb.Checked)
+                        ar.Add(cb.Tag);
+                }
+                record.arrOfFingersSize = ar.Count;
+                //record.arrOfFingers = new string[ar.Count];
+                record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+
+                ar.Clear();
+
+                //record.appSettings = new System.Text.StringBuilder(4);
+                //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+                //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
+
+                ar.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+                ar.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+                ar.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+                ar.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+                record.appSettings = ar.ToArray(typeof(string)) as string[];
+
+                //UInt32 score = 0;
+                unsafe
+                {
+                    fixed (UInt32* ptr = &record.size)
                     {
-                        e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
-                    }
-                    else
-                    {
-                        var configurationServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient();
-                        e.Result = configurationServiceClient.match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                        {
+                            e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                        }
+                        else
+                        {
+                            var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient();
+                            e.Result = matchingServiceClient.match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                        }
                     }
                 }
             }
@@ -141,7 +157,7 @@ namespace PSCBioIdentification
                 {
                     pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
-                    if (record.errorMessage.Length != 0)
+                    if (record != null && record.errorMessage.Length != 0)
                     {
                         //retcode = false;
                         ShowErrorMessage("ERROR!!!");
