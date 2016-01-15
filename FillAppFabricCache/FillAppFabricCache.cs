@@ -4,23 +4,28 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using Microsoft.ApplicationServer.Caching;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace FillAppFabricCache
 {
     class FillAppFabricCache
     {
         //private static DataCacheFactory _factory = null;
-        private static DataCache _cache = null;
+        private static DataCache _cache;
+        private static CancellationToken _ct;
 
-        static FillAppFabricCache()
-        {
-            DataCacheFactory factory = new DataCacheFactory();
-            _cache = factory.GetCache("default");
-            //Debug.Assert(_cache == null);
-        }
+        //static FillAppFabricCache()
+        //{
+        //    DataCacheFactory factory = new DataCacheFactory();
+        //    _cache = factory.GetCache("default");
+        //    //Debug.Assert(_cache == null);
+        //}
 
-        public FillAppFabricCache()
+        public FillAppFabricCache(CancellationToken ct, DataCache cache)
         {
+            _ct = ct;
+            _cache = cache;
         }
 
 
@@ -72,7 +77,7 @@ namespace FillAppFabricCache
     
         //public void run(int from, int to, int count, int threadId)
         //public void run(int from, int to)
-        public void run(int from, int to, int count)
+        public int run(int from, int to, int count)
         {
             //string fingerFields = "ri,rm,rr,rl";
             string fingerFields = "li,lm,lr,ll,ri,rm,rr,rl,lt,rt";
@@ -110,8 +115,8 @@ namespace FillAppFabricCache
             //return;            
 
             string regionName = from.ToString();
-            _cache.RemoveRegion(regionName);
-            _cache.CreateRegion(regionName);
+            //_cache.RemoveRegion(regionName);
+            //_cache.CreateRegion(regionName);
 
             try
             {
@@ -139,7 +144,9 @@ namespace FillAppFabricCache
                     id = (int)reader[dbIdColumn];
 
                     rowNumber++;
-                    //Console.WriteLine("{0}", rowNumber + from);
+                    //if (rowNumber % 1000 == 0)
+                    //    Console.WriteLine("{0}", rowNumber + from);
+                    
                     //Console.WriteLine("ID = {0}", id);
                     //if (id == 20000007)
                     //    id = id;
@@ -169,8 +176,13 @@ namespace FillAppFabricCache
                                 buffer[i++] = new byte[0];
                         }
 
-                        if (confirmed)
-                            _cache.Add(id.ToString(), buffer, regionName);
+                        if (id == 123)
+                        {
+                            Console.WriteLine("ID: {0}, confirmed: {1}", id, confirmed);
+                        }
+
+                        //if (confirmed)
+                        //    _cache.Add(id.ToString(), buffer, regionName);
 //                    }
                     //else
                     //{
@@ -188,7 +200,7 @@ namespace FillAppFabricCache
 
                 //Console.WriteLine("{0}", rowNumber + from);
                 //Console.WriteLine("Objects in Cache = {0}", k);
-
+                return 0;
             }
             catch (Exception ex)
             {
@@ -212,6 +224,41 @@ namespace FillAppFabricCache
                     throw new Exception(ex.Message);
                 }
             }
+        }
+
+        public int iterateCache(String regionName)
+        {
+            Stopwatch st = new Stopwatch();
+            st.Start();
+
+            byte[][] buffer = new byte[10][];
+            int rowNumber = 0;
+            foreach (KeyValuePair<string, object> item in _cache.GetObjectsInRegion(regionName))
+            {
+                //rowNumber++;
+                //if (rowNumber % 1000 == 0)
+                //    Console.WriteLine("Region name: {0}, row number: {1}", regionName, rowNumber);
+
+                if (_ct.IsCancellationRequested)
+                {
+                    _ct.ThrowIfCancellationRequested();
+                }
+
+                //if (item.Key == "123")
+                {
+                    buffer = item.Value as byte[][];
+                    for (int i = 0; i < buffer.Length; i++)
+                        if (buffer[i] != null && (buffer[i]).Length != 0)
+                        {
+                            //return (int)(buffer[i]).Length;
+                        }
+                }
+            }
+
+            st.Stop();
+            Console.WriteLine(" ----- Region name \"{0}\",  time elapsed: {1}", regionName, st.Elapsed);
+
+            return 0;
         }
 
         static private String getConnectionString()
