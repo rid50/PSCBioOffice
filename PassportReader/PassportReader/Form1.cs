@@ -941,7 +941,7 @@ namespace PassportReaderNS
             }
 
             int handAndFingerMask = Int32.Parse(sb.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
-            if ((errorCode = _sc.fpsGetFingersImages(handAndFingerMask, true)) == 0)
+            if ((errorCode = _sc.fpsGetFingersImages(handAndFingerMask, false)) == 0)
             {
 
                 //saveWsqInDatabase();
@@ -960,7 +960,7 @@ namespace PassportReaderNS
         private void saveWsqInDatabase(int id, byte[] buffer)
         {
             //FileStream fs = null;
-            return;
+
             try
             {
                 //  fs = new FileStream("lindex.wsq", FileMode.Open);
@@ -989,6 +989,7 @@ namespace PassportReaderNS
 
                     var db = new DAO.Database(settings);
                     db.SaveWSQTemplate(id, templates);
+                    this.InvokeOnClick(buttonReadFingers, new MyEventArgs(0));
                 }
 
 
