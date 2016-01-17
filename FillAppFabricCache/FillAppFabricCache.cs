@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Microsoft.ApplicationServer.Caching;
 using System.Collections.Generic;
 using System.Threading;
+using System.Collections;
 
 namespace FillAppFabricCache
 {
@@ -14,6 +15,8 @@ namespace FillAppFabricCache
         //private static DataCacheFactory _factory = null;
         private static DataCache _cache;
         private static CancellationToken _ct;
+        private static byte[] _probeTemplate;
+        private static ArrayList _fingerList;
 
         //static FillAppFabricCache()
         //{
@@ -22,10 +25,12 @@ namespace FillAppFabricCache
         //    //Debug.Assert(_cache == null);
         //}
 
-        public FillAppFabricCache(CancellationToken ct, DataCache cache)
+        public FillAppFabricCache(CancellationToken ct, DataCache cache, byte[] probeTemplate, ArrayList fingerList)
         {
             _ct = ct;
             _cache = cache;
+            _probeTemplate = probeTemplate;
+            _fingerList = fingerList;
         }
 
 
@@ -226,16 +231,25 @@ namespace FillAppFabricCache
             }
         }
 
+        enum FingerListEnum {li, lm, lr, ll, ri, rm, rr, rl, lt, rt}
+
         public int iterateCache(String regionName)
         {
             Stopwatch st = new Stopwatch();
             st.Start();
 
+            var matcher = new BioProcessor.BioProcessor();
+            matcher.enrollProbeTemplate(_probeTemplate);
+
             byte[][] buffer = new byte[10][];
             int rowNumber = 0;
+            int retcode = 0;
             foreach (KeyValuePair<string, object> item in _cache.GetObjectsInRegion(regionName))
             {
-                //rowNumber++;
+                short numOfMatches = 0;
+                bool matched = false;
+                rowNumber++;
+                //continue;
                 //if (rowNumber % 1000 == 0)
                 //    Console.WriteLine("Region name: {0}, row number: {1}", regionName, rowNumber);
 
@@ -243,22 +257,39 @@ namespace FillAppFabricCache
                 {
                     _ct.ThrowIfCancellationRequested();
                 }
-
+               
                 //if (item.Key == "123")
+                //if( false)
                 {
                     buffer = item.Value as byte[][];
-                    for (int i = 0; i < buffer.Length; i++)
-                        if (buffer[i] != null && (buffer[i]).Length != 0)
+                    //for (int i = 0; i < buffer.Length; i++)
+                    foreach(string finger in _fingerList)
+                    {
+                        FingerListEnum f = (FingerListEnum)Enum.Parse(typeof(FingerListEnum), finger);
+                        if (buffer[(int)f] != null && (buffer[(int)f]).Length != 0)
                         {
-                            //return (int)(buffer[i]).Length;
+                            matched = matcher.match(buffer[(int)f]);
+                            if (matched)
+                            {
+                                numOfMatches++;
+                            }
                         }
+                    }
+
+                    if (_fingerList.Count == numOfMatches)
+                    {
+                        retcode = int.Parse(item.Key);
+                        break;
+                    }
                 }
             }
+            
+            //Console.WriteLine("====== Region name: {0}, row number: {1}", regionName, rowNumber);
 
             st.Stop();
             Console.WriteLine(" ----- Region name \"{0}\",  time elapsed: {1}", regionName, st.Elapsed);
 
-            return 0;
+            return retcode;
         }
 
         static private String getConnectionString()

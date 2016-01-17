@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Collections;
 using Microsoft.ApplicationServer.Caching;
+using System.IO;
+using Neurotec.Licensing;
 
 namespace FillAppFabricCache
 {
@@ -14,6 +16,8 @@ namespace FillAppFabricCache
         public CancellationToken ct;
         public DataCache cache;
         public string regionName;
+        public byte[] probeTemplate;
+        public ArrayList fingerList;
     }
 
     class Program
@@ -27,11 +31,29 @@ namespace FillAppFabricCache
             //Debug.Assert(_cache == null);
         }
 
+
         //[STAThread]
         static void Main(string[] args)
         {
+            const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ";
+
             try
             {
+                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    NLicense.ObtainComponents("/local", "5000", component);
+                }
+
+                //Helpers.ObtainLicenses(licensesMain);
+
+                //try
+                //{
+                //    Helpers.ObtainLicenses(licensesBss);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.ToString());
+                //}
                 Run(args);
             }
             catch (Exception ex)
@@ -40,6 +62,10 @@ namespace FillAppFabricCache
                 Console.WriteLine(ex.ToString());
 
                 //MessageBox.Show("Error. Details: " + ex.Message, "Fingers Sample", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                NLicense.ReleaseComponents(Components);
             }
         }
 
@@ -127,21 +153,36 @@ namespace FillAppFabricCache
                 throw new Exception("Cache is empty");
             }
 
+            MemoryStream memStream;
+            using (FileStream fileStream = File.OpenRead("IndexMiddleRightFingers.temp"))
+            {
+                memStream = new MemoryStream();
+                memStream.SetLength(fileStream.Length);
+                fileStream.Read(memStream.GetBuffer(), 0, (int)fileStream.Length);
+            }
+
+//            BioProcessor.BioProcessor.enrollProbeTemplate(memStream.ToArray());
+            var fingerList = new ArrayList() { "ri", "rm" };
+
             taskArray = new Task<int>[regionNameList.Count];
+            //taskArray = new Task<int>[8];
             //Task<UInt32>[] taskArray = new Task<UInt32>[2];
             int retcode = 0;
             //int i = 0;
             if (true)
             {
+                //string regionName = "";
                 int i = 0;
                 //for (int i = 0; i < taskArray.Length; i++)
                 foreach (string regionName in regionNameList)
                 {
-                    taskArray[i++] = Task.Factory.StartNew((Object obj) =>
+                    //if (i > 7) continue;
+
+                    taskArray[i] = Task.Factory.StartNew((Object obj) =>
                     {
                         StateObject state = obj as StateObject;
 
-                        var process = new FillAppFabricCache(state.ct, state.cache);
+                        var process = new FillAppFabricCache(state.ct, state.cache, state.probeTemplate, state.fingerList);
                         //try
                         //{
                         //process.run(state.LoopCounter * limit + offset, state.LoopCounter * limit + limit, limit - offset, Thread.CurrentThread.ManagedThreadId);
@@ -150,7 +191,14 @@ namespace FillAppFabricCache
                         //retcode = process.run(state.LoopCounter * limit + offset, state.LoopCounter * limit + limit, limit);
                         //return retcode;
                         //string name = regionName;
-                        return process.iterateCache(state.regionName);
+                        retcode = process.iterateCache(state.regionName);
+
+                        if (retcode != 0)
+                            tokenSource.Cancel();
+
+                        return retcode;
+                        //int n = 80000 + 10000 * state.LoopCounter;
+                        //return process.iterateCache(n.ToString());
 
                         //}
                         //catch (Exception ex)
@@ -159,10 +207,12 @@ namespace FillAppFabricCache
                         //}
                         //Console.WriteLine(process.run(1, 2, Thread.CurrentThread.ManagedThreadId));
                     },
-                    new StateObject() { LoopCounter = i, ct = ct, cache = _cache, regionName = regionName },
+                    new StateObject() { LoopCounter = i++, ct = ct, cache = _cache, probeTemplate = memStream.ToArray(), fingerList = fingerList, regionName = regionName },
                     tokenSource.Token,
                     TaskCreationOptions.LongRunning,
                     TaskScheduler.Default);
+
+                    //break;
                 }
 
                 try
@@ -171,7 +221,10 @@ namespace FillAppFabricCache
                     foreach (var t in taskArray)
                     {
                         if (t.Status == TaskStatus.RanToCompletion && (UInt32)t.Result != 0)
+                        {
                             retcode = (int)t.Result;
+                            break;
+                        }
                     }
 
                     //Console.WriteLine(" ----- Time elapsed: {0}", stw.Elapsed);
@@ -180,8 +233,11 @@ namespace FillAppFabricCache
                 {
                     foreach (var t in taskArray)
                     {
-                        if (t.Status == TaskStatus.RanToCompletion && (UInt32)t.Result != 0)
+                        if (t.Status == TaskStatus.RanToCompletion && (int)t.Result != 0)
+                        {
                             retcode = (int)t.Result;
+                            break;
+                        }
                         else if (t.Status == TaskStatus.Faulted)
                         {
                             while ((ex is AggregateException) && (ex.InnerException != null))
@@ -194,10 +250,13 @@ namespace FillAppFabricCache
                         //                  t.Status != TaskStatus.Canceled ? t.Status != TaskStatus.Faulted ? t.Result.ToString("N0") : "n/a" : "falted");
                     }
 
-                    Console.WriteLine(ex.ToString());
+                    //Console.WriteLine(ex.ToString());
                 }
                 finally
                 {
+                    memStream.Close();
+
+                    Console.WriteLine(" ==================================== Return code: {0}", retcode);
                     //Console.WriteLine(" ------------------ Press any key to close -----------------------");
                     //Console.ReadKey();
                 }
@@ -206,7 +265,7 @@ namespace FillAppFabricCache
             {
                 try
                 {
-                    var process = new FillAppFabricCache(ct, _cache);
+                    var process = new FillAppFabricCache(ct, _cache, memStream.ToArray(), fingerList);
                     for (int i = 0; i < taskArray.Length; i++)
                     {
                         //process.run(state.LoopCounter * limit + offset, state.LoopCounter * limit + limit, limit - offset, Thread.CurrentThread.ManagedThreadId);

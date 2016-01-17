@@ -2596,27 +2596,29 @@ namespace PSCBioIdentification
             _mre = new ManualResetEvent(false);
             startCachingServiceProcess(_mre);
 
-            //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
-            //callback.MyEvent += MyEvent;
-            //InstanceContext context = new InstanceContext(callback);
+//            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+//            callback.MyEvent += MyEvent;
+//            InstanceContext context = new InstanceContext(callback);
 
-            //var client = new AppFabricCacheService.PopulateCacheServiceClient(context);
+//            var client = new CachePopulateService.PopulateCacheServiceClient(context); 
+//            var fingerList = new System.Collections.ArrayList();
 
-            //try
-            //{
-            //    client.Run(new string[]{});
-            //    //client.Run(new string[] { "0" });
-            //}
-            //catch (FaultException ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    //ShowErrorMessage(ex.Message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    //ShowErrorMessage(ex.Message);
-            //}
+//            CheckBox cb; Label lb;
+//            for (int i = 1; i < 11; i++)
+//            {
+//                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+//                lb.BackColor = Color.Transparent;
+
+//                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+//                if (cb.Checked)
+//                    fingerList.Add(cb.Tag);
+//            }
+
+
+//            client.Run(fingerList);
+//            //client.Run(new string[] { });
+//            //client.Run(new string[] { "0" });
+////            _mre.WaitOne();
         }
 
         //class CallbackFromAppFabricCacheService : AppFabricCacheService.IPopulateCacheServiceCallback

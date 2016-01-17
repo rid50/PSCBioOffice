@@ -67,7 +67,7 @@ namespace PSCBioIdentification
             // on the UI thread from this method.
             var client = e.Argument as CachePopulateService.PopulateCacheServiceClient;
 
-            var cbArray = new System.Collections.ArrayList();
+            var fingerList = new System.Collections.ArrayList();
 
             CheckBox cb; Label lb;
             for (int i = 1; i < 11; i++)
@@ -77,12 +77,12 @@ namespace PSCBioIdentification
 
                 cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    cbArray.Add(cb.Tag);
+                    fingerList.Add(cb.Tag);
             }
 
-            if (cbArray.Count == 0)
+            if (fingerList.Count == 0)
             {
-                e.Result = cbArray;
+                e.Result = fingerList;
                 return;
             }
             //record.arrOfFingersSize = ar.Count;
@@ -91,11 +91,11 @@ namespace PSCBioIdentification
 
             //ar.Clear();
 
-            client.Run(cbArray);
+            client.Run(fingerList);
             //client.Run(new string[] { });
             //client.Run(new string[] { "0" });
             _mre.WaitOne();
-            e.Result = cbArray;
+            e.Result = fingerList;
         }
 
         private void backgroundWorkerCachingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -106,9 +106,9 @@ namespace PSCBioIdentification
                 ShowErrorMessage(e.Error.Message);
             }
 
-            ArrayList cbArray = (ArrayList)e.Result;
+            ArrayList fingerList = (ArrayList)e.Result;
 
-            if (cbArray.Count == 0)
+            if (fingerList.Count == 0)
             {
                 ShowErrorMessage("At least one finger should be selected");
             }
@@ -119,7 +119,7 @@ namespace PSCBioIdentification
                 for (int i = 1; i < 11; i++)
                 {
                     lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                    if (cbArray.IndexOf(lb.Text) != -1)
+                    if (fingerList.IndexOf(lb.Text) != -1)
                         lb.BackColor = Color.Cyan;
                     else
                         lb.BackColor = Color.Transparent;
