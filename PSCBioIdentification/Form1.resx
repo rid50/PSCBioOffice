@@ -1636,7 +1636,7 @@
     <value>35, 279</value>
   </metadata>
   <data name="toolStripStatusLabelError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>988, 17</value>
+    <value>957, 17</value>
   </data>
   <data name="toolStripStatusLabelError.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -2661,31 +2661,31 @@
   <data name="&gt;&gt;scannersListBox.ZOrder" xml:space="preserve">
     <value>21</value>
   </data>
-  <data name="fillAppFabricCache.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="manageCacheButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="fillAppFabricCache.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="manageCacheButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 678</value>
   </data>
-  <data name="fillAppFabricCache.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="manageCacheButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>102, 23</value>
   </data>
-  <data name="fillAppFabricCache.TabIndex" type="System.Int32, mscorlib">
+  <data name="manageCacheButton.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
   </data>
-  <data name="fillAppFabricCache.Text" xml:space="preserve">
+  <data name="manageCacheButton.Text" xml:space="preserve">
     <value>Refresh Cache</value>
   </data>
-  <data name="&gt;&gt;fillAppFabricCache.Name" xml:space="preserve">
-    <value>fillAppFabricCache</value>
+  <data name="&gt;&gt;manageCacheButton.Name" xml:space="preserve">
+    <value>manageCacheButton</value>
   </data>
-  <data name="&gt;&gt;fillAppFabricCache.Type" xml:space="preserve">
+  <data name="&gt;&gt;manageCacheButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;fillAppFabricCache.Parent" xml:space="preserve">
+  <data name="&gt;&gt;manageCacheButton.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;fillAppFabricCache.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;manageCacheButton.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
   <data name="checkBoxCache4.AutoSize" type="System.Boolean, mscorlib">

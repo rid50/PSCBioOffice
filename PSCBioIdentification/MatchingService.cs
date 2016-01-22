@@ -9,6 +9,7 @@ using System.IO;
 using Neurotec.Biometrics;
 using System.Windows.Forms;
 using System.Collections;
+using System.ServiceModel;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -60,14 +61,13 @@ namespace PSCBioIdentification
                         fingerList.Add(cb.Tag);
                 }
 
-                byte[] template = (e.Argument as NFRecord).Save().ToArray();
+                byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
 
                 var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                e.Result = matchingServiceClient.match(fingerList, template);
+                e.Result = matchingServiceClient.match(fingerList, probeTemplate);
             }
             else
             {
-
                 record = new Record();
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
@@ -113,7 +113,11 @@ namespace PSCBioIdentification
                         }
                         else
                         {
-                            var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient();
+                            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                            callback.MyEvent += MyEvent;
+                            InstanceContext context = new InstanceContext(callback);
+
+                            var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
                             e.Result = matchingServiceClient.match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }
                     }

@@ -24,15 +24,36 @@ namespace Nomad {
 		//	//return retcode;
 		//	return true;
 		//}
+		//fnNotify _callBack;
+		fnCallBack _callBack;
+
+		//void MySetCallBack(fnNotify callBack) {
+		void SetCallBack(fnCallBack callBack) {
+			_callBack = callBack;
+		}
 
 		void __stdcall terminateMatchingService() {
 			Nomad::Data::Odbc::terminateLoop = true;
 			//Nomad::Data::Odbc::terminate();
 		}
 
-		unsigned __int32 __stdcall match(char *arrOfFingers[], __int32 arrOfFingersSize,
+		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[]) {
+				Nomad::Data::Odbc::fillOnly = true;
+				CallBackStruct callBackParam;
+				callBackParam.code = 22;
+				//callBackParam.text = L"kuku";
+				wcscpy_s(callBackParam.text, 5, L"kuku");
+
+				//strcpy_s(callBackParam.text, 5, "kuku" + '\0');
+				_callBack(&callBackParam);
+				
+				//return match(fingerList, fingerListSize, NULL, 0, appSettings, errorMessage, messageSize);
+		}
+
+		unsigned __int32 __stdcall match(char *fingerList[], __int32 fingerListSize,
 			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *appSettings[], char *errorMessage, __int32 messageSize) {
 
+			Nomad::Data::Odbc::fillOnly = false;
 			unsigned __int32 retcode = 0;
 
 			//std::stringstream ss2; 
@@ -112,7 +133,7 @@ namespace Nomad {
 							Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 							try {
-								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage);
 							} catch (std::exception& e) {
 								errMessage = "Error: ";
 								errMessage += e.what();
@@ -140,9 +161,9 @@ namespace Nomad {
 				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
-					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, arrOfFingers, arrOfFingersSize, &errMessage)) > 0) {
+					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {
 					try {
-						retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, arrOfFingers, arrOfFingersSize, &errMessage);
+						retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, fingerList, fingerListSize, &errMessage);
 					} catch (std::exception& e) {
 						errMessage = "Error: ";
 						errMessage += e.what();

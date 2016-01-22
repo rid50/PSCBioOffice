@@ -28,6 +28,7 @@ namespace Nomad
 		//}
 
 		bool Odbc::terminateLoop = false;
+		bool Odbc::fillOnly = false;
 
 		Odbc::~Odbc() {
 			//disconnect();
@@ -146,7 +147,7 @@ namespace Nomad
 			//	if (i != 0)
 			//		stmt << ",";
 
-			//	stmt << arrOfFingers[i];
+			//	stmt << fingerList[i];
 			//}
 
 			////stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
@@ -222,7 +223,7 @@ namespace Nomad
 			FIELDSTRUCT F10;
 		};
 
-		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *arrOfFingers[], __int32 numOfFieldsToMatch, std::string *errorMessage) {
+		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *fingerList[], __int32 numOfFieldsToMatch, std::string *errorMessage) {
 			hStmt = SQL_NULL_HSTMT;
 
 			SQLULEN			NumRowsFetched;
@@ -324,7 +325,7 @@ namespace Nomad
 				if (i != 0)
 					stmt << ",";
 
-				stmt << arrOfFingers[i];
+				stmt << fingerList[i];
 			}
 
 			stmt << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " << dbSettings[2] << " ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
@@ -382,6 +383,9 @@ namespace Nomad
 
 				if (terminateLoop)
 					break;
+
+				if (fillOnly)
+					continue;
 
 				short numOfMatches = 0;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {

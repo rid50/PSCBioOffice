@@ -9,6 +9,11 @@ namespace PSCBioIdentification
 {
     partial class Form1
     {
+        private bool IsDataServiceRunning
+        {
+            get { return backgroundWorkerDataService.IsBusy; }
+        }
+
         void startDataServiceProcess()
         {
             if (backgroundWorkerDataService.IsBusy)

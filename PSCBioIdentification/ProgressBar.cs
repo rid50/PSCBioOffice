@@ -8,7 +8,7 @@ namespace PSCBioIdentification
 {
     partial class Form1
     {
-        private int _max = 0;
+//        private int _max = 0;
 
         private bool IsCapturing
         {
@@ -20,7 +20,7 @@ namespace PSCBioIdentification
             if (IsCapturing)
                 return;
 
-            _max = toolStripProgressBar.Maximum;
+//            _max = toolStripProgressBar.Maximum;
             //toolStripProgressBar.Enabled = true;
 
             //toolStripStatusLabelError.Text = message;
@@ -46,14 +46,16 @@ namespace PSCBioIdentification
             backgroundWorkerProgressBar.ReportProgress(0);
             while (true)
             {
-                for (int i = 1; i < _max; i++)
+                System.Threading.Thread.Sleep(500);
+                for (int i = 0; i <= 100; i++)
                 {
                     // Introduce some delay to simulate a more complicated calculation.
                     System.Threading.Thread.Sleep(50);
                     //backgroundWorkerProgressBar.ReportProgress((int)((float)(100 * i) / (float)_max), "Working...");
                     //(sender as BackgroundWorker).ReportProgress((int)((float)(100 * i) / (float)_max), "WorkingAAAAAAAA...");
                     //(sender as BackgroundWorker).ReportProgress((100 * i) / _max, "Working...");
-                    (sender as BackgroundWorker).ReportProgress((100 * i) / _max);
+                    //(sender as BackgroundWorker).ReportProgress((100 * i) / _max);
+                    (sender as BackgroundWorker).ReportProgress(i);
                     //(sender as BackgroundWorker).ReportProgress(i, "Working...");
 
                     if (backgroundWorkerProgressBar.CancellationPending)
@@ -72,9 +74,14 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerProgressBar_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+
             //toolStripProgressBar.Increment(2);
             //toolStripProgressBar.PerformStep();
+            //if (e.ProgressPercentage == 100)
+            //{
+            //    int i = 0;
 
+            //}
             toolStripProgressBar.Value = e.ProgressPercentage;
             if (toolStripStatusLabelError.Text == String.Empty)
                 toolStripStatusLabelError.Text = e.UserState as String;

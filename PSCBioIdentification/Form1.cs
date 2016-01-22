@@ -35,6 +35,13 @@ namespace PSCBioIdentification
         //public static extern bool initFingerMatcher();
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern UInt32 fillCache(
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] arrOfFingers, int arrOffingersSize,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] appSettings);
+
+        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern UInt32 match(
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             string[] arrOfFingers, int arrOffingersSize,
@@ -99,6 +106,7 @@ namespace PSCBioIdentification
         private NDevice _device;
         
         private bool _isCapturing = false;
+        //private bool _isPopulatingChache = false;
 
         //System.Diagnostics.Stopwatch _sw;
 
@@ -222,23 +230,35 @@ namespace PSCBioIdentification
 
             UpdateScannerList();
 
-            var client = new CacheMatchingService.MatchingServiceClient();
+            //var client = new CacheMatchingService.MatchingServiceClient();
+
+            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+            InstanceContext context = new InstanceContext(callback);
+            var client = new CachePopulateService.PopulateCacheServiceClient(context);
+
             ArrayList fingerList = client.getFingerList();
 
-            if (fingerList != null)
+            if (fingerList == null)
+                fingerList = new ArrayList();
+
+            Label lab; CheckBox cb;
+            for (int i = 1; i < 11; i++)
             {
-                Label lab; CheckBox cb;
-                for (int i = 1; i < 11; i++)
+                lab = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                if (fingerList.IndexOf(lab.Text) != -1)
                 {
-                    lab = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                    if (fingerList.IndexOf(lab.Text) != -1)
-                    {
-                        cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
-                        cb.Checked = true;
-                        lab.BackColor = Color.Cyan;
-                    }
+                    cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+                    cb.Checked = true;
+                    lab.BackColor = Color.Cyan;
                 }
+
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (fingerList.IndexOf(cb.Tag) != -1)
+                    cb.Enabled = true;
+                else
+                    cb.Enabled = false;
             }
+
             //string selectedScannerModules = "Futronic";
             //scannerMan = new FPScannerMan(selectedScannerModules, this);
             ////scannerMan = new NDeviceManager(selectedScannerModules, this);
@@ -339,11 +359,15 @@ namespace PSCBioIdentification
 
         private void EnableControls(bool enable)
         {
-            fillAppFabricCache.Enabled = enable;
+            //fillAppFabricCache.Enabled = enable;
+            if (enable)
+                manageCacheButton.Enabled = enable;
+
             buttonRequest.Enabled = enable;
             buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
             groupBoxMode.Enabled = enable;
             panel2.Enabled = enable;
+            //manageCacheButton.Text = IsCachingServiceRunning ? "Stop Cache Refreshing" : "Refresh Cache";
             buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
             //radioButtonVerify.Enabled = enable;
             //radioButtonIdentify.Enabled = enable;
@@ -1484,23 +1508,34 @@ namespace PSCBioIdentification
                         //nfView1.Visible = false;
 
                         //checkBox1.Checked = true;
+/*
+                        var client = new CacheMatchingService.MatchingServiceClient();
+                        ArrayList fingerList = client.getFingerList();
 
-                        CheckBox bb; bool donotcheck = false;
-                        for (int i = 0; i < 10; i++)
-                        {
-                            bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
-                            if (bb.Checked)
-                            {
-                                donotcheck = true;
-                                break;
-                            }
-                        }
+                        if (fingerList == null)
+                            fingerList = new ArrayList();
 
-                        if (!donotcheck)
+                        CheckBox cb; //bool donotcheck = false;
+                        for (int i = 1; i < 11; i++)
                         {
-                            checkBox5.Checked = true;
-                            checkBox6.Checked = true;
+                            cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                            if (fingerList.IndexOf(cb.Tag) != -1)
+                                cb.Enabled = true;
+                            else
+                                cb.Enabled = false;
+
+                            //if (cb.Checked)
+                            //{
+                            //    donotcheck = true;
+                            //    break;
+                            //}
                         }
+*/
+                        //if (!donotcheck)
+                        //{
+                        //    checkBox5.Checked = true;
+                        //    checkBox6.Checked = true;
+                        //}
                         //checkBox7.Checked = true;
 
                         personId.ReadOnly = true;
@@ -2382,6 +2417,9 @@ namespace PSCBioIdentification
                 }
 
                 var fScanner = ((NFingerScanner)_device);
+                if (fScanner == null)
+                    return;
+
                 bool CancelEvent = false;
                 foreach (NFPosition position in fScanner.GetSupportedPositions())
                 {
@@ -2533,9 +2571,44 @@ namespace PSCBioIdentification
             }
         }
 
+        //delegate void d();
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            new Action(delegate()
+            {
+                EnableControls(false);
+            }).BeginInvoke(null, null);
+
+            //act();
+
+            //d d = delegate
+            //{
+            //    EnableControls(false);
+            //    startProgressBar();
+            //};
+            //d();
+
             stopCapturing();
+
+            if (backgroundWorkerCachingService.IsBusy)
+            {
+                backgroundWorkerCachingService.CancelAsync();
+                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                InstanceContext context = new InstanceContext(callback);
+                var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                client.Terminate();
+
+                manageCacheButton.Enabled = false;
+
+                ShowStatusMessage("The application is terminating, wait ...");
+
+                while (backgroundWorkerCachingService.IsBusy)
+                {
+                    Thread.Sleep(0);
+                    Application.DoEvents();
+                }
+            }
 
             if (backgroundWorkerDataService.IsBusy)
             {
@@ -2569,6 +2642,8 @@ namespace PSCBioIdentification
                 ShowStatusMessage(e.Message);
             else
             {
+                backgroundWorkerCachingService.CancelAsync();
+
                 _mre.Set();                     //cache service finished cache populating
                 
                 var act = new Action(delegate()
@@ -2591,10 +2666,40 @@ namespace PSCBioIdentification
                 //ShowErrorMessage(e.Error);
         }
 
-        private void fillAppFabricCache_Click(object sender, EventArgs e)
+//        private void fillAppFabricCache_Click(object sender, EventArgs e)
+        private void manageCacheButton_Click(object sender, EventArgs e)
         {
-            _mre = new ManualResetEvent(false);
-            startCachingServiceProcess(_mre);
+            if (!IsCachingServiceRunning)
+            {
+                int count = 0;
+                CheckBox cb;
+                for (int i = 1; i < 11; i++)
+                {
+                    cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+                    if (cb.Checked)
+                        if (++count > 1)
+                            break;
+                }
+
+                if (count < 2)
+                {
+                    ShowErrorMessage("At least two fingers should be selected");
+                    return;
+                }
+
+                _mre = new ManualResetEvent(false);
+                startCachingServiceProcess(_mre);
+            }
+            else
+            {
+                backgroundWorkerCachingService.CancelAsync();
+                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                InstanceContext context = new InstanceContext(callback);
+
+                var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                client.Terminate();
+                manageCacheButton.Enabled = false;
+            }
 
 //            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
 //            callback.MyEvent += MyEvent;

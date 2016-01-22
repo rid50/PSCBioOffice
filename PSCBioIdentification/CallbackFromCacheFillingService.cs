@@ -3,14 +3,23 @@ using System.Windows.Forms;
 
 namespace PSCBioIdentification
 {
-    class CallbackFromAppFabricCacheService : CachePopulateService.IPopulateCacheServiceCallback
+    //interface CallbackFromUnmanagedCacheService : MatchingService.IMatchingServiceCallback
+    //{
+    //}
+
+    //interface CallbackFromManagedCacheService : CachePopulateService.IPopulateCacheServiceCallback
+    //{
+    //}
+
+    //class CallbackFromCacheFillingService : CallbackFromUnmanagedCacheService, CallbackFromManagedCacheService
+    class CallbackFromCacheFillingService : MatchingService.IMatchingServiceCallback, CachePopulateService.IPopulateCacheServiceCallback
     {
         private static int totalRecords;
         private static double runningSum;
 
         public event EventHandler<MyEventArgs> MyEvent;
 
-        public CallbackFromAppFabricCacheService()
+        public CallbackFromCacheFillingService()
         {
             totalRecords = 0;
             runningSum = 0;
@@ -38,7 +47,7 @@ namespace PSCBioIdentification
             }
         }
 
-        public void RespondWithResult(string str)
+        public void RespondWithText(string str)
         {
             MyEventArgs args = new MyEventArgs { Message = str, Error = "" };
             //args.Message = str;
@@ -62,7 +71,7 @@ namespace PSCBioIdentification
             }
         }
 
-        public void CacheComplete()
+        public void CacheOperationComplete()
         {
             EventHandler<MyEventArgs> handler = MyEvent;
             if (handler != null)

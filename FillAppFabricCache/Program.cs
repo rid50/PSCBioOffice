@@ -255,7 +255,7 @@ namespace FillAppFabricCache
                 finally
                 {
                     memStream.Close();
-
+                    tokenSource.Dispose();
                     Console.WriteLine(" ==================================== Return code: {0}", retcode);
                     //Console.WriteLine(" ------------------ Press any key to close -----------------------");
                     //Console.ReadKey();

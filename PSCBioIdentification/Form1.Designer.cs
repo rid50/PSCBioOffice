@@ -100,7 +100,7 @@
             this.lbFinger4 = new System.Windows.Forms.Label();
             this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
             this.scannersListBox = new System.Windows.Forms.ListBox();
-            this.fillAppFabricCache = new System.Windows.Forms.Button();
+            this.manageCacheButton = new System.Windows.Forms.Button();
             this.checkBoxCache4 = new System.Windows.Forms.CheckBox();
             this.labCache4 = new System.Windows.Forms.Label();
             this.labCache3 = new System.Windows.Forms.Label();
@@ -604,6 +604,7 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             resources.ApplyResources(this.toolStripProgressBar, "toolStripProgressBar");
             this.toolStripProgressBar.Step = 1;
+            this.toolStripProgressBar.Value = 1;
             // 
             // panel1
             // 
@@ -734,12 +735,12 @@
             this.scannersListBox.Name = "scannersListBox";
             this.scannersListBox.SelectedIndexChanged += new System.EventHandler(this.ScannersListBoxSelectedIndexChanged);
             // 
-            // fillAppFabricCache
+            // manageCacheButton
             // 
-            resources.ApplyResources(this.fillAppFabricCache, "fillAppFabricCache");
-            this.fillAppFabricCache.Name = "fillAppFabricCache";
-            this.fillAppFabricCache.UseVisualStyleBackColor = true;
-            this.fillAppFabricCache.Click += new System.EventHandler(this.fillAppFabricCache_Click);
+            resources.ApplyResources(this.manageCacheButton, "manageCacheButton");
+            this.manageCacheButton.Name = "manageCacheButton";
+            this.manageCacheButton.UseVisualStyleBackColor = true;
+            this.manageCacheButton.Click += new System.EventHandler(this.manageCacheButton_Click);
             // 
             // checkBoxCache4
             // 
@@ -1006,7 +1007,7 @@
             this.Controls.Add(this.checkBoxCache3);
             this.Controls.Add(this.labCache4);
             this.Controls.Add(this.checkBoxCache4);
-            this.Controls.Add(this.fillAppFabricCache);
+            this.Controls.Add(this.manageCacheButton);
             this.Controls.Add(this.scannersListBox);
             this.Controls.Add(this.pictureBoxCompanyLogo);
             this.Controls.Add(this.gbResults);
@@ -1144,7 +1145,7 @@
         private Neurotec.Biometrics.Gui.NFingerView fingerView2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button fillAppFabricCache;
+        private System.Windows.Forms.Button manageCacheButton;
         private System.Windows.Forms.CheckBox checkBoxCache4;
         private System.Windows.Forms.Label labCache4;
         private System.Windows.Forms.Label labCache3;

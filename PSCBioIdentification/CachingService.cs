@@ -29,45 +29,59 @@ namespace PSCBioIdentification
             if (backgroundWorkerCachingService.IsBusy)
                 return;
 
-            _mre = mre;
             startProgressBar();
             EnableControls(false);
+            manageCacheButton.Text = "Cancel";
 
-            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+            _mre = mre;
+
+            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
             callback.MyEvent += MyEvent;
             InstanceContext context = new InstanceContext(callback);
 
-            var client = new CachePopulateService.PopulateCacheServiceClient(context);
+            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
+            {
+                //_mre = mre;
 
-            //try
-            //{
-            //    client.Run(new string[] { });
-            //    //client.Run(new string[] { "0" });
-            //}
-            //catch (FaultException ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    //ShowErrorMessage(ex.Message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    //ShowErrorMessage(ex.Message);
-            //}
+                //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+                //callback.MyEvent += MyEvent;
+                //InstanceContext context = new InstanceContext(callback);
 
-            //buttonRequest.Enabled = false;
+                var client = new CachePopulateService.PopulateCacheServiceClient(context);
 
-            backgroundWorkerCachingService.RunWorkerAsync(client);
+                //try
+                //{
+                //    client.Run(new string[] { });
+                //    //client.Run(new string[] { "0" });
+                //}
+                //catch (FaultException ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //    //ShowErrorMessage(ex.Message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //    //ShowErrorMessage(ex.Message);
+                //}
+
+                //buttonRequest.Enabled = false;
+
+                backgroundWorkerCachingService.RunWorkerAsync(client);
+            }
+            else
+            {
+                var client = new MatchingService.MatchingServiceClient(context);
+                backgroundWorkerCachingService.RunWorkerAsync(client);
+
+                //backgroundWorkerCachingService.RunWorkerAsync();
+
+            }
         }
 
         private void backgroundWorkerCachingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            // This method will run on a thread other than the UI thread.
-            // Be sure not to manipulate any Windows Forms controls created
-            // on the UI thread from this method.
-            var client = e.Argument as CachePopulateService.PopulateCacheServiceClient;
-
-            var fingerList = new System.Collections.ArrayList();
+            var list = new System.Collections.ArrayList();
 
             CheckBox cb; Label lb;
             for (int i = 1; i < 11; i++)
@@ -77,25 +91,113 @@ namespace PSCBioIdentification
 
                 cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    fingerList.Add(cb.Tag);
+                    list.Add(cb.Tag);
             }
 
-            if (fingerList.Count == 0)
+            if (list.Count == 0)
             {
-                e.Result = fingerList;
+                e.Result = list;
                 return;
             }
-            //record.arrOfFingersSize = ar.Count;
-            //record.arrOfFingers = new string[ar.Count];
-            //record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
 
-            //ar.Clear();
+            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
+            {
+                var client = e.Argument as CachePopulateService.PopulateCacheServiceClient;
 
-            client.Run(fingerList);
-            //client.Run(new string[] { });
-            //client.Run(new string[] { "0" });
-            _mre.WaitOne();
-            e.Result = fingerList;
+                //var fingerList = new System.Collections.ArrayList();
+
+                //CheckBox cb; Label lb;
+                //for (int i = 1; i < 11; i++)
+                //{
+                //    lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                //    lb.BackColor = Color.Transparent;
+
+                //    cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+                //    if (cb.Checked)
+                //        fingerList.Add(cb.Tag);
+                //}
+
+                //if (fingerList.Count == 0)
+                //{
+                //    e.Result = fingerList;
+                //    return;
+                //}
+                //record.arrOfFingersSize = ar.Count;
+                //record.arrOfFingers = new string[ar.Count];
+                //record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+
+                //ar.Clear();
+
+                client.Run(list);
+                //client.Run(new string[] { });
+                //client.Run(new string[] { "0" });
+                _mre.WaitOne();
+
+                //if (!backgroundWorkerCachingService.CancellationPending)
+                //    e.Result = list;
+                //else
+                //    e.Result = null;
+            }
+            else
+            {
+                record = new Record();
+                record.errorMessage = new System.Text.StringBuilder(512);
+
+                //var ar = new ArrayList();
+
+                ////record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
+                ////record.arrOfFingersSize = 3;
+                //CheckBox cb;
+                //for (int i = 1; i < 11; i++)
+                //{
+                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                //    if (cb.Checked)
+                //        ar.Add(cb.Tag);
+                //}
+                record.arrOfFingersSize = list.Count;
+                //record.arrOfFingers = new string[ar.Count];
+                record.arrOfFingers = list.ToArray(typeof(string)) as string[];
+
+                list.Clear();
+
+                //record.appSettings = new System.Text.StringBuilder(4);
+                //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+                //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
+
+                list.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+                list.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+                list.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+                list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+                record.appSettings = list.ToArray(typeof(string)) as string[];
+
+                //UInt32 score = 0;
+                unsafe
+                {
+                    fixed (UInt32* ptr = &record.size)
+                    {
+                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                        {
+                            fillCache(record.arrOfFingers, record.arrOfFingersSize, record.appSettings);
+                        }
+                        else
+                        {
+                            //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+                            //callback.MyEvent += MyEvent;
+                            //InstanceContext context = new InstanceContext(callback);
+                            var client = e.Argument as MatchingService.MatchingServiceClient;
+
+                            //var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
+                            client.fillCache(record.arrOfFingers, record.arrOfFingersSize, record.appSettings);
+                            _mre.WaitOne();
+                        }
+                    }
+                }
+            }
+
+            if (!backgroundWorkerCachingService.CancellationPending)
+                e.Result = list;
+            else
+                e.Result = null;
         }
 
         private void backgroundWorkerCachingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -107,26 +209,32 @@ namespace PSCBioIdentification
             }
 
             ArrayList fingerList = (ArrayList)e.Result;
+            if (fingerList == null)
+                fingerList = new ArrayList();
 
-            if (fingerList.Count == 0)
+            Label lb;
+            for (int i = 1; i < 11; i++)
             {
-                ShowErrorMessage("At least one finger should be selected");
+                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                if (fingerList.IndexOf(lb.Text) != -1)
+                    lb.BackColor = Color.Cyan;
+                else
+                    lb.BackColor = Color.Transparent;
             }
-            else
-            {
 
-                Label lb;
-                for (int i = 1; i < 11; i++)
-                {
-                    lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                    if (fingerList.IndexOf(lb.Text) != -1)
-                        lb.BackColor = Color.Cyan;
-                    else
-                        lb.BackColor = Color.Transparent;
-                }
+            CheckBox cb;
+            for (int i = 1; i < 11; i++)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (fingerList.IndexOf(cb.Tag) != -1)
+                    cb.Enabled = true;
+                else
+                    cb.Enabled = false;
             }
+
             stopProgressBar();
             EnableControls(true);
+            manageCacheButton.Text = "Refresh Cache";
         }
     }
 }
