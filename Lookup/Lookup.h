@@ -5,20 +5,31 @@
 using namespace std;
 
 namespace Nomad {
+		//typedef struct _tagCallBackStruct
+		//{
+		//	short code;
+		//	wchar_t text[MESSAGE_SIZE]; 
+		//} CallBackStruct;
+
+		////typedef void (__stdcall *fnNotify)(int notifyCode);
+		////typedef void (__stdcall *fnCallBack)(int callBackParam);
+		//typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
+
 	namespace Lookup {
 		Nomad::Data::Odbc *odbcPtr;
 
-		typedef struct _tagCallBackStruct
-		{
-			short code;
-			wchar_t text[256]; 
-		} CallBackStruct;
+		//typedef struct _tagCallBackStruct
+		//{
+		//	short code;
+		//	wchar_t text[MESSAGE_SIZE]; 
+		//} CallBackStruct;
 
-		//typedef void (__stdcall *fnNotify)(int notifyCode);
-		//typedef void (__stdcall *fnCallBack)(int callBackParam);
-		typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
+		////typedef void (__stdcall *fnNotify)(int notifyCode);
+		////typedef void (__stdcall *fnCallBack)(int callBackParam);
+		//typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
 		//typedef void (__stdcall *fnNotify)(int notifyCode, NotifyStruct* notifyInfo);
 		//extern "C" void __declspec(dllexport) __stdcall MySetCallBack(fnNotify callBack);
+
 		extern "C" void __declspec(dllexport) __stdcall SetCallBack(fnCallBack callBack);
 
 		extern "C"
@@ -31,6 +42,11 @@ namespace Nomad {
 														char *errorMessage, __int32 messageSize);
 
 		extern "C" void __declspec(dllexport) __stdcall terminateMatchingService();
+
+		unsigned __int32 run(char *fingerList[], __int32 fingerListSize, 
+														unsigned char *record, unsigned __int32 size,
+														char *appSettings[],
+														char *errorMessage, __int32 messageSize, fnCallBack callBack);
 
 		inline void printStatusStatement(double statusStatement) {
 #ifdef _DEBUG

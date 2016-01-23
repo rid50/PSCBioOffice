@@ -10,6 +10,7 @@ using Neurotec.Biometrics;
 using System.Windows.Forms;
 using System.Collections;
 using System.ServiceModel;
+using System.Runtime.InteropServices;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -18,12 +19,23 @@ namespace PSCBioIdentification
 {
     partial class Form1
     {
+        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern UInt32 match(
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] fingerList, int fingerListSize,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            byte[] template,
+            UInt32 size,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] appSettings,
+            System.Text.StringBuilder errorMessage, int messageSize);
+
         class Record
         {
             public UInt32   size;
             public byte[]   template;
-            public string[] arrOfFingers;
-            public int      arrOfFingersSize;
+            public string[] fingerList;
+            public int      fingerListSize;
             public string[] appSettings;
             public System.Text.StringBuilder errorMessage;
 
@@ -77,8 +89,8 @@ namespace PSCBioIdentification
 
                 var ar = new ArrayList();
 
-                //record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
-                //record.arrOfFingersSize = 3;
+                //record.fingerList = new string[3] { "ri", "rm", "rr" };
+                //record.fingerListSize = 3;
                 CheckBox cb;
                 for (int i = 1; i < 11; i++)
                 {
@@ -86,9 +98,9 @@ namespace PSCBioIdentification
                     if (cb.Checked)
                         ar.Add(cb.Tag);
                 }
-                record.arrOfFingersSize = ar.Count;
-                //record.arrOfFingers = new string[ar.Count];
-                record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+                record.fingerListSize = ar.Count;
+                //record.fingerList = new string[ar.Count];
+                record.fingerList = ar.ToArray(typeof(string)) as string[];
 
                 ar.Clear();
 
@@ -109,7 +121,7 @@ namespace PSCBioIdentification
                     {
                         if (ConfigurationManager.AppSettings["matchingService"] == "local")
                         {
-                            e.Result = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = match(record.fingerList, record.fingerListSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                         }
                         else
                         {
@@ -118,7 +130,7 @@ namespace PSCBioIdentification
                             InstanceContext context = new InstanceContext(callback);
 
                             var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
-                            e.Result = matchingServiceClient.match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }
                     }
                 }

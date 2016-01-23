@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.ServiceModel;
 using System.Threading;
 using System.Collections;
+using System.Runtime.InteropServices;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -19,6 +20,42 @@ namespace PSCBioIdentification
 {
     partial class Form1
     {
+        [DllImport("Lookup.dll", EntryPoint = "fillCache", CallingConvention = CallingConvention.StdCall)]
+        public static extern void fillCache(
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] fingerList, int fingerListSize,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+            string[] appSettings);
+
+        [DllImport("Lookup.dll", CharSet = CharSet.Auto)]
+        public static extern void SetCallBack(CallBackDelegate callback);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct CallBackStruct
+        {
+            public short code;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string text;
+        }
+
+        CallbackFromCacheFillingService _callBack;
+
+        public delegate void CallBackDelegate(ref CallBackStruct callBackParam);
+
+        public void OnCallback(ref CallBackStruct callBackParam)
+        {
+            if (callBackParam.code == 1)
+            {
+                int result;
+                int.TryParse(callBackParam.text, out result);
+                _callBack.RespondWithRecordNumbers(result);
+            } 
+            else if (callBackParam.code == 2)
+                _callBack.RespondWithText(callBackParam.text);
+            else if (callBackParam.code == 3)
+                _callBack.RespondWithError(callBackParam.text);
+        }
+
         private bool IsCachingServiceRunning
         {
             get { return backgroundWorkerCachingService.IsBusy; }
@@ -35,11 +72,11 @@ namespace PSCBioIdentification
 
             _mre = mre;
 
-            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-            callback.MyEvent += MyEvent;
-            InstanceContext context = new InstanceContext(callback);
+            _callBack = new CallbackFromCacheFillingService();
+            _callBack.MyEvent += MyEvent;
+            InstanceContext context = new InstanceContext(_callBack);
 
-            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
                 //_mre = mre;
 
@@ -81,7 +118,7 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerCachingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            var list = new System.Collections.ArrayList();
+            var fingerList = new System.Collections.ArrayList();
 
             CheckBox cb; Label lb;
             for (int i = 1; i < 11; i++)
@@ -91,16 +128,16 @@ namespace PSCBioIdentification
 
                 cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    list.Add(cb.Tag);
+                    fingerList.Add(cb.Tag);
             }
 
-            if (list.Count == 0)
+            if (fingerList.Count == 0)
             {
-                e.Result = list;
+                e.Result = fingerList;
                 return;
             }
 
-            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
                 var client = e.Argument as CachePopulateService.PopulateCacheServiceClient;
 
@@ -122,13 +159,13 @@ namespace PSCBioIdentification
                 //    e.Result = fingerList;
                 //    return;
                 //}
-                //record.arrOfFingersSize = ar.Count;
-                //record.arrOfFingers = new string[ar.Count];
-                //record.arrOfFingers = ar.ToArray(typeof(string)) as string[];
+                //record.fingerListSize = ar.Count;
+                //record.fingerList = new string[ar.Count];
+                //record.fingerList = ar.ToArray(typeof(string)) as string[];
 
                 //ar.Clear();
 
-                client.Run(list);
+                client.Run(fingerList);
                 //client.Run(new string[] { });
                 //client.Run(new string[] { "0" });
                 _mre.WaitOne();
@@ -145,8 +182,8 @@ namespace PSCBioIdentification
 
                 //var ar = new ArrayList();
 
-                ////record.arrOfFingers = new string[3] { "ri", "rm", "rr" };
-                ////record.arrOfFingersSize = 3;
+                ////record.fingerList = new string[3] { "ri", "rm", "rr" };
+                ////record.fingerListSize = 3;
                 //CheckBox cb;
                 //for (int i = 1; i < 11; i++)
                 //{
@@ -154,11 +191,12 @@ namespace PSCBioIdentification
                 //    if (cb.Checked)
                 //        ar.Add(cb.Tag);
                 //}
-                record.arrOfFingersSize = list.Count;
-                //record.arrOfFingers = new string[ar.Count];
-                record.arrOfFingers = list.ToArray(typeof(string)) as string[];
+                record.fingerListSize = fingerList.Count;
+                //record.fingerList = new string[ar.Count];
+                record.fingerList = fingerList.ToArray(typeof(string)) as string[];
 
-                list.Clear();
+
+                var list = new System.Collections.ArrayList();
 
                 //record.appSettings = new System.Text.StringBuilder(4);
                 //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
@@ -175,9 +213,12 @@ namespace PSCBioIdentification
                 {
                     fixed (UInt32* ptr = &record.size)
                     {
-                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
-                            fillCache(record.arrOfFingers, record.arrOfFingersSize, record.appSettings);
+                            CallBackDelegate d = new CallBackDelegate(OnCallback);
+                            SetCallBack(d);
+
+                            fillCache(record.fingerList, record.fingerListSize, record.appSettings);
                         }
                         else
                         {
@@ -187,7 +228,7 @@ namespace PSCBioIdentification
                             var client = e.Argument as MatchingService.MatchingServiceClient;
 
                             //var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
-                            client.fillCache(record.arrOfFingers, record.arrOfFingersSize, record.appSettings);
+                            client.fillCache(record.fingerList, record.fingerListSize, record.appSettings);
                             _mre.WaitOne();
                         }
                     }
@@ -195,7 +236,7 @@ namespace PSCBioIdentification
             }
 
             if (!backgroundWorkerCachingService.CancellationPending)
-                e.Result = list;
+                e.Result = fingerList;
             else
                 e.Result = null;
         }
@@ -207,29 +248,31 @@ namespace PSCBioIdentification
                 LogLine("Caching service: " + e.Error.Message, true);
                 ShowErrorMessage(e.Error.Message);
             }
-
-            ArrayList fingerList = (ArrayList)e.Result;
-            if (fingerList == null)
-                fingerList = new ArrayList();
-
-            Label lb;
-            for (int i = 1; i < 11; i++)
+            else
             {
-                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                if (fingerList.IndexOf(lb.Text) != -1)
-                    lb.BackColor = Color.Cyan;
-                else
-                    lb.BackColor = Color.Transparent;
-            }
+                ArrayList fingerList = (ArrayList)e.Result;
+                if (fingerList == null)
+                    fingerList = new ArrayList();
 
-            CheckBox cb;
-            for (int i = 1; i < 11; i++)
-            {
-                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                if (fingerList.IndexOf(cb.Tag) != -1)
-                    cb.Enabled = true;
-                else
-                    cb.Enabled = false;
+                Label lb;
+                for (int i = 1; i < 11; i++)
+                {
+                    lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                    if (fingerList.IndexOf(lb.Text) != -1)
+                        lb.BackColor = Color.Cyan;
+                    else
+                        lb.BackColor = Color.Transparent;
+                }
+
+                CheckBox cb;
+                for (int i = 1; i < 11; i++)
+                {
+                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    if (fingerList.IndexOf(cb.Tag) != -1)
+                        cb.Enabled = true;
+                    else
+                        cb.Enabled = false;
+                }
             }
 
             stopProgressBar();

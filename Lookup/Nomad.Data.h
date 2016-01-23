@@ -31,7 +31,8 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Matcher.lib")
 
-#define BUFFERLEN	10000
+#define BUFFERLEN		10000
+#define MESSAGE_SIZE	256
 
 //using namespace std;
 
@@ -43,6 +44,14 @@ namespace Nomad
 	//__declspec(dllimport) class Matcher {};
 	//__declspec(dllimport) void __stdcall  enroll();
 	//__declspec(dllimport) void __stdcall match(void *buffer2, int size);
+
+	typedef struct _tagCallBackStruct
+	{
+		short code;
+		wchar_t text[MESSAGE_SIZE]; 
+	} CallBackStruct;
+
+	typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
 
 	namespace Bio
 	{
@@ -125,7 +134,7 @@ namespace Nomad
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
-			unsigned __int32 exec(unsigned long int, unsigned int, char *fingerList[], __int32 fingerListSize, std::string *errorMessage);
+			unsigned __int32 exec(unsigned long int, unsigned int, char *fingerList[], __int32 fingerListSize, std::string *errorMessage, fnCallBack callBack);
 			//static void enroll(unsigned char *record, unsigned __int32 size);
 			//static void terminate();
 			//void disconnect();

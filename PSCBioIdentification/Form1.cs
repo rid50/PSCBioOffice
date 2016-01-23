@@ -34,23 +34,23 @@ namespace PSCBioIdentification
         //[DllImport("Lookup.dll", CharSet = CharSet.Auto)]
         //public static extern bool initFingerMatcher();
 
-        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 fillCache(
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] arrOfFingers, int arrOffingersSize,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] appSettings);
+        //[DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
+        //public static extern UInt32 fillCache(
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+        //    string[] fingerList, int fingerListSize,
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+        //    string[] appSettings);
 
-        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 match(
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] arrOfFingers, int arrOffingersSize,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            byte[] template,
-            UInt32 size,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] appSettings,
-            System.Text.StringBuilder errorMessage, int messageSize);
+        //[DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
+        //public static extern UInt32 match(
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+        //    string[] fingerList, int fingerListSize,
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+        //    byte[] template,
+        //    UInt32 size,
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
+        //    string[] appSettings,
+        //    System.Text.StringBuilder errorMessage, int messageSize);
 
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void terminateMatchingService();

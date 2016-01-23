@@ -38,22 +38,43 @@ namespace Nomad {
 		}
 
 		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[]) {
-				Nomad::Data::Odbc::fillOnly = true;
-				CallBackStruct callBackParam;
-				callBackParam.code = 22;
-				//callBackParam.text = L"kuku";
-				wcscpy_s(callBackParam.text, 5, L"kuku");
+			Nomad::Data::Odbc::fillOnly = true;
+			__int32 messageSize = MESSAGE_SIZE;
+			//char errorMessage[messageSize];
+			char *errorMessage = new char[messageSize];
+			errorMessage[0] = '\0';
 
-				//strcpy_s(callBackParam.text, 5, "kuku" + '\0');
-				_callBack(&callBackParam);
+			//CallBackStruct callBackParam;
+			//callBackParam.code = 22;
+			////callBackParam.text = L"kuku";
+			//wcscpy_s(callBackParam.text, 5, L"kuku");
+
+			////strcpy_s(callBackParam.text, 5, "kuku" + '\0');
+			//_callBack(&callBackParam);
 				
-				//return match(fingerList, fingerListSize, NULL, 0, appSettings, errorMessage, messageSize);
+			run(fingerList, fingerListSize, NULL, 0, appSettings, errorMessage, messageSize, _callBack);
+
+			if (strlen(errorMessage) != 0) {
+				CallBackStruct callBackParam;
+				callBackParam.code = 3;
+				size_t length = strlen(errorMessage);
+				mbstowcs_s(&length, callBackParam.text, errorMessage, length);
+				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+				_callBack(&callBackParam);
+			}
+
+			delete[] errorMessage;
 		}
 
 		unsigned __int32 __stdcall match(char *fingerList[], __int32 fingerListSize,
 			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *appSettings[], char *errorMessage, __int32 messageSize) {
+				Nomad::Data::Odbc::fillOnly = false;
+				return run(fingerList, fingerListSize, probeTemplate, probeTemplateSize, appSettings, errorMessage, messageSize, NULL);
+		}
 
-			Nomad::Data::Odbc::fillOnly = false;
+		unsigned __int32 run(char *fingerList[], __int32 fingerListSize,
+			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *appSettings[], char *errorMessage, __int32 messageSize, fnCallBack callBack) {
+
 			unsigned __int32 retcode = 0;
 
 			//std::stringstream ss2; 
@@ -109,6 +130,21 @@ namespace Nomad {
 			}
 			
 			delete odbcPtr;
+
+			if (callBack != NULL) {
+				CallBackStruct callBackParam;
+				callBackParam.code = 1;
+
+				stringstream strm;
+				strm << rowcount;
+				string temp = strm.str();
+				char const* chars = temp.c_str();
+
+				size_t length = strlen(chars);
+				mbstowcs_s(&length, callBackParam.text, chars, length);
+				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+				_callBack(&callBackParam);
+			}
 			//return retcode;
 			//odbcPtr->enroll(record, size);
 			//Nomad::Data::Odbc::terminate(false);
@@ -124,7 +160,7 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (1) {
+			if (0) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
@@ -133,7 +169,7 @@ namespace Nomad {
 							Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 							try {
-								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage);
+								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
 							} catch (std::exception& e) {
 								errMessage = "Error: ";
 								errMessage += e.what();
@@ -163,7 +199,8 @@ namespace Nomad {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {
 					try {
-						retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, fingerList, fingerListSize, &errMessage);
+						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
+						//retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, fingerList, fingerListSize, &errMessage, _callBack);
 					} catch (std::exception& e) {
 						errMessage = "Error: ";
 						errMessage += e.what();
@@ -179,7 +216,7 @@ namespace Nomad {
 				delete odbcPtr;
 			}
 			
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			QueryPerformanceCounter(&end);
 			QueryPerformanceFrequency(&freq);
 
@@ -187,18 +224,25 @@ namespace Nomad {
 
 			//printf("%s : %4.2f ms\n", "ODBC - Time elapsed: ", result * 1000);
 
-			//char buffer [30];
-			//sprintf (buffer, "%s : %4.2f ms\n", "ODBC - Time elapsed: ", result * 1000);
+			char buffer [90];
+			sprintf_s(buffer, 90, "--- Time elapsed: %4.2f min", result / 60);
+
+			CallBackStruct callBackParam;
+			callBackParam.code = 2;
+			size_t length = strlen(buffer);
+			mbstowcs_s(&length, callBackParam.text, buffer, length);
+			//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+			_callBack(&callBackParam);
+
 			//printf ("%s",buffer);
 
 			//printStatusStatement(result);
 			//std::cout << result << " sec" << endl;
 
-
-			std::stringstream ss; 
-			ss << result << " sec";
-			Data::Log(ss.str(), false);
-#endif
+			//std::stringstream ss; 
+			//ss << result << " sec";
+			//Data::Log(ss.str(), false);
+//#endif
 			//OutputDebugString(ss.str().c_str());
 
 			if (retcode > 0) {

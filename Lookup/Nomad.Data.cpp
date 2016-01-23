@@ -1,6 +1,10 @@
 //#include "stdafx.h"
 #include "Nomad.Data.h"
 
+#include <concrt.h>
+//#include <chrono>
+//#include <thread>
+
 //#include <iostream>
 //#include <sstream>
 //#include <string>
@@ -12,6 +16,8 @@
 //using std::endl;
 //using std::string;
 //using namespace System;
+//using namespace System::Threading;
+
 
 namespace Nomad
 {
@@ -223,7 +229,7 @@ namespace Nomad
 			FIELDSTRUCT F10;
 		};
 
-		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *fingerList[], __int32 numOfFieldsToMatch, std::string *errorMessage) {
+		unsigned __int32 Odbc::exec(unsigned long int from, unsigned int limit, char *fingerList[], __int32 numOfFieldsToMatch, std::string *errorMessage, fnCallBack callBack) {
 			hStmt = SQL_NULL_HSTMT;
 
 			SQLULEN			NumRowsFetched;
@@ -384,11 +390,32 @@ namespace Nomad
 				if (terminateLoop)
 					break;
 
-				if (fillOnly)
-					continue;
+					//if (fillOnly)
+					//	continue;
 
 				short numOfMatches = 0;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {
+
+					if (i % 1000 == 0 && callBack != NULL) {
+						Concurrency::wait(100);
+						CallBackStruct callBackParam;
+						callBackParam.code = 1;
+
+						//std::stringstream strm;
+						//strm << NumRowsFetched;
+						//std::string temp = strm.str();
+						//char const* chars = temp.c_str();
+
+						size_t length = strlen("1000");
+						//mbstowcs_s(&length, callBackParam.text, chars, length);
+						mbstowcs_s(&length, callBackParam.text, "1000", length);
+						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+						callBack(&callBackParam);
+					}
+
+					if (fillOnly)
+						continue;
+
 					numOfMatches = 0;
 					matched = false;
 

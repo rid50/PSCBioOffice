@@ -12,7 +12,7 @@ namespace MatcherTest
         [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern UInt32 match(
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] arrOfFingers, int arrOffingersSize,
+            string[] fingerList, int fingerListSize,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             byte[] template,
             UInt32 size, System.Text.StringBuilder errorMessage, int messageSize);
@@ -24,8 +24,8 @@ namespace MatcherTest
         {
             public UInt32 size;
             public byte[] template;
-            public string[] arrOfFingers;
-            public int arrOfFingersSize;
+            public string[] fingerList;
+            public int fingerListSize;
             public System.Text.StringBuilder errorMessage;
         }
 
@@ -64,23 +64,23 @@ namespace MatcherTest
             record.size = (UInt32)subject.Fingers[0].Objects[0].Template.GetSize();
             record.template = subject.Fingers[0].Objects[0].Template.Save().ToArray();
 
-            record.arrOfFingers = new string[2] { "ri", "rm" };
-            record.arrOfFingersSize = record.arrOfFingers.Length;
+            record.fingerList = new string[2] { "ri", "rm" };
+            record.fingerListSize = record.fingerList.Length;
 
             for (int i = 1; i < 2; i++)
             {
                 switch (i) {
                     case 0:
-                        record.arrOfFingers = new string[2] { "ri", "rm" };
+                        record.fingerList = new string[2] { "ri", "rm" };
                         break;
                     case 1:
-                        record.arrOfFingers = new string[2] { "li", "lm" };
+                        record.fingerList = new string[2] { "li", "lm" };
                         break;
                     case 2:
-                        record.arrOfFingers = new string[2] { "ri", "rm" };
+                        record.fingerList = new string[2] { "ri", "rm" };
                         break;
                     case 3:
-                        record.arrOfFingers = new string[2] { "rl", "rr" };
+                        record.fingerList = new string[2] { "rl", "rr" };
                         break;
                 }
 
@@ -92,7 +92,7 @@ namespace MatcherTest
                 {
                     fixed (UInt32* ptr = &record.size)
                     {
-                        appId = match(record.arrOfFingers, record.arrOfFingersSize, record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
+                        appId = match(record.fingerList, record.fingerListSize, record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
                     }
                 }
 
