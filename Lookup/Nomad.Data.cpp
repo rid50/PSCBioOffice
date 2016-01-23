@@ -396,7 +396,7 @@ namespace Nomad
 				short numOfMatches = 0;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {
 
-					if (i % 1000 == 0 && callBack != NULL) {
+					if (false && i % 1000 == 0 && callBack != NULL) {
 						Concurrency::wait(100);
 						CallBackStruct callBackParam;
 						callBackParam.code = 1;
