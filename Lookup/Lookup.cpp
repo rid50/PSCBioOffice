@@ -160,15 +160,17 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
-			if (0) {
+			if (1) {
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
 						if (!Nomad::Data::Odbc::terminateLoop) {
 							unsigned __int32 ret = 0;
-							Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
+							Nomad::Data::Odbc *odbcPtr = NULL;
+							//Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 							try {
+								odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
 							} catch (std::exception& e) {
 								errMessage = "Error: ";
@@ -188,7 +190,8 @@ namespace Nomad {
 								tg.cancel();
 							}
 
-							delete odbcPtr;
+							if (odbcPtr != NULL) 
+								delete odbcPtr;
 						} else
 							tg.cancel();
 					});

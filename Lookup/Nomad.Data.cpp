@@ -443,7 +443,9 @@ namespace Nomad
 									//matched = matcherFacadePtr->match(RecordStructArray[i].li, static_cast<unsigned __int32>(RecordStructArray[i].liInd));
 									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(*index));
 
-									matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
+									//if (!fillOnly)
+										matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
+
 									if (matched) {
 										numOfMatches++;
 									}
