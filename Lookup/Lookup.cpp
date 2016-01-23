@@ -226,6 +226,7 @@ namespace Nomad {
 
 			char buffer [90];
 			sprintf_s(buffer, 90, "--- Time elapsed: %4.2f min", result / 60);
+			//sprintf(buffer, "%s : %4.2f min", "--- Time elapsed: ", result / 60);
 
 			CallBackStruct callBackParam;
 			callBackParam.code = 2;

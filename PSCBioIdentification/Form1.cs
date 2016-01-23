@@ -2639,14 +2639,20 @@ namespace PSCBioIdentification
                 _mre.Set();                     //cache service finished cache populating
             }
             else if (e.Error.Length == 0)
-                ShowStatusMessage(e.Message);
+            {
+                this.BeginInvoke((Action<string>)((Message) =>
+                {
+                    ShowStatusMessage(Message);
+                }), e.Message);
+            }
             else
             {
                 backgroundWorkerCachingService.CancelAsync();
 
                 _mre.Set();                     //cache service finished cache populating
-                
-                var act = new Action(delegate()
+
+                //var act = new Action(delegate()
+                this.BeginInvoke(new Action(delegate()
                 {
                     Label lb;
                     for (int i = 1; i < 11; i++)
@@ -2654,14 +2660,18 @@ namespace PSCBioIdentification
                         lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
                         lb.BackColor = Color.Transparent;
                     }
-                });
-                
-                stopProgressBar();
-                MessageBox.Show(e.Error);
 
-                act();
-                
-                EnableControls(true);
+                    stopProgressBar();
+                    MessageBox.Show(e.Error);
+                    EnableControls(true);
+                }));
+
+                //stopProgressBar();
+                //MessageBox.Show(e.Error);
+
+                //act();
+
+                //EnableControls(true);
             }
                 //ShowErrorMessage(e.Error);
         }
