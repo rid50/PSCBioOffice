@@ -24,16 +24,16 @@ namespace PSCBioIdentification
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             string[] fingerList, int fingerListSize,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            byte[] template,
-            UInt32 size,
+            byte[] probeTemplate,
+            UInt32 probeTemplateSize,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             string[] appSettings,
             System.Text.StringBuilder errorMessage, int messageSize);
 
         class Record
         {
-            public UInt32   size;
-            public byte[]   template;
+            public UInt32   probeTemplateSize;
+            public byte[]   probeTemplate;
             public string[] fingerList;
             public int      fingerListSize;
             public string[] appSettings;
@@ -83,8 +83,8 @@ namespace PSCBioIdentification
                 record = new Record();
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
-                record.size = (UInt32)(e.Argument as NFRecord).GetSize();
-                record.template = (e.Argument as NFRecord).Save().ToArray();
+                record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
+                record.probeTemplate = (e.Argument as NFRecord).Save().ToArray();
                 record.errorMessage = new System.Text.StringBuilder(512);
 
                 var ar = new ArrayList();
@@ -117,11 +117,11 @@ namespace PSCBioIdentification
                 //UInt32 score = 0;
                 unsafe
                 {
-                    fixed (UInt32* ptr = &record.size)
+                    fixed (UInt32* ptr = &record.probeTemplateSize)
                     {
                         if (ConfigurationManager.AppSettings["matchingService"] == "local")
                         {
-                            e.Result = match(record.fingerList, record.fingerListSize, record.template, record.size, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                         }
                         else
                         {
@@ -130,7 +130,7 @@ namespace PSCBioIdentification
                             InstanceContext context = new InstanceContext(callback);
 
                             var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
-                            e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.template, record.size, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }
                     }
                 }

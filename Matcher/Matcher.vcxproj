@@ -118,6 +118,10 @@
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK\Lib\Win64_x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>NCore.dll.lib;NMedia.dll.lib;NBiometricClient.dll.lib;NBiometrics.dll.lib;NLicensing.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y $(OutDir)Matcher.dll C:\psc\PSCBioOfficeWeb\BiometricService\bin
+xcopy /Y $(OutDir)Matcher.pdb C:\psc\PSCBioOfficeWeb\BiometricService\bin</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

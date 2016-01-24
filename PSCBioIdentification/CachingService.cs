@@ -211,9 +211,9 @@ namespace PSCBioIdentification
                 //UInt32 score = 0;
                 unsafe
                 {
-                    fixed (UInt32* ptr = &record.size)
+                    fixed (UInt32* ptr = &record.probeTemplateSize)
                     {
-                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
                         {
                             CallBackDelegate d = new CallBackDelegate(OnCallback);
                             SetCallBack(d);

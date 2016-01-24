@@ -256,7 +256,7 @@ namespace PSCBioIdentification
                 if (fingerList.IndexOf(cb.Tag) != -1)
                     cb.Enabled = true;
                 else
-                    cb.Enabled = false;
+                    cb.Enabled = true;
             }
 
             //string selectedScannerModules = "Futronic";
@@ -667,10 +667,21 @@ namespace PSCBioIdentification
 
             //return;
             //foreach (var obj in fingers.Objects)
-
-            AsyncResult result = (AsyncResult)iar;
-            CaptureFingersDelegate caller = (CaptureFingersDelegate)result.AsyncDelegate;
-            var fingers = (NFinger)caller.EndInvoke(result);
+            NFinger fingers = null;
+            try {
+                AsyncResult result = (AsyncResult)iar;
+                CaptureFingersDelegate caller = (CaptureFingersDelegate)result.AsyncDelegate;
+                fingers = (NFinger)caller.EndInvoke(result);
+            }
+            catch (Exception ex)
+            {
+                this.Invoke((Action<string>)((txt) =>
+                {
+                    ShowErrorMessage(txt);
+                    EnableControls(true);
+                }), ex.Message);
+                return;
+            }
 
             var obj = fingers.Objects[0];
             if (obj.Status == NBiometricStatus.Ok)
@@ -718,7 +729,6 @@ namespace PSCBioIdentification
                     LogLine(txt, true);
                     EnableControls(true);
                 }), text);
-
             }
         }
 
