@@ -106,9 +106,24 @@ namespace Nomad
 
 			// Set the ODBC version environment attribute
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
-				rc = SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER*)SQL_OV_ODBC3, 0 );
+/*				
+if (!SQL_SUCCEEDED(SQLSetEnvAttr(
+      NULL,  // make process level cursor pooling
+      SQL_ATTR_CONNECTION_POOLING,
+      (SQLPOINTER)SQL_CP_ONE_PER_DRIVER,
+      SQL_IS_INTEGER)))
+*/				
+//				rc = SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER*)SQL_OV_ODBC3, 0 );
+				rc = SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER*)SQL_OV_ODBC3, SQL_IS_INTEGER );
 				// Allocate connection handle
 				if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
+/*					
+//set the matching condition for using an existing connection in the
+   pool
+   if (!SQL_SUCCEEDED(SQLSetEnvAttr(henv, SQL_ATTR_CP_MATCH,
+   (SQLPOINTER) SQL_CP_RELAXED_MATCH, SQL_IS_INTEGER)))
+   printf("SQLSetEnvAttr/SQL_ATTR_CP_MATCH error\n");
+*/					
 					rc = SQLAllocHandle( SQL_HANDLE_DBC, hEnv, &hDBC );
 					// Set login timeout to 3 seconds
 					if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
