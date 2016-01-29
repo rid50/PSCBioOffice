@@ -236,7 +236,24 @@ namespace PSCBioIdentification
             InstanceContext context = new InstanceContext(callback);
             var client = new CachePopulateService.PopulateCacheServiceClient(context);
 
-            ArrayList fingerList = client.getFingerList();
+            ArrayList fingerList = null;
+            try
+            {
+                fingerList = client.getFingerList();
+            }
+            catch (FaultException<string> fault) {
+                labelCacheUnavailable.Text = fault.Detail;
+                fingerList = null;
+                labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
+                //ShowErrorMessage(ex.Message);
+                //EnableControls(false);
+                manageCacheButton.Tag = "off";
+                manageCacheButton.Enabled = false;
+                radioButtonIdentify.Tag = "off";
+                radioButtonIdentify.Enabled = false;
+                buttonScan.Enabled = false;
+ //               return;
+            }
 
             if (fingerList == null)
                 fingerList = new ArrayList();
@@ -360,12 +377,18 @@ namespace PSCBioIdentification
         private void EnableControls(bool enable)
         {
             //fillAppFabricCache.Enabled = enable;
-            if (enable)
+            if (enable && (string)manageCacheButton.Tag != "off")
                 manageCacheButton.Enabled = enable;
-
+            
             buttonRequest.Enabled = enable;
             buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
             groupBoxMode.Enabled = enable;
+            if ((string)radioButtonIdentify.Tag == "off")
+            {
+                radioButtonIdentify.Enabled = false;
+                buttonScan.Enabled = false;
+            }
+
             panel2.Enabled = enable;
             //manageCacheButton.Text = IsCachingServiceRunning ? "Stop Cache Refreshing" : "Refresh Cache";
             buttonScan.Text = _isCapturing ? "Cancel" : "Scan";

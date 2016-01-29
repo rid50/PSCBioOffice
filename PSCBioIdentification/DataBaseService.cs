@@ -12,6 +12,7 @@ namespace DataSourceServices
 {
     class DataBaseService : DataSource
     {
+        enum FingerListEnum { li = 1, lm, lr, ll, ri, rm, rr, rl, lt, rt }
 
         string dbPictureTable = MyConfigurationSettings.AppSettings["dbPictureTable"];
         string dbFingerTable = MyConfigurationSettings.AppSettings["dbFingerTable"];
@@ -111,11 +112,18 @@ namespace DataSourceServices
                         {
                             buffer[0] = (byte[])reader[dbFingerColumn];  //(byte[])reader["AppWsq"];
 
-                            string[] result = fingerFields.Split(new char[] { ',' });
+                            string[] fingerFieldsArray = fingerFields.Split(new char[] { ',' });
 
                             int i = 1;
-                            foreach (string s in result) {
-                                buffer[i++] = (byte[])reader[s];  //(byte[])reader["li"];
+                            foreach (string finger in fingerFieldsArray)
+                            {
+                                FingerListEnum f = (FingerListEnum)Enum.Parse(typeof(FingerListEnum), finger);
+                                if (!reader.IsDBNull(i) && ((byte[])reader[finger]).Length > 1)
+                                    buffer[(int)f] = (byte[])reader[finger];  //(byte[])reader["li"];
+                                else
+                                    buffer[(int)f] = new byte[0];
+
+                                i++;
                             }
                         }
                         else

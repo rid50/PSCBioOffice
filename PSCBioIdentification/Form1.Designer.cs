@@ -121,6 +121,7 @@
             this.checkBoxCache10 = new System.Windows.Forms.CheckBox();
             this.labCache9 = new System.Windows.Forms.Label();
             this.checkBoxCache9 = new System.Windows.Forms.CheckBox();
+            this.labelCacheUnavailable = new System.Windows.Forms.Label();
             this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
             this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
@@ -872,6 +873,12 @@
             this.checkBoxCache9.Tag = "lt";
             this.checkBoxCache9.UseVisualStyleBackColor = true;
             // 
+            // labelCacheUnavailable
+            // 
+            resources.ApplyResources(this.labelCacheUnavailable, "labelCacheUnavailable");
+            this.labelCacheUnavailable.ForeColor = System.Drawing.Color.OrangeRed;
+            this.labelCacheUnavailable.Name = "labelCacheUnavailable";
+            // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Active = false;
@@ -987,6 +994,7 @@
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
+            this.Controls.Add(this.labelCacheUnavailable);
             this.Controls.Add(this.labCache10);
             this.Controls.Add(this.checkBoxCache10);
             this.Controls.Add(this.labCache9);
@@ -1166,7 +1174,7 @@
         private System.Windows.Forms.CheckBox checkBoxCache10;
         private System.Windows.Forms.Label labCache9;
         private System.Windows.Forms.CheckBox checkBoxCache9;
-
+        private System.Windows.Forms.Label labelCacheUnavailable;
     }
 }
 
