@@ -213,7 +213,7 @@ namespace PSCBioIdentification
                 {
                     fixed (UInt32* ptr = &record.probeTemplateSize)
                     {
-                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
                             CallBackDelegate d = new CallBackDelegate(OnCallback);
                             SetCallBack(d);

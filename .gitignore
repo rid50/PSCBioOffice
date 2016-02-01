@@ -1,0 +1,9 @@
+Debug
+ipch
+x64
+Release
+obj
+bin
+*.sdf
+*.config
+*.cfg

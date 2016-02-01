@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSCBioVerification", "PSCBioVerification\PSCBioVerification.csproj", "{BEA5342F-A7F3-40ED-AEA4-6469845CCAF2}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PSCBioVerificationSetup", "PSCBioVerificationSetup\PSCBioVerificationSetup.vdproj", "{2379E2D2-2B7D-45A5-821E-03E139C06BC9}"

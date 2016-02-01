@@ -244,7 +244,8 @@ namespace PSCBioIdentification
             catch (FaultException<string> fault) {
                 labelCacheUnavailable.Text = fault.Detail;
                 fingerList = null;
-                labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
+                //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
+                labelCacheUnavailable.Text = string.Format("{0}", fault.Detail);
                 //ShowErrorMessage(ex.Message);
                 //EnableControls(false);
                 manageCacheButton.Tag = "off";
@@ -1643,7 +1644,7 @@ namespace PSCBioIdentification
         //private void buttonRequest_Click(object sender, EventArgs e)
         private bool processEnrolledData(byte[][] serializedWSQArray)
         {
-            bool createTemplatesFromWSQ = false;
+            bool createTemplatesFromWSQ = true;
 
             PictureBox pb;
             //NSubject[] subjects = new NSubject[10];

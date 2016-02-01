@@ -61,7 +61,7 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (ConfigurationManager.AppSettings["matchingProvider"] == "managed")
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
                 var fingerList = new ArrayList();
 
@@ -119,7 +119,7 @@ namespace PSCBioIdentification
                 {
                     fixed (UInt32* ptr = &record.probeTemplateSize)
                     {
-                        if (ConfigurationManager.AppSettings["matchingService"] == "local")
+                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
                             e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                         }
