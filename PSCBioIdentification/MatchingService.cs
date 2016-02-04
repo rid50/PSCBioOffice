@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.ServiceModel;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -46,6 +47,8 @@ namespace PSCBioIdentification
 
         Record record;
 
+        Stopwatch _stw = new Stopwatch();
+
         private bool IsMatchingServiceRunning
         {
             get { return backgroundWorkerMatchingService.IsBusy; }
@@ -61,6 +64,8 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
         {
+            _stw.Start();
+
             if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
                 var fingerList = new ArrayList();
@@ -142,6 +147,7 @@ namespace PSCBioIdentification
             //Application.DoEvents();
 
             //MessageBox.Show(toolStripProgressBar.Value.ToString());
+            _stw.Stop();
 
             if (e.Error != null)
             {
@@ -155,7 +161,9 @@ namespace PSCBioIdentification
                 UInt32 score = (UInt32)e.Result;
 
                 string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
+                LogLine(str, true);
 
+                str = string.Format("Time elapsed: {0:hh\\:mm\\:ss}", _stw.Elapsed);
                 LogLine(str, true);
 
                 //ShowStatusMessage(str);

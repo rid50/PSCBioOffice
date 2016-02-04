@@ -58,7 +58,7 @@ namespace PassportReaderNS
         public Form1()
         {
             InitializeComponent();
-            TextBoxID.Text = "123";
+            TextBoxID.Text = "20005140";
         }
 
         void ShowError(ARHScanner sc)

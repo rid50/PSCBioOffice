@@ -274,7 +274,7 @@ namespace PSCBioIdentification
                 if (fingerList.IndexOf(cb.Tag) != -1)
                     cb.Enabled = true;
                 else
-                    cb.Enabled = true;
+                    cb.Enabled = false;
             }
 
             //string selectedScannerModules = "Futronic";
@@ -329,9 +329,6 @@ namespace PSCBioIdentification
             
             }
 
-
-
-
             AcceptButton = buttonRequest;
  
             //ProgramMode mode = (ProgramMode)Settings.Default.ProgramMode;
@@ -348,7 +345,7 @@ namespace PSCBioIdentification
             //personId.Focus();
 
             //personId.Text = "123"; 20010235
-            personId.Text = "20095423";
+            personId.Text = "20005140";
             //personId.Text = "20002346";            
 
             //buttonRequest.Focus();
@@ -2696,6 +2693,7 @@ namespace PSCBioIdentification
                     }
 
                     stopProgressBar();
+                    ShowStatusMessage("");
                     MessageBox.Show(e.Error);
                     EnableControls(true);
                 }));

@@ -85,7 +85,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\PassportReader.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
@@ -146,19 +146,19 @@
       <HintPath>..\..\..\PSCBioOfficeWeb\DAO\bin\DAO.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec">
-      <HintPath>..\..\dotNET32\Neurotec.dll</HintPath>
+      <HintPath>..\..\dotNET\Neurotec.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Biometrics">
-      <HintPath>..\..\dotNET32\Neurotec.Biometrics.dll</HintPath>
+      <HintPath>..\..\dotNET\Neurotec.Biometrics.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Biometrics.Client">
-      <HintPath>..\..\dotNET32\Neurotec.Biometrics.Client.dll</HintPath>
+      <HintPath>..\..\dotNET\Neurotec.Biometrics.Client.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Licensing">
-      <HintPath>..\..\dotNET32\Neurotec.Licensing.dll</HintPath>
+      <HintPath>..\..\dotNET\Neurotec.Licensing.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Media">
-      <HintPath>..\..\dotNET32\Neurotec.Media.dll</HintPath>
+      <HintPath>..\..\dotNET\Neurotec.Media.dll</HintPath>
     </Reference>
     <Reference Include="PrFps22">
       <HintPath>bin\PrFps22.dll</HintPath>

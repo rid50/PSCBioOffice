@@ -164,7 +164,7 @@ namespace PSCBioIdentification
                 //record.fingerList = ar.ToArray(typeof(string)) as string[];
 
                 //ar.Clear();
-
+                int id = Thread.CurrentThread.ManagedThreadId;
                 client.Run(fingerList);
                 //client.Run(new string[] { });
                 //client.Run(new string[] { "0" });

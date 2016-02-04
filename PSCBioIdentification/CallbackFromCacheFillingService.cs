@@ -36,7 +36,7 @@ namespace PSCBioIdentification
             else
             {
                 runningSum += num;
-                args = new MyEventArgs { Message = string.Format(" --- {0:0}%", runningSum / totalRecords * 100), Error = "" };
+                args = new MyEventArgs { Message = string.Format(" --- {0:0.00}%", runningSum / totalRecords * 100), Error = "" };
             }
             //args.Message = str;
 
