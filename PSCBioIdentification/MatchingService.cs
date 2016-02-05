@@ -64,7 +64,7 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            _stw.Start();
+            _stw.Restart();
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {

@@ -346,6 +346,7 @@ namespace PSCBioIdentification
 
             //personId.Text = "123"; 20010235
             personId.Text = "20005140";
+            personId.Text = "20005232";
             //personId.Text = "20002346";            
 
             //buttonRequest.Focus();
@@ -730,7 +731,7 @@ namespace PSCBioIdentification
                     //File.WriteAllBytes("TwoFingersTemplate.temp", _subject2.Fingers[0].Objects[0].Template.Save().ToArray());
 
                     Mode = ProgramMode.Identification;
-                    BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+                    //BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
                 }
                 else
                 {

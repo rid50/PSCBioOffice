@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="254d732a-22ec-4140-81d9-455e6c792337" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ArrayList" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://pscservice/AppFabricCacheService/PopulateCacheService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="PopulateCacheService.wsdl" MetadataType="Wsdl" ID="e3db9f74-ab53-48ce-9014-cf447e6ca152" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?wsdl" />
+    <MetadataFile FileName="PopulateCacheService.xsd" MetadataType="Schema" ID="ae6f3d3a-6864-4598-947b-232c795f1204" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd2" />
+    <MetadataFile FileName="PopulateCacheService.disco" MetadataType="Disco" ID="f73cbccc-dbdd-4d33-922c-4230c0b7745f" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?disco" />
+    <MetadataFile FileName="PopulateCacheService1.xsd" MetadataType="Schema" ID="552f389f-6536-4b67-91e7-4882577cdc63" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd1" />
+    <MetadataFile FileName="PopulateCacheService2.xsd" MetadataType="Schema" ID="a800082d-6c48-4469-89ba-239510103ced" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
