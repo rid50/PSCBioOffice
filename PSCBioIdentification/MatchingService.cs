@@ -54,12 +54,12 @@ namespace PSCBioIdentification
             get { return backgroundWorkerMatchingService.IsBusy; }
         }
 
-        void startMatchingServiceProcess(NFRecord template)
+        void startMatchingServiceProcess(NSubject.FingerCollection probeFingerCollection)
         {
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
-            backgroundWorkerMatchingService.RunWorkerAsync(template);
+            backgroundWorkerMatchingService.RunWorkerAsync(probeFingerCollection);
         }
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
@@ -78,7 +78,8 @@ namespace PSCBioIdentification
                         fingerList.Add(cb.Tag);
                 }
 
-                byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
+                //byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
+                byte[] probeTemplate = (e.Argument as NSubject.FingerCollection).Save().ToArray();
 
                 var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
                 e.Result = matchingServiceClient.match(fingerList, probeTemplate);
