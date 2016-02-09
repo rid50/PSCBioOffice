@@ -472,8 +472,19 @@ namespace PSCBioIdentification
             }
 
             var fScanner = (NFScanner)_device;
+            fScanner.CapturePreview += DeviceCapturePreview;
             fScanner.Capture(finger);
+            fScanner.CapturePreview -= DeviceCapturePreview;
             return finger;
+        }
+
+        private void DeviceCapturePreview(object sender, NBiometricDeviceCapturePreviewEventArgs e)
+        {
+            clearLog();
+            foreach (var obj in ((NFrictionRidge)e.Biometric).Objects)
+            {
+                LogLine(string.Format("{0}: {1}", obj.Position, obj.Status), true);
+            }
         }
 
         private void startCapturing()
@@ -731,18 +742,18 @@ namespace PSCBioIdentification
                 //_biometricClient.FingersDeterminePatternClass = true;
                 //_biometricClient.FingersCalculateNfiq = true;
                 //NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Segment | NBiometricOperations.CreateTemplate | NBiometricOperations.AssessQuality, _subject2);
-
-                //NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Segment | NBiometricOperations.CreateTemplate, _subject2);
-                //_biometricClient.BeginPerformTask(task, OnSegmentCompleted, null);
-
-
-
-                //subject.Fingers[0].Image.Save(subject.Fingers[0].Position + ".png");
-
-                _biometricClient.CreateTemplate(_subject2);
-
-                Mode = ProgramMode.Identification;
-                BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
+                //bool segmentationOnServer = true;
+                //if (segmentationOnServer)
+                {
+                    NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Segment | NBiometricOperations.CreateTemplate, _subject2);
+                    _biometricClient.BeginPerformTask(task, OnSegmentCompleted, null);
+                }
+                //else
+                //{
+                //    _biometricClient.CreateTemplate(_subject2);
+                //    Mode = ProgramMode.Identification;
+                //    BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
+                //}
 
                 //if (_subject2.Fingers[0].Objects[0].Template != null)
                 //{
@@ -831,7 +842,7 @@ namespace PSCBioIdentification
                         sb.Append(string.Format("Templates extracted: \n"));
                         if (_subject2.Fingers[1].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[1].Objects[0].Template.Position = fingerList[0];
+                            _subject2.Fingers[1].Position = fingerList[0];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[0].ToString(),
                                                 string.Format("Quality: {0}", _subject2.Fingers[1].Objects[0].Quality), _subject2.Fingers[1].Objects[0].Template.GetSize()));
                         }
@@ -840,7 +851,7 @@ namespace PSCBioIdentification
                     if (segmentsCount > 1 && _subject2.Fingers[2].Status == NBiometricStatus.Ok)
                     {
                         if (_subject2.Fingers[2].Objects[0].Template != null) {
-                            _subject2.Fingers[2].Objects[0].Template.Position = fingerList[1];
+                            _subject2.Fingers[2].Position = fingerList[1];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[1].ToString(),
                                                 string.Format("Quality: {0}", _subject2.Fingers[2].Objects[0].Quality), _subject2.Fingers[2].Objects[0].Template.GetSize()));
                         }
@@ -849,7 +860,7 @@ namespace PSCBioIdentification
                     {
                         if (_subject2.Fingers[3].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[3].Objects[0].Template.Position = fingerList[2];
+                            _subject2.Fingers[3].Position = fingerList[2];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[2].ToString(),
                                                 string.Format("Quality: {0}", _subject2.Fingers[3].Objects[0].Quality), _subject2.Fingers[3].Objects[0].Template.GetSize()));
                         }
@@ -858,7 +869,7 @@ namespace PSCBioIdentification
                     {
                         if (_subject2.Fingers[4].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[4].Objects[0].Template.Position = fingerList[3];
+                            _subject2.Fingers[4].Position = fingerList[3];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[3].ToString(),
                                                 string.Format("Quality: {0}", _subject2.Fingers[4].Objects[0].Quality), _subject2.Fingers[4].Objects[0].Template.GetSize()));
                         }
@@ -874,27 +885,24 @@ namespace PSCBioIdentification
 
                     //NSubject _probeSubject = NSubject.FromMemory(_subject2.GetTemplateBuffer().ToArray());
 
-                    var stw = new System.Diagnostics.Stopwatch();
-                    stw.Start();
+                    //var stw = new System.Diagnostics.Stopwatch();
+                    //stw.Start();
 
-                    var status = _biometricClient.Verify(_probeSubject, _subject2);
-                    //var nfTemplate = new NFTemplate();
-                    //nfTemplate.Records.Add((NFRecord)record.Clone());
-                    //nfTemplate.Save().ToArray();
+                    //var status = _biometricClient.Verify(_probeSubject, _subject2);
+                    ////var nfTemplate = new NFTemplate();
+                    ////nfTemplate.Records.Add((NFRecord)record.Clone());
+                    ////nfTemplate.Save().ToArray();
 
-                    stw.Stop();
+                    //stw.Stop();
 
-                    this.Invoke((Action<string>)((txt) =>
-                    {
-                        LogLine(txt, true);
-                    }), string.Format("Time elapsed: {0:ss\\.fffff} : status: {1}", stw.Elapsed, status));
+                    //this.Invoke((Action<string>)((txt) =>
+                    //{
+                    //    LogLine(txt, true);
+                    //}), string.Format("Time elapsed: {0:ss\\.fffff} : status: {1}", stw.Elapsed, status));
 
-
-
-
-                    _subject2.Fingers[1].Objects[0].Template.Position = NFPosition.LeftIndex;
-                    var probeSubject = NSubject.FromMemory(_subject2.Fingers[1].Objects[0].Template.Save().ToArray());
-                    NFRecord record = new NFRecord(_subject2.Fingers[1].Objects[0].Template.Save().ToArray());
+                    //_subject2.Fingers[1].Objects[0].Template.Position = NFPosition.LeftIndex;
+                    //var probeSubject = NSubject.FromMemory(_subject2.Fingers[1].Objects[0].Template.Save().ToArray());
+                    //NFRecord record = new NFRecord(_subject2.Fingers[1].Objects[0].Template.Save().ToArray());
                     //record.Position = NFPosition.LeftIndex;
 
                     //NSubject sub = new NSubject();
@@ -922,6 +930,7 @@ namespace PSCBioIdentification
                     //File.WriteAllBytes("TwoFingersTemplate.temp", _subject2.Fingers[0].Objects[0].Template.Save().ToArray());
 
                     Mode = ProgramMode.Identification;
+                    BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
                     //BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers); }));
                     //BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
                 }

@@ -189,10 +189,11 @@ namespace PSCBioIdentification
             {
                 UInt32 score = (UInt32)e.Result;
 
-                string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
-                LogLine(str, true);
+                //string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
+                //string str = string.Format("Identification: {0}", score == 0 ? "failed" : "succeess");
+                //LogLine(str, true);
 
-                str = string.Format("Time elapsed: {0:hh\\:mm\\:ss}", _stw.Elapsed);
+                string str = string.Format("{0}, Time elapsed: {1:hh\\:mm\\:ss}", score == 0 ? "Failure" : "Succeess", _stw.Elapsed);
                 LogLine(str, true);
 
                 //ShowStatusMessage(str);

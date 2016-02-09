@@ -273,6 +273,8 @@ namespace PSCBioIdentification
                     else
                         cb.Enabled = false;
                 }
+
+                labelCacheValidationTime.Text += string.Format(" {0:MMM dd} {0:t}", DateTime.Now);
             }
 
             stopProgressBar();
