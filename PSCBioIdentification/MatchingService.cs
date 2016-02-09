@@ -54,35 +54,60 @@ namespace PSCBioIdentification
             get { return backgroundWorkerMatchingService.IsBusy; }
         }
 
-        void startMatchingServiceProcess(NSubject.FingerCollection probeFingerCollection)
+        //void startMatchingServiceProcess(NSubject.FingerCollection probeFingerCollection)
+        void startMatchingServiceProcess(byte[] probeTemplate)
         {
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
-            backgroundWorkerMatchingService.RunWorkerAsync(probeFingerCollection);
+            backgroundWorkerMatchingService.RunWorkerAsync(probeTemplate);
+            //backgroundWorkerMatchingService.RunWorkerAsync(probeFingerCollection);
         }
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
         {
+            var fingerList = new ArrayList();
+            CheckBox cb;
+            for (int i = 4; i > 0; i--)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    fingerList.Add(cb.Tag as string);
+            }
+
+            for (int i = 5; i < 11; i++)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    fingerList.Add(cb.Tag as string);
+            }
+
             _stw.Restart();
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
-                var fingerList = new ArrayList();
+                //var fingerList = new ArrayList();
 
-                CheckBox cb;
-                for (int i = 1; i < 11; i++)
-                {
-                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                    if (cb.Checked)
-                        fingerList.Add(cb.Tag);
-                }
+                //CheckBox cb;
+                //for (int i = 1; i < 11; i++)
+                //{
+                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                //    if (cb.Checked)
+                //        fingerList.Add(cb.Tag);
+                //}
 
+                record = new Record();
+                record.probeTemplate = e.Argument as byte[];
+                //record.probeTemplate = new byte[4][];
                 //byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
-                byte[] probeTemplate = (e.Argument as NSubject.FingerCollection).Save().ToArray();
+                //int k = 0;
+                //foreach (var template in e.Argument as NSubject.FingerCollection)
+                //{
+                //    record.probeTemplate[k++] = template.Save().ToArray();
+                //}
 
                 var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                e.Result = matchingServiceClient.match(fingerList, probeTemplate);
+                e.Result = matchingServiceClient.match(fingerList, record.probeTemplate);
             }
             else
             {
@@ -90,35 +115,36 @@ namespace PSCBioIdentification
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
                 record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
-                record.probeTemplate = (e.Argument as NFRecord).Save().ToArray();
+                record.probeTemplate = e.Argument as byte[];
+                //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
                 record.errorMessage = new System.Text.StringBuilder(512);
 
-                var ar = new ArrayList();
+                //var ar = new ArrayList();
 
-                //record.fingerList = new string[3] { "ri", "rm", "rr" };
-                //record.fingerListSize = 3;
-                CheckBox cb;
-                for (int i = 1; i < 11; i++)
-                {
-                    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                    if (cb.Checked)
-                        ar.Add(cb.Tag);
-                }
-                record.fingerListSize = ar.Count;
+                ////record.fingerList = new string[3] { "ri", "rm", "rr" };
+                ////record.fingerListSize = 3;
+                //CheckBox cb;
+                //for (int i = 1; i < 11; i++)
+                //{
+                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                //    if (cb.Checked)
+                //        ar.Add(cb.Tag);
+                //}
+                record.fingerListSize = fingerList.Count;
                 //record.fingerList = new string[ar.Count];
-                record.fingerList = ar.ToArray(typeof(string)) as string[];
+                record.fingerList = fingerList.ToArray(typeof(string)) as string[];
 
-                ar.Clear();
+                fingerList.Clear();
 
                 //record.appSettings = new System.Text.StringBuilder(4);
                 //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
                 //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
 
-                ar.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
-                ar.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
-                ar.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
-                ar.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                record.appSettings = ar.ToArray(typeof(string)) as string[];
+                fingerList.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+                fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+                fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+                fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+                record.appSettings = fingerList.ToArray(typeof(string)) as string[];
 
                 //UInt32 score = 0;
                 unsafe
@@ -128,6 +154,7 @@ namespace PSCBioIdentification
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
                             e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                            //e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                         }
                         else
                         {
@@ -137,6 +164,7 @@ namespace PSCBioIdentification
 
                             var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
                             e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }
                     }
                 }
@@ -182,7 +210,7 @@ namespace PSCBioIdentification
                 {
                     pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
-                    if (record != null && record.errorMessage.Length != 0)
+                    if (record != null && record.errorMessage != null && record.errorMessage.Length != 0)
                     {
                         //retcode = false;
                         ShowErrorMessage("ERROR!!!");

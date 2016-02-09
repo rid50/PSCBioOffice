@@ -39,6 +39,12 @@
   <wsdl:message name="IPopulateCacheService_getFingerList_StringFault_FaultMessage">
     <wsdl:part xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/" name="detail" element="q1:string" />
   </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getExpirationTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:getExpirationTime" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getExpirationTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getExpirationTimeResponse" />
+  </wsdl:message>
   <wsdl:message name="IPopulateCacheService_Terminate_InputMessage">
     <wsdl:part name="parameters" element="tns:Terminate" />
   </wsdl:message>
@@ -69,6 +75,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerList" message="tns:IPopulateCacheService_getFingerList_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListResponse" message="tns:IPopulateCacheService_getFingerList_OutputMessage" />
       <wsdl:fault wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListStringFault" name="StringFault" message="tns:IPopulateCacheService_getFingerList_StringFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getExpirationTime">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTime" message="tns:IPopulateCacheService_getExpirationTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse" message="tns:IPopulateCacheService_getExpirationTime_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Terminate">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Terminate" message="tns:IPopulateCacheService_Terminate_InputMessage" />
@@ -116,6 +126,15 @@
       <wsdl:fault name="StringFault">
         <soap12:fault use="literal" name="StringFault" namespace="" />
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getExpirationTime">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/getExpirationTime" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="Terminate">
       <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Terminate" style="document" />

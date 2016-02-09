@@ -312,7 +312,15 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				return 0;							
 			}
 
-			RowStatus = new SQLUSMALLINT[limit + 1];
+			try {
+				RowStatus = new SQLUSMALLINT[limit + 1];
+			}
+			catch (std::bad_alloc& e) {
+				*errorMessage = e.what();
+				//FreeStmtHandle(hStmt);
+				//delete matcherFacadePtr;
+				return 0;
+			}
 
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_BIND_TYPE, (SQLPOINTER)sizeof(RECORDSTRUCT), SQL_IS_UINTEGER);
 			rc = SQLSetStmtAttr(hStmt, SQL_ATTR_ROW_STATUS_PTR, RowStatus, SQL_IS_POINTER);

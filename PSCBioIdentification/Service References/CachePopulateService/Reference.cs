@@ -28,6 +28,9 @@ namespace PSCBioIdentification.CachePopulateService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         System.Collections.ArrayList getFingerList();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/getExpirationTime", ReplyAction="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse")]
+        System.DateTime getExpirationTime();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Terminate", ReplyAction="http://tempuri.org/IPopulateCacheService/TerminateResponse")]
         void Terminate();
     }
@@ -86,6 +89,10 @@ namespace PSCBioIdentification.CachePopulateService {
         
         public System.Collections.ArrayList getFingerList() {
             return base.Channel.getFingerList();
+        }
+        
+        public System.DateTime getExpirationTime() {
+            return base.Channel.getExpirationTime();
         }
         
         public void Terminate() {
