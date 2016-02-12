@@ -274,7 +274,7 @@ namespace PSCBioIdentification
                         cb.Enabled = false;
                 }
 
-                labelCacheValidationTime.Text += string.Format(" {0:MMM dd} {0:t}", DateTime.Now);
+                labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
             }
 
             stopProgressBar();

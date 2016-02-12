@@ -22,6 +22,9 @@ namespace PSCBioIdentification.CacheMatchingService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/Terminate", ReplyAction="http://tempuri.org/IMatchingService/TerminateResponse")]
         void Terminate();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/verify", ReplyAction="http://tempuri.org/IMatchingService/verifyResponse")]
+        bool verify(byte[] probeTemplate, byte[] galleryTemplate);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         uint match(System.Collections.ArrayList fingerList, byte[] probeTemplate);
@@ -60,6 +63,10 @@ namespace PSCBioIdentification.CacheMatchingService {
         
         public void Terminate() {
             base.Channel.Terminate();
+        }
+        
+        public bool verify(byte[] probeTemplate, byte[] galleryTemplate) {
+            return base.Channel.verify(probeTemplate, galleryTemplate);
         }
         
         public uint match(System.Collections.ArrayList fingerList, byte[] probeTemplate) {

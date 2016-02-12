@@ -26,6 +26,12 @@
   <wsdl:message name="IMatchingService_Terminate_OutputMessage">
     <wsdl:part name="parameters" element="tns:TerminateResponse" />
   </wsdl:message>
+  <wsdl:message name="IMatchingService_verify_InputMessage">
+    <wsdl:part name="parameters" element="tns:verify" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_verify_OutputMessage">
+    <wsdl:part name="parameters" element="tns:verifyResponse" />
+  </wsdl:message>
   <wsdl:message name="IMatchingService_match_InputMessage">
     <wsdl:part name="parameters" element="tns:match" />
   </wsdl:message>
@@ -40,6 +46,10 @@
     <wsdl:operation name="Terminate">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/Terminate" message="tns:IMatchingService_Terminate_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/TerminateResponse" message="tns:IMatchingService_Terminate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="verify">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/verify" message="tns:IMatchingService_verify_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/verifyResponse" message="tns:IMatchingService_verify_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="match">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/match" message="tns:IMatchingService_match_InputMessage" />
@@ -60,6 +70,15 @@
     </wsdl:operation>
     <wsdl:operation name="Terminate">
       <soap:operation soapAction="http://tempuri.org/IMatchingService/Terminate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="verify">
+      <soap:operation soapAction="http://tempuri.org/IMatchingService/verify" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
