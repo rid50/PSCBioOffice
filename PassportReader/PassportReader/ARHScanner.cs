@@ -967,7 +967,7 @@ class ARHScanner
 
                 break;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //if (gxSystem.GetErrorCode() == (int)GX_ERROR_CODES.GX_EBUSY)
                 continue;

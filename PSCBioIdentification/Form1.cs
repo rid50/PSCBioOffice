@@ -813,7 +813,7 @@ namespace PSCBioIdentification
             }
         }
 
-        NSubject probeSubject = null;
+        //NSubject probeSubject = null;
 
         private void OnSegmentCompleted(IAsyncResult r)
         {
@@ -3021,6 +3021,8 @@ namespace PSCBioIdentification
                     ShowErrorMessage("At least two fingers should be selected");
                     return;
                 }
+
+                labelCacheValidationTime.Text = "";
 
                 _mre = new ManualResetEvent(false);
                 startCachingServiceProcess(_mre);
