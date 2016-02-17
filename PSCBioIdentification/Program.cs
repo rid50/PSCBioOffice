@@ -40,7 +40,7 @@ namespace PSCBioIdentification
 
             //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ,Biometrics.FingerSegmentation,Biometrics.FingerQualityAssessmentBase";
             //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Biometrics.FingerDetection,Devices.FingerScanners,Images.WSQ";
-            const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ,Biometrics.FingerSegmentation";
+            const string Components = "Biometrics.FingerExtraction,Biometrics.FingerSegmentation,Images.WSQ,Devices.FingerScanners";
 
             try
             {

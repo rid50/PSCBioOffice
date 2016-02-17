@@ -220,7 +220,7 @@ namespace PSCBioIdentification
 
             _biometricClient = new NBiometricClient { UseDeviceManager = true, BiometricTypes = NBiometricType.Finger };
             _biometricClient.Initialize();
-            _biometricClient.FingersQualityThreshold = 40;
+            _biometricClient.FingersQualityThreshold = 48;
             //_biometricClient.FingerScanner.CapturePreview += OnFingerPropertyChanged;
 
             //_biometricClient.FingersReturnProcessedImage = true;
@@ -1440,22 +1440,23 @@ namespace PSCBioIdentification
                 sw.Start();
 
                 var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                //var status = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
-                var status = _biometricClient.Verify(_subject, _subject2);
+                var status = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                //var status = _biometricClient.Verify(_subject, _subject2);
 
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
                 LogLine("Matched in " + elapsedTime, true);
 
-                LogLine(string.Format("Verification status: {0}", status == NBiometricStatus.Ok ? "Success" : "Failue"), true);
+                LogLine(string.Format("Verification status: {0}", status ? "Success" : "Failue"), true);
+                //LogLine(string.Format("Verification status: {0}", status == NBiometricStatus.Ok ? "Success" : "Failue"), true);
 
                 fingerView1.Finger = _subject.Fingers[1];
 
                 //ShowStatusMessage(str);
 
-                if (status == NBiometricStatus.Ok)
-                //if (status)
+                //if (status == NBiometricStatus.Ok)
+                if (status)
                 {
                     // Get matching score
                     //int score = _subject.MatchingResults[0].Score;
@@ -1998,9 +1999,9 @@ namespace PSCBioIdentification
             //bool rbChecked = false;
             //, pbChecked = false;
 
-            _biometricClient.FingersTemplateSize = NTemplateSize.Large;
+            _biometricClient.FingersTemplateSize = NTemplateSize.Small;
             _biometricClient.FingersFastExtraction = false;
-
+            _biometricClient.FingersQualityThreshold = 40;
             //TimeSpan ts;
             //string elapsedTime;
             //var sw = System.Diagnostics.Stopwatch.StartNew();

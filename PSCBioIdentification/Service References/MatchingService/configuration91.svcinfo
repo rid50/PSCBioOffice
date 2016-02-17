@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="xx2dLxbIacSCt+BB6udn/bUJyG4=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="tGQC72u/F1CvacSw+V7slazdsuI=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_IMatchingService1">
+    <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_IMatchingService">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSDualHttpBinding_IMatchingService1</serializedValue>
+          <serializedValue>WSDualHttpBinding_IMatchingService</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -97,7 +97,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_IMatchingService" contract="MatchingService.IMatchingService" bindingType="wsDualHttpBinding" address="http://pscservice/BiometricService/MatchingService.svc" bindingConfiguration="WSDualHttpBinding_IMatchingService1">
+    <endpoint name="WSDualHttpBinding_IMatchingService" contract="MatchingService.IMatchingService" bindingType="wsDualHttpBinding" address="http://pscservice/BiometricService/MatchingService.svc" bindingConfiguration="WSDualHttpBinding_IMatchingService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://pscservice/BiometricService/MatchingService.svc</serializedValue>
@@ -109,7 +109,7 @@
           <serializedValue>wsDualHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSDualHttpBinding_IMatchingService1</serializedValue>
+          <serializedValue>WSDualHttpBinding_IMatchingService</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>MatchingService.IMatchingService</serializedValue>

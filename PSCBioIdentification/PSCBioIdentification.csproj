@@ -94,15 +94,13 @@
     <Reference Include="Neurotec.Biometrics.Client">
       <HintPath>..\dotNET\Neurotec.Biometrics.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Neurotec.Biometrics.Gui, Version=3.1.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Neurotec.Biometrics.Gui">
       <HintPath>..\dotNET\Neurotec.Biometrics.Gui.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Devices">
       <HintPath>..\dotNET\Neurotec.Devices.dll</HintPath>
     </Reference>
-    <Reference Include="Neurotec.Gui, Version=1.1.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Neurotec.Gui">
       <HintPath>..\dotNET\Neurotec.Gui.dll</HintPath>
     </Reference>
     <Reference Include="Neurotec.Licensing, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=AMD64">
