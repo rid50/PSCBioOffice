@@ -42,6 +42,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q2:ArrayOfanyType" />
+        <xs:element minOccurs="0" name="gender" type="xs:int" />
         <xs:element minOccurs="0" name="probeTemplate" nillable="true" type="xs:base64Binary" />
       </xs:sequence>
     </xs:complexType>

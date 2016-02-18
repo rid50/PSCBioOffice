@@ -82,6 +82,14 @@ namespace PSCBioIdentification
                     fingerList.Add(cb.Tag as string);
             }
 
+            int gender = 1;
+            if (radioButtonMan.Checked)
+                gender = 1;
+            else if (radioButtonWoman.Checked)
+                gender = 2;
+            else if (radioButtonManAndWoman.Checked)
+                gender = 0;
+
             _stw.Restart();
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
@@ -107,7 +115,7 @@ namespace PSCBioIdentification
                 //}
 
                 var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                e.Result = matchingServiceClient.match(fingerList, record.probeTemplate);
+                e.Result = matchingServiceClient.match(fingerList, gender, record.probeTemplate);
             }
             else
             {

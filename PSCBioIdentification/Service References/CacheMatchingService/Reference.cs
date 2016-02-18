@@ -27,7 +27,7 @@ namespace PSCBioIdentification.CacheMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        uint match(System.Collections.ArrayList fingerList, byte[] probeTemplate);
+        uint match(System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -69,8 +69,8 @@ namespace PSCBioIdentification.CacheMatchingService {
             return base.Channel.verify(probeTemplate, galleryTemplate);
         }
         
-        public uint match(System.Collections.ArrayList fingerList, byte[] probeTemplate) {
-            return base.Channel.match(fingerList, probeTemplate);
+        public uint match(System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate) {
+            return base.Channel.match(fingerList, gender, probeTemplate);
         }
     }
 }

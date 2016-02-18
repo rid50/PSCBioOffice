@@ -2833,6 +2833,10 @@ namespace PSCBioIdentification
                 bb.Visible = show;
                 bb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as ButtonBase;
                 bb.Visible = !show;
+
+                radioButtonMan.Visible = !show;
+                radioButtonWoman.Visible = !show;
+                radioButtonManAndWoman.Visible = !show;
             }
         }
 
