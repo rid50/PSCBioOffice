@@ -79,8 +79,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.pictureBoxPhoto = new System.Windows.Forms.PictureBox();
-            this.pictureBoxCheckMark = new System.Windows.Forms.PictureBox();
             this.groupBoxMode = new System.Windows.Forms.GroupBox();
             this.radioButtonIdentify = new System.Windows.Forms.RadioButton();
             this.radioButtonVerify = new System.Windows.Forms.RadioButton();
@@ -101,7 +99,6 @@
             this.lbFinger2 = new System.Windows.Forms.Label();
             this.lbFinger3 = new System.Windows.Forms.Label();
             this.lbFinger4 = new System.Windows.Forms.Label();
-            this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
             this.scannersListBox = new System.Windows.Forms.ListBox();
             this.manageCacheButton = new System.Windows.Forms.Button();
             this.checkBoxCache4 = new System.Windows.Forms.CheckBox();
@@ -126,8 +123,12 @@
             this.checkBoxCache9 = new System.Windows.Forms.CheckBox();
             this.labelCacheUnavailable = new System.Windows.Forms.Label();
             this.labelCacheValidationTime = new System.Windows.Forms.Label();
+            this.buttonRefreshScannerListBox = new System.Windows.Forms.Button();
+            this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
             this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
             this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
+            this.pictureBoxPhoto = new System.Windows.Forms.PictureBox();
+            this.pictureBoxCheckMark = new System.Windows.Forms.PictureBox();
             this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox10 = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox6 = new PSCBioIdentification.MyPictureBox();
@@ -147,8 +148,6 @@
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).BeginInit();
             this.groupBoxMode.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -158,6 +157,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).BeginInit();
@@ -581,20 +582,6 @@
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
             // 
-            // pictureBoxPhoto
-            // 
-            this.pictureBoxPhoto.BackgroundImage = global::PSCBioIdentification.Properties.Resources._66;
-            this.pictureBoxPhoto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.pictureBoxPhoto, "pictureBoxPhoto");
-            this.pictureBoxPhoto.Name = "pictureBoxPhoto";
-            this.pictureBoxPhoto.TabStop = false;
-            // 
-            // pictureBoxCheckMark
-            // 
-            resources.ApplyResources(this.pictureBoxCheckMark, "pictureBoxCheckMark");
-            this.pictureBoxCheckMark.Name = "pictureBoxCheckMark";
-            this.pictureBoxCheckMark.TabStop = false;
-            // 
             // groupBoxMode
             // 
             this.groupBoxMode.Controls.Add(this.radioButtonIdentify);
@@ -755,12 +742,6 @@
             this.lbFinger4.ForeColor = System.Drawing.Color.DarkGreen;
             this.lbFinger4.Name = "lbFinger4";
             // 
-            // pictureBoxCompanyLogo
-            // 
-            resources.ApplyResources(this.pictureBoxCompanyLogo, "pictureBoxCompanyLogo");
-            this.pictureBoxCompanyLogo.Name = "pictureBoxCompanyLogo";
-            this.pictureBoxCompanyLogo.TabStop = false;
-            // 
             // scannersListBox
             // 
             this.scannersListBox.FormattingEnabled = true;
@@ -916,6 +897,21 @@
             resources.ApplyResources(this.labelCacheValidationTime, "labelCacheValidationTime");
             this.labelCacheValidationTime.Name = "labelCacheValidationTime";
             // 
+            // buttonRefreshScannerListBox
+            // 
+            this.buttonRefreshScannerListBox.BackColor = System.Drawing.Color.Transparent;
+            this.buttonRefreshScannerListBox.Image = global::PSCBioIdentification.Properties.Resources.refresh32;
+            resources.ApplyResources(this.buttonRefreshScannerListBox, "buttonRefreshScannerListBox");
+            this.buttonRefreshScannerListBox.Name = "buttonRefreshScannerListBox";
+            this.buttonRefreshScannerListBox.UseVisualStyleBackColor = false;
+            this.buttonRefreshScannerListBox.Click += new System.EventHandler(this.buttonRefreshScannerListBox_Click);
+            // 
+            // pictureBoxCompanyLogo
+            // 
+            resources.ApplyResources(this.pictureBoxCompanyLogo, "pictureBoxCompanyLogo");
+            this.pictureBoxCompanyLogo.Name = "pictureBoxCompanyLogo";
+            this.pictureBoxCompanyLogo.TabStop = false;
+            // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Active = false;
@@ -933,6 +929,20 @@
             this.pictureBoxGreen.Name = "pictureBoxGreen";
             this.pictureBoxGreen.TabStop = false;
             this.pictureBoxGreen.Tag = "leftLittle";
+            // 
+            // pictureBoxPhoto
+            // 
+            this.pictureBoxPhoto.BackgroundImage = global::PSCBioIdentification.Properties.Resources.p66;
+            this.pictureBoxPhoto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.pictureBoxPhoto, "pictureBoxPhoto");
+            this.pictureBoxPhoto.Name = "pictureBoxPhoto";
+            this.pictureBoxPhoto.TabStop = false;
+            // 
+            // pictureBoxCheckMark
+            // 
+            resources.ApplyResources(this.pictureBoxCheckMark, "pictureBoxCheckMark");
+            this.pictureBoxCheckMark.Name = "pictureBoxCheckMark";
+            this.pictureBoxCheckMark.TabStop = false;
             // 
             // fpPictureBox9
             // 
@@ -1031,6 +1041,7 @@
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
+            this.Controls.Add(this.buttonRefreshScannerListBox);
             this.Controls.Add(this.labelCacheValidationTime);
             this.Controls.Add(this.labelCacheUnavailable);
             this.Controls.Add(this.labCache10);
@@ -1075,8 +1086,6 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).EndInit();
             this.groupBoxMode.ResumeLayout(false);
             this.groupBoxMode.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -1091,6 +1100,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCheckMark)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox6)).EndInit();
@@ -1217,6 +1228,7 @@
         private System.Windows.Forms.RadioButton radioButtonMan;
         private System.Windows.Forms.RadioButton radioButtonManAndWoman;
         private System.Windows.Forms.RadioButton radioButtonWoman;
+        private System.Windows.Forms.Button buttonRefreshScannerListBox;
     }
 }
 

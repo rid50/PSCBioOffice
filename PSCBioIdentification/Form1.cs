@@ -27,6 +27,7 @@ using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
 using System.Text;
 using System.Configuration;
+using System.Collections.Specialized;
 
 namespace PSCBioIdentification
 {
@@ -105,7 +106,7 @@ namespace PSCBioIdentification
         //private NSubject[] _subjects = new NSubject[10];
 
         //private NFinger _subjectFinger;
-        private NDevice _device;
+        //private NDevice _device;
         
         private bool _isCapturing = false;
         //private bool _isPopulatingChache = false;
@@ -225,12 +226,15 @@ namespace PSCBioIdentification
 
             //_biometricClient.FingersReturnProcessedImage = true;
 
-            _deviceManager = _biometricClient.DeviceManager;
+            _deviceManager = new NDeviceManager { DeviceTypes = NDeviceType.FingerScanner, AutoPlug = true };
+            //_deviceManager = _biometricClient.DeviceManager;
             _deviceManager.Initialize();
+            _deviceManager.Devices.CollectionChanged += deviceManager_CollectionChanged;
+
             //set type of the device used
             //_deviceManager.DeviceTypes = NDeviceType.FingerScanner;
 
-            UpdateScannerList();
+            UpdateScannerList(false);
 
             //var client = new CacheMatchingService.MatchingServiceClient();
 
@@ -405,49 +409,86 @@ namespace PSCBioIdentification
             //pictureBoxPhoto.Image = null;
         }
 
-        private void UpdateScannerList()
+        private void deviceManager_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            BeginInvoke(new Action<NotifyCollectionChangedEventArgs>(ea =>
+            {
+                scannersListBox.BeginUpdate();
+                switch (ea.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        bool add = true;
+                        foreach (var item in scannersListBox.Items)
+                        {
+                            if (item == (NDevice)ea.NewItems[0])
+                            {
+                                add = false;
+                                break;
+                            }
+                        }
 
-            //biometric.ImpressionType = _impressionType;
-            //biometric.Position = _position;
+                        if (add)
+                        {
+                            scannersListBox.Items.Add((NDevice)ea.NewItems[0]);
+                            if (scannersListBox.SelectedItem == null) scannersListBox.SelectedIndex = 0;
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        for (int i = 0; i < scannersListBox.Items.Count; i++) {
+                            if (scannersListBox.Items[i] == (NDevice)ea.OldItems[0])
+                            {
+                                scannersListBox.Items.RemoveAt(i);
+                                scannersListBox.SelectedIndex = i == 0 ? (scannersListBox.Items.Count == 0 ? -1 : 0) : i - 1;
+                            }
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        UpdateScannerList(false);
+                        break;
+                }
+                scannersListBox.EndUpdate();
+            }), e);
+        }
 
+        private NDevice GetSelectedDevice()
+        {
+            return scannersListBox.SelectedItem == null ? null : (NDevice)scannersListBox.SelectedItem;
+        }
+
+        private void UpdateScannerList(bool refresh)
+        {
             scannersListBox.BeginUpdate();
             try
             {
                 scannersListBox.Items.Clear();
+
+                 //if (refresh)
+                //{
+                //    _deviceManager.Devices.CollectionChanged -= deviceManager_CollectionChanged;
+                //    _deviceManager.Dispose();
+                //    //_deviceManager = _biometricClient.DeviceManager;
+                //    _deviceManager = new NDeviceManager { DeviceTypes = NDeviceType.FingerScanner, AutoPlug = true };
+                //    _deviceManager.Initialize();
+                //    _deviceManager.Devices.CollectionChanged += deviceManager_CollectionChanged;
+                //}
+
                 //if (_biometricClient.DeviceManager != null)
                 if (_deviceManager != null)
                 {
+                    //_deviceManager.Reset();
+                    //_deviceManager.Initialize();
                     //foreach (NDevice item in _biometricClient.DeviceManager.Devices)
                     foreach (NDevice item in _deviceManager.Devices)
                     {
-                        //var fn = ((NFingerScanner)_device).;
-                        
-                        if (_device == null)
-                            _device = item;
-
-                        var fScanner = item as NFScanner;
-                        if (fScanner.IsAvailable)
-                        {
-                            foreach (NFImpressionType impressionType in fScanner.GetSupportedImpressionTypes())
-                            {
-                                //biometricDeviceImpressionTypeComboBox.Items.Add(impressionType);
-                            }
-
-                            foreach (NFPosition position in fScanner.GetSupportedPositions())
-                            {
-                                //biometricDevicePositionList.Add(position);
-                            }
-
-                        }
-
                         scannersListBox.Items.Add(item);
                     }
+                    scannersListBox.SelectedIndex = 0;
                 }
             }
             finally
             {
                 scannersListBox.EndUpdate();
+                //_deviceManager.Dispose();
             }
         }
 
@@ -458,21 +499,21 @@ namespace PSCBioIdentification
 
             switch (numberOfFingers)
             {
-                case 1:
-                    finger.Position = NFPosition.Unknown;
-                    break;
+                //case 1:
+                //    finger.Position = NFPosition.Unknown;
+                //    break;
                 case 2:
                     finger.Position = NFPosition.UnknownTwoFingers;
                     break;
-                case 3:
-                    finger.Position = NFPosition.UnknownThreeFingers;
-                    break;
+                //case 3:
+                //    finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.RightIndex;
+                //    break;
                 case 4:
-                    finger.Position = NFPosition.UnknownFourFingers;
+                    finger.Position = NFPosition.PlainLeftFourFingers;
                     break;
             }
 
-            var fScanner = (NFScanner)_device;
+            var fScanner = (NFScanner)GetSelectedDevice();
             fScanner.CapturePreview += DeviceCapturePreview;
             fScanner.Capture(finger);
             fScanner.CapturePreview -= DeviceCapturePreview;
@@ -524,6 +565,30 @@ namespace PSCBioIdentification
 
                     if (count == 0)
                         return;
+                }
+
+                if (radioButtonIdentify.Checked)
+                {
+                    var fScanner = ((NFingerScanner)GetSelectedDevice());
+                    if (fScanner == null)
+                    {
+                        ShowErrorMessage("No scanner selected");
+                        return;
+                    }
+
+                    var supportedPositions = fScanner.GetSupportedPositions();
+                    if (supportedPositions.Contains<NFPosition>(NFPosition.PlainLeftFourFingers))
+                    {
+                        if (count != 2 && count != 4) {
+                            ShowErrorMessage("2 or 4 fingers should be selected");
+                            return;
+                        }
+                    }
+                    else if (count != 2)
+                    {
+                        ShowErrorMessage("2 fingers should be selected");
+                        return;
+                    }
                 }
 
                 _isCapturing = true;
@@ -614,7 +679,7 @@ namespace PSCBioIdentification
             if (_isCapturing)
             {
                 if (radioButtonIdentify.Checked && mouseclick)
-                    ((NFScanner)_device).Cancel();
+                    ((NFScanner)GetSelectedDevice()).Cancel();
                 else
                     _biometricClient.Cancel();
                 
@@ -977,6 +1042,8 @@ namespace PSCBioIdentification
                     string error = "";
                     if (task.Error != null)
                         error = task.Error.Message;
+                    else
+                        error = task.Status.ToString();
 
                     _subject2 = null;
 
@@ -2741,31 +2808,39 @@ namespace PSCBioIdentification
                         count++;
                 }
 
-                var fScanner = ((NFingerScanner)_device);
+                var fScanner = ((NFingerScanner)GetSelectedDevice());
                 if (fScanner == null)
                     return;
 
-                bool CancelEvent = false;
+                bool CancelEvent = false; bool cancel = false;
                 foreach (NFPosition position in fScanner.GetSupportedPositions())
                 {
+                    CancelEvent = false;
                     switch (position) {
+                        case NFPosition.PlainLeftFourFingers:
                         case NFPosition.UnknownFourFingers:
                             if (count > 4)
                                 CancelEvent = true;
+                            cancel = true;
                             break;
-                        case NFPosition.UnknownThreeFingers:
-                            if (count > 3)
-                                CancelEvent = true;
-                            break;
+                        //case NFPosition.UnknownThreeFingers:
+                        //    if (count > 3)
+                        //        CancelEvent = true;
+                        //    break;
                         case NFPosition.UnknownTwoFingers:
                             if (count > 2)
                                 CancelEvent = true;
                             break;
                     }
 
-                    if (CancelEvent)
-                        (sender as CheckBox).Checked = false;
+                    if (cancel)
+                        break;
+                    //if (CancelEvent)
+                    //    (sender as CheckBox).Checked = false;
                 }
+
+                if (CancelEvent)
+                    (sender as CheckBox).Checked = false;
 
                 return;
             }
@@ -2887,6 +2962,14 @@ namespace PSCBioIdentification
         private void ScannersListBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             _biometricClient.FingerScanner = scannersListBox.SelectedItem as NFScanner;
+            //_device = scannersListBox.SelectedItem as NFScanner;
+
+            CheckBox bb;
+            for (int i = 0; i < 10; i++)
+            {
+                bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                bb.Checked = false;
+            }
         }
 
         private void FingerViewMouseClick(object sender, MouseEventArgs e)
@@ -2950,14 +3033,43 @@ namespace PSCBioIdentification
                 }
             }
 
-            if (_device != null && _device.IsAvailable)
-            {
-                //_deviceManager.DisconnectFromDevice(_device);
-                Neurotec.Gui.NGui.InvokeAsync(((NBiometricDevice)_device).Cancel);
-            }
+            _deviceManager.Devices.CollectionChanged -= deviceManager_CollectionChanged;
 
-            if (_biometricClient != null)
-                _biometricClient.Cancel();
+            //NDevice device = GetSelectedDevice();
+
+            //if (device != null && device.IsAvailable)
+            //{
+            //_deviceManager.DisconnectFromDevice(_device);
+            //Neurotec.Gui.NGui.InvokeAsync(((NBiometricDevice)device).Cancel);
+            new Action(delegate ()
+                //Neurotec.Gui.NGui.InvokeAsync(delegate ()
+                {
+                    NDevice device = GetSelectedDevice();
+
+                    if (device != null && device.IsAvailable)
+                    {
+                        ((NBiometricDevice)device).Cancel();
+                        //try
+                        //{
+                        //    _deviceManager.ConnectToDeviceDisconnectFromDevice(device);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show(ex.ToString(), @"Disconnect from Device Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //}
+                        //_deviceManager.DisconnectFromDevice(device);
+                    }
+
+                    if (_biometricClient != null)
+                        _biometricClient.Cancel();
+                }).Invoke();
+
+                //    ((NBiometricDevice)device).Cancel);
+                //_deviceManager.DisconnectFromDevice(device);
+            //}
+
+            //if (_biometricClient != null)
+            //    _biometricClient.Cancel();
         }
 
 
@@ -3068,6 +3180,12 @@ namespace PSCBioIdentification
 ////            _mre.WaitOne();
         }
 
+        private void buttonRefreshScannerListBox_Click(object sender, EventArgs e)
+        {
+            UpdateScannerList(true);
+        }
+
+
         //class CallbackFromAppFabricCacheService : AppFabricCacheService.IPopulateCacheServiceCallback
         //{
         //    public void Respond(String str)
@@ -3083,7 +3201,7 @@ namespace PSCBioIdentification
         //        //MessageBox.Show(str);
         //    }
         //}    
-    
+
     }
 
     [Serializable]

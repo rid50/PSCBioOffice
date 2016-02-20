@@ -267,6 +267,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\refresh32.png" />
     <None Include="Service References\CachePopulateService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
