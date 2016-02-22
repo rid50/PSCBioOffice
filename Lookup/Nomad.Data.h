@@ -31,7 +31,7 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Matcher.lib")
 
-#define BUFFERLEN		20000
+#define BUFFERLEN		10000
 #define MESSAGE_SIZE	256
 
 //using namespace std;

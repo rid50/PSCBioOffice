@@ -1,19 +1,70 @@
 using System;
-using gx;
-using pr;
-using fps;
+//using PrFps22;
 using System.Collections;
 using System.IO;
 using System.Runtime.Serialization;
+using Pr22.Task;
+using Pr22.Util;
+
+enum BarcodeTypes {
+        // Summary:
+        //     8 char article numbering code
+        EAN8 = 1,
+        //
+        // Summary:
+        //     13 char article numbering code
+        EAN13 = 2,
+        //
+        // Summary:
+        //     General text code.
+        Code39 = 3,
+        //
+        // Summary:
+        //     General text code.
+        Code128 = 4,
+        //
+        // Summary:
+        //     2D binary / text code
+        PDF417 = 5,
+        //
+        // Summary:
+        //     General number code.
+        ITF = 6,
+        //
+        // Summary:
+        //     2D binary / text code
+        DataMatrix = 7,
+        //
+        // Summary:
+        //     2D binary / text code
+        QR = 8,
+        //
+        // Summary:
+        //     2D binary / text code
+        Aztec = 9,
+        //
+        // Summary:
+        //     Universal Postal Union code.
+        UPU = 10,
+};
 
 class ARHScanner
 {
-    PassportReader _pr = null;
-    FingerPrintScanner _fps = null;
+    Pr22.DocumentReaderDevice _pr = null;
+    Pr22.FingerprintScannerDevice _fps = null;
+
+    PresenceState Detect = PresenceState.NoMove;
+
+    int Resolution = 0;
+    int ScanState = 0;
+    int Progress = 0;
+    int[] Quality = new int[4];
+    string Message = "";
 
     //Lib _lib;
     Helper _helper = null;
-    prDoc _doc;
+    //    prDoc _doc;
+    Pr22.Processing.Document ndoc;
 
     string _errorMessage;
     public string ErrorMessage
@@ -61,31 +112,20 @@ class ARHScanner
             fpsDisconnect();
 
             /* Opening the FPS system */
-            _fps = new FingerPrintScanner();	/* Object for the FPS system */
-/*
-            int i = _fps.TestPowerState();
+            _fps = new Pr22.FingerprintScannerDevice();	/* Object for the FPS system */
 
-            if (_fps.TestPowerState() != 0)
-            {
-                ErrorMessage = "The power is off";
-                return -1;
-            }
-*/
-            /* Validity check */
-            if (!_fps.IsValid())
-            {
-                ErrorMessage = "Failed to initialize!";
-                return 1303;
-            }
+            //_fps.PreviewCaptured += new System.EventHandler<Pr22.Events.PreviewEventArgs>(PreviewCaptured);
+            //_fps.ImageScanned += new System.EventHandler<Pr22.Events.FingerImageEventArgs>(ImageScanned);
+            //_fps.FingerScanned += new System.EventHandler<Pr22.Events.FingerEventArgs>(FingerScanned);
+            //_fps.PresenceStateChanged += new System.EventHandler<Pr22.Events.DetectionEventArgs>(PresenceStateChanged);
 
             /* Connecting to the first device */
-            _fps.UseDevice(0, (int)FPS_USAGEMODE.FPS_UMODE_FULL_CONTROL);
-
-            //int i = _fps.TestPowerState();
-
+            _fps.UseDevice(0);
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
+            //_errorMessage = e.Message + " --- fpsConnect()";
+            //return 1305;
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
         catch (Exception e)
@@ -97,6 +137,53 @@ class ARHScanner
         return 0;
     }
 
+
+    ////----------------------------------------------------------------------
+
+    //void PreviewCaptured(object a, Pr22.Events.PreviewEventArgs e)
+    //{
+    //    Resolution = (int)(_fps.Scanner.GetLiveImage().HRes / 39.37);
+    //    ScanState++;
+    //    PrintState();
+    //}
+    ////----------------------------------------------------------------------
+
+    //void ImageScanned(object a, Pr22.Events.FingerImageEventArgs e)
+    //{
+    //    int[] pos = { 0, 2, 0, 1, 2, 3, 1, 3, 2, 1, 0 };
+    //    int ix = (int)e.position > 10 ? 0 : (int)e.position;
+    //    Quality[pos[ix]] = _fps.Scanner.GetFinger(e.position, Pr22.Imaging.ImpressionType.Plain).GetQuality();
+    //    PrintState();
+    //}
+    ////----------------------------------------------------------------------
+
+    //void FingerScanned(object a, Pr22.Events.FingerEventArgs e)
+    //{
+    //    Message = e.fingerFailureMask.ToString();
+    //    PrintState();
+    //}
+    ////----------------------------------------------------------------------
+
+    //void PresenceStateChanged(object a, Pr22.Events.DetectionEventArgs e)
+    //{
+    //    Message = e.State.ToString();
+    //    Detect = e.State;
+    //    PrintState();
+    //}
+
+    //void PrintState()
+    //{
+    //    string States = "|/-\\";
+    //    string Prog = "##########";
+
+    //    System.Console.Write(" {0} {1,3} DPI Progress:[{2,-10}] [{3,-21}] Q1:{4,4} Q2:{5,4} Q3:{6,4} Q4:{7,4}\r",
+    //        States[ScanState % 4], Resolution, Prog.Substring(10 - Progress / 10),
+    //        Message, Quality[0], Quality[1], Quality[2], Quality[3]);
+    //}
+
+    ////----------------------------------------------------------------------
+
+
     public int fpsGetFingersImages(int handAndFingerMask, bool saveFingerAsFile)
     {
         try
@@ -104,11 +191,8 @@ class ARHScanner
             if (_arrayOfBMP != null) { _arrayOfBMP.Clear(); _arrayOfBMP = null; }
             if (_arrayOfWSQ != null) { _arrayOfWSQ.Clear(); _arrayOfWSQ = null; }
 
-            /* Search Finger */
-            int reqid, stat;
-
             /* Clears internal stored finger buffers */
-            _fps.ResetFingerList();
+            _fps.Scanner.CleanUpData();
 
 
             /* Starts an asynchronous capture process
@@ -124,18 +208,26 @@ class ARHScanner
             //	s - right thumb		|
             */
 
-            int color = (int)FPS_STATUS_LED_COLOR.FPS_SLC_OFF;
-            int index = 0;
-            int middle = 0;
-            int ring = 0;
-            int little = 0;
+            Pr22.Control.StatusLed.Color color = Pr22.Control.StatusLed.Color.Off;
+            Pr22.Imaging.FingerPosition index = Pr22.Imaging.FingerPosition.Unknown;
+            Pr22.Imaging.FingerPosition middle = Pr22.Imaging.FingerPosition.Unknown;
+            Pr22.Imaging.FingerPosition ring = Pr22.Imaging.FingerPosition.Unknown;
+            Pr22.Imaging.FingerPosition little = Pr22.Imaging.FingerPosition.Unknown;
             string wsqIndexFileName = String.Empty;
             string wsqMiddleFileName = String.Empty;
             string wsqRingFileName = String.Empty;
             string wsqLittleFileName = String.Empty;
 
-            _fps.SetStatusLed(0xff, color); // off
-            color = (int)FPS_STATUS_LED_COLOR.FPS_SLC_GREEN;
+            short idx = 0;
+            foreach (Pr22.Control.StatusLed statled in _fps.Peripherals.StatusLeds)
+            {
+                if (idx++ > 11)
+                    break;
+
+                statled.Turn(color); // off
+            }
+
+            color = Pr22.Control.StatusLed.Color.Green;
 
             int fingerMask = 0x00;
             switch (handAndFingerMask & 0xff000000)
@@ -157,10 +249,10 @@ class ARHScanner
             switch (handAndFingerMask & 0xff000000)
             {
                 case 0x10000000:    //0x10333300  left hand
-                    index = (int)FPS_POSITION.FPS_POS_LEFT_INDEX;
-                    middle = (int)FPS_POSITION.FPS_POS_LEFT_MIDDLE;
-                    ring = (int)FPS_POSITION.FPS_POS_LEFT_RING;
-                    little = (int)FPS_POSITION.FPS_POS_LEFT_LITTLE;
+                    index = Pr22.Imaging.FingerPosition.LeftIndex;
+                    middle = Pr22.Imaging.FingerPosition.LeftMiddle;
+                    ring = Pr22.Imaging.FingerPosition.LeftRing;
+                    little = Pr22.Imaging.FingerPosition.LeftLittle;
                     wsqIndexFileName = "lindex.wsq";
                     wsqMiddleFileName = "lmiddle.wsq";
                     wsqRingFileName = "lring.wsq";
@@ -172,10 +264,10 @@ class ARHScanner
                     lampMask |= (fingerMask & 0x00000008) != 0 ? 0x01 : 0x00;
                     break;
                 case 0x20000000:    //0x20333300
-                    index = (int)FPS_POSITION.FPS_POS_RIGHT_INDEX;
-                    middle = (int)FPS_POSITION.FPS_POS_RIGHT_MIDDLE;
-                    ring = (int)FPS_POSITION.FPS_POS_RIGHT_RING;
-                    little = (int)FPS_POSITION.FPS_POS_RIGHT_LITTLE;
+                    index = Pr22.Imaging.FingerPosition.RightIndex;
+                    middle = Pr22.Imaging.FingerPosition.RightMiddle;
+                    ring = Pr22.Imaging.FingerPosition.RightRing;
+                    little = Pr22.Imaging.FingerPosition.RightLittle;
                     wsqIndexFileName = "rindex.wsq";
                     wsqMiddleFileName = "rmiddle.wsq";
                     wsqRingFileName = "rring.wsq";
@@ -183,8 +275,8 @@ class ARHScanner
                     lampMask |= 0x40;
                     break;
                 case 0x30000000:    //0x30000033
-                    middle = (int)FPS_POSITION.FPS_POS_LEFT_THUMB;
-                    ring = (int)FPS_POSITION.FPS_POS_RIGHT_THUMB;
+                    middle = Pr22.Imaging.FingerPosition.LeftThumb;
+                    ring = Pr22.Imaging.FingerPosition.RightThumb;
                     wsqMiddleFileName = "lthumb.wsq";
                     wsqRingFileName = "rthumb.wsq";
                     lampMask |= 0x20;
@@ -192,45 +284,97 @@ class ARHScanner
             }
 
             /* Turning the display leds depending on the mask */
-            _fps.SetStatusLed(lampMask, color);
+            for (int i = 0; i < 32; i++)
+                if ((lampMask & (1 << i)) != 0)
+                    _fps.Peripherals.StatusLeds[i].Turn(color);
 
-            //reqid = _fps.CaptureStart(100, 100, (int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, 0x10333300);
-            reqid = _fps.CaptureStart(3000, 7000, (int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, handAndFingerMask);
+            ////starting detection
+            //TaskControl LiveTask =_fps.Scanner.StartTask(FingerTask.Detection());
 
-            for (stat = 0; stat < 100; )
+            //int timeout = 10;  // in 100 milliseconds
+            ////int i;
+
+            //for (int i = 0; i < timeout && Detect != PresenceState.Present; ++i)
+            //    System.Threading.Thread.Sleep(100);
+
+            Pr22.Task.FingerTask ftask = Pr22.Task.FingerTask.PlainScan(700, 3000);
+            //ftask.Add(index).Add(middle).Add(ring).Add(little).Del(Pr22.Imaging.FingerPosition.Unknown);
+            //if (index != Pr22.Imaging.FingerPosition.Unknown) ftask.Add(index);
+            //if (middle != Pr22.Imaging.FingerPosition.Unknown) ftask.Add(middle);
+            //if (ring != Pr22.Imaging.FingerPosition.Unknown) ftask.Add(ring);
+            //if (little != Pr22.Imaging.FingerPosition.Unknown) ftask.Add(little);
+
+            int mask = 0x10;
+            for (int i = 0; i < 4; i++)
+            {
+                mask >>= 1;
+                switch (fingerMask & mask)
+                {
+                    case 0x08:
+                        ftask.Add(index);
+                        break;
+                    case 0x04:
+                        ftask.Add(middle);
+                        break;
+                    case 0x02:
+                        ftask.Add(ring);
+                        break;
+                    case 0x01:
+                        ftask.Add(little);
+                        break;
+                }
+            }
+
+            Pr22.Task.TaskControl tc = _fps.Scanner.StartTask(ftask);
+
+            //for (stat = 0; stat < 100; )
+            int status = 0;
+            while (status < 100)
             {
                 /* Test if better images are captured or capture has accomplished */
-                stat = _fps.CaptureStatus(reqid);
+                status = tc.GetState();
 
                 _helper.Wait(100);
             }
 
             /* Closing the capture sequence */
-            _fps.CaptureWait(reqid);
+            tc.Wait();
 
-            color = (int)FPS_STATUS_LED_COLOR.FPS_SLC_OFF;
-            _fps.SetStatusLed(0xff, color); // off
+            //for (int i = 0; i < timeout && Detect == PresenceState.Present; ++i)
+            //    System.Threading.Thread.Sleep(100);
+
+            //LiveTask.Stop();
+
+            color = Pr22.Control.StatusLed.Color.Off;
+            idx = 0;
+            foreach (Pr22.Control.StatusLed statled in _fps.Peripherals.StatusLeds)
+            {
+                if (idx++ > 11)
+                    break;
+
+                statled.Turn(color); // off
+            }
 
             /* Save individual finger images */
-            gxImage img;
-            gxVariant var = null;
-            int mask = 0x10;
+            Pr22.Imaging.RawImage rawImage;
+            Pr22.Imaging.FingerImage fingerImage = null;
+            mask = 0x10;
 
             _arrayOfBMP = new ArrayList();
             _arrayOfWSQ = new ArrayList();
 
             for (int i = 0; i < 4; i++)
             {
-                mask >>= 1; 
+                mask >>= 1;
                 bool valid = true;
                 switch (fingerMask & mask)
                 {
                     case 0x08:
                         try
                         {
-                            var = _fps.GetImage((int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, index, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER);
+                            fingerImage = _fps.Scanner.GetFinger(index, Pr22.Imaging.ImpressionType.Plain);
                             if (saveFingerAsFile)
-                                _fps.SaveImage(0, index, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER, wsqIndexFileName, (int)GX_IMGFILEFORMATS.GX_WSQ);
+                                fingerImage.GetImage().Save(Pr22.Imaging.RawImage.FileFormat.Wsq).Save(wsqIndexFileName);
                         }
                         catch
                         {
@@ -242,9 +386,9 @@ class ARHScanner
                     case 0x04:
                         try
                         {
-                            var = _fps.GetImage((int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, middle, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER);
+                            fingerImage = _fps.Scanner.GetFinger(middle, Pr22.Imaging.ImpressionType.Plain);
                             if (saveFingerAsFile)
-                                _fps.SaveImage(0, middle, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER, wsqMiddleFileName, (int)GX_IMGFILEFORMATS.GX_WSQ);
+                                fingerImage.GetImage().Save(Pr22.Imaging.RawImage.FileFormat.Wsq).Save(wsqMiddleFileName);
                         }
                         catch
                         {
@@ -256,9 +400,9 @@ class ARHScanner
                     case 0x02:
                         try
                         {
-                            var = _fps.GetImage((int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, ring, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER);
+                            fingerImage = _fps.Scanner.GetFinger(ring, Pr22.Imaging.ImpressionType.Plain);
                             if (saveFingerAsFile)
-                                _fps.SaveImage(0, ring, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER, wsqRingFileName, (int)GX_IMGFILEFORMATS.GX_WSQ);
+                                fingerImage.GetImage().Save(Pr22.Imaging.RawImage.FileFormat.Wsq).Save(wsqRingFileName);
                         }
                         catch
                         {
@@ -270,9 +414,9 @@ class ARHScanner
                     case 0x01:
                         try
                         {
-                            var = _fps.GetImage((int)FPS_IMPRESSION_TYPE.FPS_SCAN_LIVE, little, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER);
+                            fingerImage = _fps.Scanner.GetFinger(little, Pr22.Imaging.ImpressionType.Plain);
                             if (saveFingerAsFile)
-                                _fps.SaveImage(0, little, (int)FPS_IMAGE_TYPE.FPS_IT_FINGER, wsqLittleFileName, (int)GX_IMGFILEFORMATS.GX_WSQ);
+                                fingerImage.GetImage().Save(Pr22.Imaging.RawImage.FileFormat.Wsq).Save(wsqLittleFileName);
                         }
                         catch
                         {
@@ -284,29 +428,27 @@ class ARHScanner
                     default:
                         _arrayOfBMP.Add(new Byte[] { new Byte() });
                         _arrayOfWSQ.Add(new WsqImage());
-//                        _arrayOfWSQ.Add(new Byte[] { new Byte() });
+                        //_arrayOfWSQ.Add(new Byte[] { new Byte() });
                         continue;
                 }
 
                 if (valid)
                 {
-                    img = new gxImage();
-                    gxVariant vtest = new gxVariant();
-                    img.FromVariant(var);
+                    rawImage = fingerImage.GetImage();
 
                     WsqImage im = new WsqImage();
-                    im.Content = img.SaveToMem((int)GX_IMGFILEFORMATS.GX_WSQ);
+                    im.Content = rawImage.Save(Pr22.Imaging.RawImage.FileFormat.Wsq).ToByteArray();
                     //im.Content = img.SaveToMem((int)GX_IMGFILEFORMATS.GX_BMP);
-                    im.XRes = img.xres() / (10000 / 254);
-                    im.YRes = img.yres() / (10000 / 254);
-                    im.XSize = img.xsize();
-                    im.YSize = img.ysize();
-                    im.PixelFormat = img.format();
+                    im.XRes = rawImage.HRes / (10000 / 254);
+                    im.YRes = rawImage.VRes / (10000 / 254);
+                    im.XSize = rawImage.Size.Width;
+                    im.YSize = rawImage.Size.Height;
+                    im.PixelFormat = (int)rawImage.Format;
                     _arrayOfWSQ.Add(im);
 
-                    _arrayOfBMP.Add(img.SaveToMem((int)GX_IMGFILEFORMATS.GX_BMP));
+                    _arrayOfBMP.Add(rawImage.Save(Pr22.Imaging.RawImage.FileFormat.Bmp).ToByteArray());
                     //_arrayOfWSQ.Add(img.SaveToMem((int)GX_IMGFILEFORMATS.GX_WSQ));
-                    img.Dispose();
+                    rawImage = null;
                 }
                 else
                 {
@@ -315,11 +457,11 @@ class ARHScanner
                     _arrayOfWSQ.Add(null);
                 }
 
-                if (var != null)
-                    var.Dispose();
+                if (fingerImage != null)
+                    fingerImage = null;
             }
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -339,25 +481,30 @@ class ARHScanner
         {
             /* This section modifies the values of nist record */
 
-            gxVariant v = new gxVariant();
-            gxVariant v1 = new gxVariant();
-            gxVariant v2 = new gxVariant();
+            Pr22.Util.Variant v = new Pr22.Util.Variant(0, Pr22.Util.Variant.ListT.List);	/* General list */
 
-            v.CreateEmptyList(0);	/* General list */
+            /* List for storing the type-1 record data */
+            Pr22.Util.Variant v1 = new Pr22.Util.Variant(1, Pr22.Util.Variant.ListT.List);
+            v.List += v1;
 
-            v1.CreateEmptyList(1);		/* List for storing the type-1 record data */
-            v.AddItem((int)GX_VARIANT_FLAGS.GX_VARIANT_LAST, 0, 0, v1);
+            v1.List += new Pr22.Util.Variant(4, "ATP");	/* (field id) - (field value) */
 
-            v2.Create(4, "ATP");	/* (field id) - (field value) */
-            v1.AddItem((int)GX_VARIANT_FLAGS.GX_VARIANT_LAST, 0, 0, v2);
+            Pr22.Task.FingerTask ftask = Pr22.Task.FingerTask.PlainScan(1, 1);
+            ftask.Add(Pr22.Imaging.FingerPosition.PlainLeft4Fingers).
+                Add(Pr22.Imaging.FingerPosition.PlainRight4Fingers).
+                Add(Pr22.Imaging.FingerPosition.PlainThumbs);
 
             /* Saves all the captured fingers */
-            if (saveFingersAsFile)
-                _fps.FingerToNist("mynist.nist", v);
 
-            _nistImageBytes = _fps.FingerToNistMem(v);
+            Pr22.Processing.BinData nist = _fps.Scanner.GetFingerCollection(ftask).
+                Save(Pr22.Processing.FingerCollection.FileFormat.Nist, v);
+
+            if (saveFingersAsFile)
+                nist.Save("mynist.nist");
+
+            _nistImageBytes = nist.ToByteArray();
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -378,26 +525,30 @@ class ARHScanner
         try
         {
             /* Opening the PR system */
-            _pr = new PassportReader();	/* Object for the PR system */
-/*
-            if (_pr.TestPowerState() != 0)
-            {
-                ErrorMessage = "The power is off";
-                return -1;
-            }
-*/
+            _pr = new Pr22.DocumentReaderDevice();	/* Object for the PR system */
+
+            _pr.PresenceStateChanged += new EventHandler<Pr22.Events.DetectionEventArgs>(Motdet);
+
+            /*
+                        if (_pr.TestPowerState() != 0)
+                        {
+                            ErrorMessage = "The power is off";
+                            return -1;
+                        }
+            */
             /* Validity check */
-            if (!_pr.IsValid())
-            {
-                ErrorMessage = "Failed to initialize!";
-                return 1303;
-            }
+            /*            if (!_pr.IsValid())
+                        {
+                            ErrorMessage = "Failed to initialize!";
+                            return 1303;
+                        }
+             */
 
             /* Connecting to the first device */
-            _pr.UseDevice(0, (int)PR_USAGEMODE.PR_UMODE_FULL_CONTROL);
+            _pr.UseDevice(0);
 
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -410,14 +561,31 @@ class ARHScanner
         return 0;
     }
 
+    void Motdet(object a, Pr22.Events.DetectionEventArgs args)
+    {
+        if (DeviceState != (int)Pr22.Util.PresenceState.Present)
+            DeviceState = (int)args.State;
+
+        Pr22.Control.StatusLed.Color color = Pr22.Control.StatusLed.Color.Off;
+        switch (DeviceState)
+        {
+            case (int)Pr22.Util.PresenceState.Empty: color = Pr22.Control.StatusLed.Color.Green; break;
+            case (int)Pr22.Util.PresenceState.Moving: color = Pr22.Control.StatusLed.Color.On; break;
+            case (int)Pr22.Util.PresenceState.NoMove: color = Pr22.Control.StatusLed.Color.Red; break;
+        }
+        foreach (Pr22.Control.StatusLed statled in _pr.Peripherals.StatusLeds)
+            statled.Turn(color);
+
+    }
+
     public int prListen()
     {
         /* Enabling motion detection */
         try
         {
-            _pr.SetProperty("freerun_mode", (int)PR_FREERUNMODE.PR_FRMODE_TESTDOCUMENT);
+            _pr.Scanner.StartTask(Pr22.Task.FreerunTask.Detection());
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -425,23 +593,13 @@ class ARHScanner
         try
         {
             /* If the start button is not pressed testing the document detection */
-            int state = _pr.TestDocument(0);
+            int state = DeviceState;
+            if (DeviceState == (int)Pr22.Util.PresenceState.Present) DeviceState = (int)Pr22.Util.PresenceState.NoMove;
 
             /* Turning the display leds depending on the status */
-            int color = (int)PR_STATUS_LED_COLOR.PR_SLC_OFF;
-            switch (state)
-            {
-                case (int)PR_TESTDOC.PR_TD_OUT: color = (int)PR_STATUS_LED_COLOR.PR_SLC_GREEN; break;
-                case (int)PR_TESTDOC.PR_TD_MOVE: color = (int)PR_STATUS_LED_COLOR.PR_SLC_ANY; break;
-                case (int)PR_TESTDOC.PR_TD_NOMOVE: color = (int)PR_STATUS_LED_COLOR.PR_SLC_RED; break;
-            }
-            _pr.SetStatusLed(0xff, color);
-
-            DeviceState = state;
-
             _helper.Wait(200);
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -459,9 +617,11 @@ class ARHScanner
         try
         {
             /* Capturing images */
-            _pr.Capture();
+            Pr22.Task.DocScannerTask sct = new Pr22.Task.DocScannerTask().Add(Pr22.Imaging.Light.All).
+                Del(Pr22.Imaging.Light.CleanOVD).Del(Pr22.Imaging.Light.CleanUV);
+            _pr.Scanner.Scan(sct, Pr22.Imaging.PagePosition.First);
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -482,12 +642,13 @@ class ARHScanner
             //_pr.Capture();
 
             /* Getting the MRZ data */
-            _doc = _pr.GetMrz(0, (int)PR_LIGHT.PR_LIGHT_INFRA, (int)PR_IMAGE_TYPE.PR_IT_ORIGINAL);
+            ndoc = _pr.Engine.Analyze(_pr.Scanner.GetPage(0).Del(Pr22.Imaging.Light.UV),
+                new Pr22.Task.EngineTask().Add(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All));
 
-            if (!_doc.IsValid())
+            if (ndoc.GetFields().Count == 0)
                 throw new NoDocumentFoundException("No MRZ data found");
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -514,31 +675,23 @@ class ARHScanner
     {
         try
         {
-            if (_doc.IsValid())
-            {
-                string fieldName, text;
-                int j = "PR_DF_MRZ_".Length;
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                foreach (int i in Enum.GetValues(typeof(PR_DOCFIELD)))
-                {
-                    if (i <= (int)PR_DOCFIELD.PR_DF_MRZ_FIELDS)
-                        continue;
+            System.Collections.Generic.List<Pr22.Processing.FieldReference> fields;
+            fields = ndoc.GetFields(new Pr22.Task.EngineTask().Add(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All));
 
-                    fieldName = Enum.GetName(typeof(PR_DOCFIELD), i);
-                    if (fieldName.StartsWith("PR_DF_MRZ_"))
-                    {
-                        text = _doc.Field(i);
-                        text = text.Replace('<', ' ').Trim();
-                        if (!string.IsNullOrEmpty(text))
-                        {
-                            text = fieldName.Substring(j).Replace('_', ' ') + ": " + text;
-                            list.Add(text);
-                        }
-                    }
+            string text;
+            foreach (Pr22.Processing.FieldReference fref in fields)
+            {
+                text = ndoc.GetField(fref).GetRawStringValue();
+                text = text.Replace('<', ' ').Trim();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    text = fref.Id.ToString() + ": " + text;
+                    list.Add(text);
                 }
             }
+
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -559,22 +712,13 @@ class ARHScanner
             //_pr.Capture();
 
             /* Reading barcode from infra image */
-            _doc = _pr.GetBarcode(0, (int)PR_LIGHT.PR_LIGHT_INFRA, (int)PR_IMAGE_TYPE.PR_IT_ORIGINAL, 0, 0);
+            ndoc = _pr.Engine.Analyze(_pr.Scanner.GetPage(0).Del(Pr22.Imaging.Light.UV),
+                new Pr22.Task.EngineTask().Add(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.All));
 
-            if (!_doc.IsValid())
-            {
-                /* Reading barcode from white image */
-                _doc = _pr.GetBarcode(0, (int)PR_LIGHT.PR_LIGHT_WHITE, (int)PR_IMAGE_TYPE.PR_IT_ORIGINAL, 0, 0);
-
-                //                bool statusOk = _doc.FieldStatus((int)PR_DOCFIELD.PR_DF_BC1) == 0;
-                //              if (!statusOk)
-                //                _doc = _pr.GetBarcode(0, (int)PR_LIGHT.PR_LIGHT_UV, (int)PR_IMAGE_TYPE.PR_IT_ORIGINAL, 0, 0);
-            }
-
-            if (!_doc.IsValid())
+            if (ndoc.GetFields().Count == 0)
                 throw new NoDocumentFoundException("No barcode found");
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -603,25 +747,18 @@ class ARHScanner
 
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 int type = -1;
 
-                gxVariant pdoc = _doc.ToVariant();
-                gxVariant v = new gxVariant();
-                if (pdoc.GetChild(v, (int)GX_VARIANT_FLAGS.GX_VARIANT_BY_ID, (int)PR_VAR_ID.PRV_BARCODE, 0))
-                {
-                    type = v.GetInt();
-                    v.Dispose();
-                }
+                type = ndoc.ToVariant().GetChild((int)Pr22.Util.VariantId.Barcode, 0).ToInt();
 
-                barcodeType = System.Enum.GetName(typeof(PR_BCTYPE), type);
-                barcodeType = barcodeType.Substring(barcodeType.LastIndexOf("_") + 1);
+                barcodeType = ((BarcodeTypes)type).ToString();
 
-                gtin = _doc.Field((int)PR_DOCFIELD.PR_DF_BC1) as string;
+                gtin = ndoc.GetField(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.Composite1).GetBasicStringValue() as string;
             }
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -643,52 +780,45 @@ class ARHScanner
     {
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 /* Searching for the barcode and displaying it */
                 int type = -1;
 
-                gxVariant pdoc = _doc.ToVariant();
-                gxVariant v = new gxVariant();
-                if (pdoc.GetChild(v, (int)GX_VARIANT_FLAGS.GX_VARIANT_BY_ID, (int)PR_VAR_ID.PRV_BARCODE, 0))
-                {
-                    type = v.GetInt();
-                    v.Dispose();
-                }
+                type = ndoc.ToVariant().GetChild((int)Pr22.Util.VariantId.Barcode, 0).ToInt();
 
-                string barcodeType = System.Enum.GetName(typeof(PR_BCTYPE), type);
-                barcodeType = barcodeType.Substring(barcodeType.LastIndexOf("_") + 1);
+                string barcodeType = ((BarcodeTypes)type).ToString();
                 list.Add(String.Format("TYPE: {0}", barcodeType));      //barcode type
                 list.Add(String.Format( // checksum
-                    "CHECKSUM: {0}", _doc.FieldStatus((int)PR_DOCFIELD.PR_DF_BC1) == 0 ? "Ok" : "No checksum"));
+                    "CHECKSUM: {0}",
+                    ndoc.GetField(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.Composite1).GetStatus() == Pr22.Processing.Status.Ok ? "Ok" : "No checksum"));
 
                 if (barcodeType == "PDF417")
                 {
-                    string fieldName, text;
-                    int j = "PR_DF_".Length;
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    foreach (int i in Enum.GetValues(typeof(PR_DOCFIELD)))
-                    {
-                        if (i <= (int)PR_DOCFIELD.PR_DF_FORMATTED)
-                            continue;
+                    System.Collections.Generic.List<Pr22.Processing.FieldReference> fields;
+                    fields = ndoc.GetFields(new Pr22.Task.EngineTask().Add(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.All));
 
-                        fieldName = Enum.GetName(typeof(PR_DOCFIELD), i);
-                        if (fieldName.StartsWith("PR_DF_"))
+                    string text;
+                    int j = "PR_DF_".Length;
+                    foreach (Pr22.Processing.FieldReference fref in fields)
+                    {
+                        try
                         {
-                            text = _doc.Field(i).Trim();
+                            text = ndoc.GetField(fref).GetFormattedStringValue().Trim();
                             if (!string.IsNullOrEmpty(text))
                             {
-                                text = fieldName.Substring(j).Replace('_', ' ') + ": " + text;
+                                text = fref.Id.ToString() + ": " + text;
                                 list.Add(text);
                             }
                         }
+                        catch (Pr22.Exceptions.General) { }
                     }
                 }
                 else
-                    list.Add("DATA: " + _doc.Field((int)PR_DOCFIELD.PR_DF_BC1) as string);
+                    list.Add("DATA: " + ndoc.GetField(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.Composite1).GetBasicStringValue() as string);
             }
         }
-        catch (gxException e)
+        catch (Pr22.Exceptions.General e)
         {
             return _helper.GetErrorMessage(e, out _errorMessage);
         }
@@ -712,16 +842,14 @@ class ARHScanner
 
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 /* Creating a barcode image */
-                gxImage img = _doc.FieldImage((int)PR_DOCFIELD.PR_DF_BC1);
-                if (img.IsValid())
-                {
-                    buff = img.SaveToMem((int)GX_IMGFILEFORMATS.GX_JPEG);
-                }
+                buff = ndoc.GetField(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.Composite1).GetImage()
+                .Save(Pr22.Imaging.RawImage.FileFormat.Jpeg).ToByteArray();
             }
         }
+        catch (Pr22.Exceptions.General) { }
         catch (Exception e)
         {
             _errorMessage = e.Message + " --- prGetBarcodeImage()";
@@ -742,16 +870,14 @@ class ARHScanner
 
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 /* Creating a MRZ image */
-                gxImage img = _doc.FieldImage((int)(PR_DOCFIELD.PR_DF_MRZ1 & PR_DOCFIELD.PR_DF_MRZ2));
-                if (img.IsValid())
-                {
-                    buff = img.SaveToMem((int)GX_IMGFILEFORMATS.GX_JPEG);
-                }
+                buff = ndoc.GetField(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All).GetImage().
+                    Save(Pr22.Imaging.RawImage.FileFormat.Jpeg).ToByteArray();
             }
         }
+        catch (Pr22.Exceptions.General) { }
         catch (Exception e)
         {
             _errorMessage = e.Message + " --- prGetMRZImage()";
@@ -765,18 +891,17 @@ class ARHScanner
     {
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 /* Saving the barcode image */
-                gxImage img = _doc.FieldImage((int)PR_DOCFIELD.PR_DF_BC1);
-                if (img.IsValid())
-                    img.Save("barcode.jpg", (int)GX_IMGFILEFORMATS.GX_JPEG);
-
+                ndoc.GetField(Pr22.Processing.FieldSource.Barcode, Pr22.Processing.FieldId.All).GetImage().
+                    Save(Pr22.Imaging.RawImage.FileFormat.Jpeg).Save("barcode.jpg");
                 //_doc.Free();
                 //_doc = null;
                 //_pr.ResetDocument();
             }
         }
+        catch (Pr22.Exceptions.General) { }
         catch (Exception e)
         {
             _errorMessage = e.Message + " --- prSaveBarcodeImage()";
@@ -790,18 +915,17 @@ class ARHScanner
     {
         try
         {
-            if (_doc.IsValid())
+            if (ndoc.GetFields().Count != 0)
             {
                 /* Saving the MRZ image */
-                gxImage img = _doc.FieldImage((int)(PR_DOCFIELD.PR_DF_MRZ1 & PR_DOCFIELD.PR_DF_MRZ2));
-                if (img.IsValid())
-                    img.Save("mrz.jpg", (int)GX_IMGFILEFORMATS.GX_JPEG);
-
+                ndoc.GetField(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All).GetImage().
+                    Save(Pr22.Imaging.RawImage.FileFormat.Jpeg).Save("mrz.jpg");
                 //_doc.Free();
                 //_doc = null;
                 //_pr.ResetDocument();
             }
         }
+        catch (Pr22.Exceptions.General) { }
         catch (Exception e)
         {
             _errorMessage = e.Message + " --- prSaveMRZImage()";
@@ -815,10 +939,10 @@ class ARHScanner
     {
         try
         {
-            if (_doc != null && _doc.IsValid())
+            if (ndoc != null)
             {
-                _doc.Free();
-                _doc = null;
+                ndoc.Dispose();
+                ndoc = null;
             }
         }
         catch (Exception e)
@@ -837,7 +961,7 @@ class ARHScanner
         {
             try
             {
-                _fps.CloseDevice();
+                _fps.Close();
                 _fps.Dispose();
                 _fps = null;
 
@@ -859,12 +983,15 @@ class ARHScanner
         {
             try
             {
-                if (_doc != null)
-                    _doc.Free();
+                if (ndoc != null)
+                {
+                    ndoc.Dispose();
+                    ndoc = null;
+                }
 
-                _pr.ResetDocument(0);
+                _pr.Scanner.CleanUpData();
 
-                _pr.CloseDevice();
+                _pr.Close();
                 _pr.Dispose();
                 _pr = null;
 
@@ -879,24 +1006,21 @@ class ARHScanner
         return 0;
     }
 
-    static gxImage _wsqImg = null;
+    static Pr22.Imaging.RawImage _wsqImg = null;
 
     public static byte[] ConvertWSQToBmp(WsqImage wsq)
     {
-        _wsqImg = new gxImage();
-        _wsqImg.Create(wsq.PixelFormat, wsq.XSize, wsq.YSize, 0);
-        _wsqImg.xres(wsq.XRes);
-        _wsqImg.yres(wsq.YRes);
-        _wsqImg.LoadFromMem(wsq.Content, wsq.PixelFormat);
-        return _wsqImg.SaveToMem((int)GX_IMGFILEFORMATS.GX_BMP);
+        _wsqImg = new Pr22.Imaging.RawImage();
+        _wsqImg.Load(new Pr22.Processing.BinData(wsq.Content));
+        return _wsqImg.Save(Pr22.Imaging.RawImage.FileFormat.Bmp).ToByteArray();
     }
 
     public static void DisposeWSQImage()
     {
-        _wsqImg.Dispose();
+        _wsqImg = null;
     }
 }
-/*
+
 [Serializable]
 public class WsqImage
 {
@@ -907,4 +1031,4 @@ public class WsqImage
     public int PixelFormat { get; set; }
     public byte[] Content { get; set; }
 }
-*/
+

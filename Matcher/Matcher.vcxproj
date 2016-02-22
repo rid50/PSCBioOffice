@@ -112,14 +112,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK Trial\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK\Lib\Win64_x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Neurotechnology\Neurotec Biometric 6.0 SDK Trial\Lib\Win64_x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>NCore.dll.lib;NMedia.dll.lib;NBiometricClient.dll.lib;NBiometrics.dll.lib;NLicensing.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>

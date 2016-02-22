@@ -100,7 +100,7 @@ namespace Nomad
 		//void		*Matcher::enrolledTemplate = 0;
 		//HNSubject	Matcher::hProbeSubject = NULL;
 
-		Matcher::~Matcher() {
+		Matcher::~Matcher() noexcept(false) {
 			result = NObjectSet(NULL, (HNObject *)&hProbeSubject);
 			if (NFailed(result))
 			{

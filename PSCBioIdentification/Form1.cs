@@ -482,7 +482,8 @@ namespace PSCBioIdentification
                     {
                         scannersListBox.Items.Add(item);
                     }
-                    scannersListBox.SelectedIndex = 0;
+                    if (scannersListBox.Items.Count != 0)
+                        scannersListBox.SelectedIndex = 0;
                 }
             }
             finally
@@ -1317,7 +1318,10 @@ namespace PSCBioIdentification
                 _biometricClient.PerformTask(task);
                 if (!(task.Error == null && task.Status == NBiometricStatus.Ok))
                 {
-                    throw new Exception("Template creation");
+                    if (task.Error != null)
+                        throw new Exception("Template creation error:" + task.Error);
+                    else
+                        throw new Exception("Template creation error:" + task.Status);
                 }
 
                 //_subject.Fingers[0].Image.Save("leftIndex.wsq");
@@ -1506,24 +1510,35 @@ namespace PSCBioIdentification
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 sw.Start();
 
-                var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                var status = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
-                //var status = _biometricClient.Verify(_subject, _subject2);
+                NBiometricStatus status;
+                if (ConfigurationManager.AppSettings["verificationService"] == "local")
+                {
+                    status = _biometricClient.Verify(_subject, _subject2);
+                }
+                else
+                {
+                    var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
+                    var retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                    if (retcode)
+                        status = NBiometricStatus.Ok;
+                    else
+                        status = NBiometricStatus.MatchNotFound;
+                }
 
                 sw.Stop();
                 TimeSpan ts = sw.Elapsed;
                 string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
                 LogLine("Matched in " + elapsedTime, true);
 
-                LogLine(string.Format("Verification status: {0}", status ? "Success" : "Failue"), true);
-                //LogLine(string.Format("Verification status: {0}", status == NBiometricStatus.Ok ? "Success" : "Failue"), true);
+                //LogLine(string.Format("Verification status: {0}", status ? "Success" : "Failue"), true);
+                LogLine(string.Format("Verification status: {0}", status == NBiometricStatus.Ok ? "Success" : "Failue"), true);
 
                 fingerView1.Finger = _subject.Fingers[1];
 
                 //ShowStatusMessage(str);
 
-                //if (status == NBiometricStatus.Ok)
-                if (status)
+                if (status == NBiometricStatus.Ok)
+                //if (status)
                 {
                     // Get matching score
                     //int score = _subject.MatchingResults[0].Score;
@@ -2002,7 +2017,7 @@ namespace PSCBioIdentification
         //private void buttonRequest_Click(object sender, EventArgs e)
         private bool processEnrolledData(byte[][] serializedWSQArray)
         {
-            bool createTemplatesFromWSQ = true;
+            bool createTemplate = true;
 
             PictureBox pb;
             //NSubject[] subjects = new NSubject[10];
@@ -2122,7 +2137,7 @@ namespace PSCBioIdentification
                             pb.SizeMode = PictureBoxSizeMode.Zoom;
                         }), nImage);
 
-                        if (!createTemplatesFromWSQ)
+                        if (!createTemplate)
                         {
                             if (serializedWSQArray[i + 1].Length != 0)
                             {
@@ -2279,7 +2294,7 @@ namespace PSCBioIdentification
 
             //serializedWSQArray.
 
-            if (!createTemplatesFromWSQ)
+            if (!createTemplate)
             {
                 if (radioButtonVerify.Checked)
                 {
@@ -2417,15 +2432,53 @@ namespace PSCBioIdentification
                 {
                     ///this.Invoke((Action)(() =>
                     //{
-                    int bestQualityImage = GetImageQuality(_subject);
+                    NFPosition bestQualityImagePosition = GetImageQuality(_subject);
 
                     if (radioButtonVerify.Checked)
                     {
-                        this.BeginInvoke((Action<int>)((best) =>
+                        if (bestQualityImagePosition != NFPosition.Unknown)
                         {
-                            var rb = this.Controls.Find("radioButton" + (best + 1).ToString(), true)[0] as RadioButton;
-                            BeginInvoke(new MethodInvoker(delegate() { checkRadioButton(rb.Name); }));
-                        }), bestQualityImage);
+                            int bestQualityImageIndex = 0;
+                            switch (bestQualityImagePosition)
+                            {
+                                case NFPosition.LeftIndex:
+                                    bestQualityImageIndex = 1;
+                                    break;
+                                case NFPosition.LeftMiddle:
+                                    bestQualityImageIndex = 2;
+                                    break;
+                                case NFPosition.LeftRing:
+                                    bestQualityImageIndex = 3;
+                                    break;
+                                case NFPosition.LeftLittle:
+                                    bestQualityImageIndex = 4;
+                                    break;
+                                case NFPosition.RightIndex:
+                                    bestQualityImageIndex = 5;
+                                    break;
+                                case NFPosition.RightMiddle:
+                                    bestQualityImageIndex = 6;
+                                    break;
+                                case NFPosition.RightRing:
+                                    bestQualityImageIndex = 7;
+                                    break;
+                                case NFPosition.RightLittle:
+                                    bestQualityImageIndex = 8;
+                                    break;
+                                case NFPosition.LeftThumb:
+                                    bestQualityImageIndex = 9;
+                                    break;
+                                case NFPosition.RightThumb:
+                                    bestQualityImageIndex = 10;
+                                    break;
+                            }
+
+                            this.BeginInvoke((Action<int>)((best) =>
+                            {
+                                var rb = this.Controls.Find("radioButton" + best.ToString(), true)[0] as RadioButton;
+                                BeginInvoke(new MethodInvoker(delegate () { checkRadioButton(rb.Name); }));
+                            }), bestQualityImageIndex);
+                        }
                     }
                     else if (radioButtonIdentify.Checked)
                     {
@@ -2454,9 +2507,9 @@ namespace PSCBioIdentification
             }
         }
 
-        private int GetImageQuality(NSubject subject)
+        private NFPosition GetImageQuality(NSubject subject)
         {
-            int bestQualityImage = 0;
+            NFPosition bestQualityImageIndex = NFPosition.Unknown;
 
             var lbs = new List<Label>();
             for (int i = 0; i < _fingersCollection.Count; i++)
@@ -2522,7 +2575,7 @@ namespace PSCBioIdentification
                         if (bestQuality < pct)
                         {
                             bestQuality = pct;
-                            bestQualityImage = i;
+                            bestQualityImageIndex = subject.Fingers[i].Position;
                         }
 
                         this.Invoke((Action<int, Label>)((percent, lab) =>
@@ -2568,7 +2621,7 @@ namespace PSCBioIdentification
                 return 0;
             }
 
-            return bestQualityImage;
+            return bestQualityImageIndex;
         }
 
         private int GetImageQuality(NSubject subject, Label lb)
@@ -2883,7 +2936,7 @@ namespace PSCBioIdentification
         public void ShowStatusMessage(string message)
         {
             toolStripStatusLabelError.ForeColor = Color.Black;
-            toolStripStatusLabelError.Text = message;
+            toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
             //toolStripProgressBar.Visible = false;
             //this.Controls.SetChildIndex(statusStrip1, 0);
 
@@ -2896,7 +2949,7 @@ namespace PSCBioIdentification
             Application.DoEvents();
 
             toolStripStatusLabelError.ForeColor = Color.Red;
-            toolStripStatusLabelError.Text = message;
+            toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
         }
 
         void ShowRadioHideCheckButtons(bool show)

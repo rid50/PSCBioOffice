@@ -59,6 +59,7 @@ namespace PassportReaderNS
         {
             InitializeComponent();
             TextBoxID.Text = "20005140";
+            tabControl1.SelectedTab = tabPage3;
         }
 
         void ShowError(ARHScanner sc)

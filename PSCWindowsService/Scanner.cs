@@ -6,7 +6,7 @@ using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
-using WindowsService.DatabaseService;
+using WindowsService.DataService;
 
 namespace PSCWindowsService
 {
@@ -125,9 +125,9 @@ namespace PSCWindowsService
                         formatter.Serialize(ms, _fingersCollection as ArrayList);
                         buff = ms.ToArray();
 
-                        var client = new DbDataServiceClient();
-                        client.SendImage(IMAGE_TYPE.wsq, Convert.ToInt32(id), ref buff);
-
+                        var client = new DataServiceClient();
+                        client.SendWSQImage(Convert.ToInt32(id), ref buff);
+                        //SendImage(IMAGE_TYPE.wsq, Convert.ToInt32(id), ref buff);
                         //saveWsqInDatabase(id, buff);
                     }
                     catch (SerializationException ex)

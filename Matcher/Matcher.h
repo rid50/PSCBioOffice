@@ -107,7 +107,7 @@ namespace Nomad
 
 		public:
 			Matcher();
-			~Matcher();
+			~Matcher() noexcept(false);
 			//bool readImages(wchar_t * szFileName, wchar_t * szFileName2);
 			//int extract(HNImage nImage, NfeExtractionStatus* extractionStatus, HNFRecord* hRecord);
 			void enroll(unsigned char *enrolledTemplate, unsigned __int32 enrolledTemplateSize);

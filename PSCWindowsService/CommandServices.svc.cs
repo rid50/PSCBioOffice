@@ -80,7 +80,7 @@ namespace PSCWindowsService
                 else
                     checkBoxes = checkBoxesStates.Split(',');
 
-                Scanner scanner = null;
+                //Scanner scanner = null;
                 MemoryStream ms = null;
                 try
                 {
@@ -95,10 +95,10 @@ namespace PSCWindowsService
                     //var bioProcessor = new BioProcessor.BioProcessor();
                     //bioProcessor.DeserializeWSQArray(buff, out fingersCollection);
 
-                    scanner = new Scanner();
-                    scanner.FingersCollection = fingersCollection;
+                    //scanner = new Scanner();
+                    //scanner.FingersCollection = fingersCollection;
 
-                    result = scanner.scan(hand, id, checkBoxes);
+                    //result = scanner.scan(hand, id, checkBoxes);
 
                     cache.SetDirty();
                     //var dataContract = new FingerPrintDataContract();
@@ -109,8 +109,8 @@ namespace PSCWindowsService
                 }
                 catch (Exception ex)
                 {
-                    if (scanner != null)
-                        scanner.Disconnect();
+                    //if (scanner != null)
+                    //    scanner.Disconnect();
                     //toReturn = ex.Message;
                     result = "error";
                     message = ex.Message;
