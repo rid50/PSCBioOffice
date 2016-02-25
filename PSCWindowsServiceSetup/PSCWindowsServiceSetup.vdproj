@@ -63,8 +63,8 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:..\\bin\\PSCWindowsServiceSetup.msi"
-        "PackageFilesAs" = "3:2"
+        "OutputFilename" = "8:..\\..\\..\\PSCInstallationFolder\\PSCWindowsServiceSetup\\PSCWindowsServiceSetup.msi"
+        "PackageFilesAs" = "3:1"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
         "Compression" = "3:2"
@@ -117,6 +117,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -124,6 +132,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0F067688ACF74BB6B6A278A2EB818DB5"
+            {
+            "Name" = "8:RunCustomActionData.vbs"
+            "Condition" = "8:"
+            "Object" = "8:_862CB7D203F644B88D50B480DE6F2D85"
+            "FileType" = "3:4"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_003B9CC7_8AA1_440F_8DEC_1B7D6D9A0B35"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:C:\\PSCInstallationFolder\\PSCWindowsServiceSetup\\installutil /u C:\\PSCInstallationFolder\\PSCWindowsServiceSetup\\PSCWindowsService.exe"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_843C674410C74C558D316C8BF64FB3CE"
             {
             "Name" = "8:RunCustomActionData.vbs"
@@ -136,7 +158,7 @@
             "Sequence" = "3:1"
             "Identifier" = "8:_EA6942EC_6F5B_4311_97F3_64C97DB00271"
             "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:installutil C:\\psc\\PSCBioOffice\\PSCWindowsService\\bin\\PSCWindowsService.exe"
+            "CustomActionData" = "8:C:\\PSCInstallationFolder\\PSCWindowsServiceSetup\\installutil /i C:\\PSCInstallationFolder\\PSCWindowsServiceSetup\\PSCWindowsService.exe"
             }
         }
         "DefaultFeature"
@@ -300,7 +322,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PSCWindowsService"
         "ProductCode" = "8:{7B755183-A906-41F5-9E1D-2748F8001D04}"
-        "PackageCode" = "8:{26949044-D26D-49BE-93E8-39BF0DE821EA}"
+        "PackageCode" = "8:{23A03B3E-8F82-46AA-AAFA-903A4311C101}"
         "UpgradeCode" = "8:{68D25144-0590-488B-A4D0-F902E2D71B51}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
