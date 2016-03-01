@@ -39,7 +39,7 @@ namespace PSCBioIdentification
             public int      fingerListSize;
             public string[] appSettings;
             public System.Text.StringBuilder errorMessage;
-
+            //public CallBackDelegate callback;
             //public String errorMessage;
             //public String[] errorMessage = new String[1];
 
@@ -170,7 +170,7 @@ namespace PSCBioIdentification
                             callback.MyEvent += MyEvent;
                             InstanceContext context = new InstanceContext(callback);
 
-                            var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
+                            var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
                             e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                             //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }

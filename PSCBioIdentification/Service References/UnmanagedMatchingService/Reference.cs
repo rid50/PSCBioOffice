@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PSCBioIdentification.MatchingService {
+namespace PSCBioIdentification.UnmanagedMatchingService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MatchingService.IMatchingService", CallbackContract=typeof(PSCBioIdentification.MatchingService.IMatchingServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="UnmanagedMatchingService.IMatchingService", CallbackContract=typeof(PSCBioIdentification.UnmanagedMatchingService.IMatchingServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchingService/fillCache2")]
@@ -45,12 +45,12 @@ namespace PSCBioIdentification.MatchingService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IMatchingServiceChannel : PSCBioIdentification.MatchingService.IMatchingService, System.ServiceModel.IClientChannel {
+    public interface IMatchingServiceChannel : PSCBioIdentification.UnmanagedMatchingService.IMatchingService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class MatchingServiceClient : System.ServiceModel.DuplexClientBase<PSCBioIdentification.MatchingService.IMatchingService>, PSCBioIdentification.MatchingService.IMatchingService {
+    public partial class MatchingServiceClient : System.ServiceModel.DuplexClientBase<PSCBioIdentification.UnmanagedMatchingService.IMatchingService>, PSCBioIdentification.UnmanagedMatchingService.IMatchingService {
         
         public MatchingServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {

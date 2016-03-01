@@ -28,7 +28,7 @@ namespace Nomad {
 		fnCallBack _callBack;
 
 		//void MySetCallBack(fnNotify callBack) {
-		void SetCallBack(fnCallBack callBack) {
+		void __stdcall SetCallBack(fnCallBack callBack) {
 			_callBack = callBack;
 		}
 
@@ -264,6 +264,10 @@ namespace Nomad {
 				else
 					strcpy_s(errorMessage, errMessage.length() + 1, errMessage.c_str());
 			}
+
+			//CallBackStruct callBackParam;
+			callBackParam.code = 0;
+			_callBack(&callBackParam);
 
 			return retcode;
 		}

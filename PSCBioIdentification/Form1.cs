@@ -248,11 +248,11 @@ namespace PSCBioIdentification
                 fingerList = client.getFingerList();
             }
             catch (FaultException<string> fault) {
-                labelCacheUnavailable.Text = fault.Detail;
+                //labelCacheUnavailable.Text = fault.Detail;
                 fingerList = null;
                 //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
-                labelCacheUnavailable.Text = string.Format("{0}", fault.Detail);
-                //ShowErrorMessage(ex.Message);
+                labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
+                //MessageBox.Show(string.Format("{0}", fault.Detail));
                 //EnableControls(false);
                 manageCacheButton.Tag = "off";
                 manageCacheButton.Enabled = false;
@@ -3203,34 +3203,49 @@ namespace PSCBioIdentification
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 InstanceContext context = new InstanceContext(callback);
 
-                var client = new CachePopulateService.PopulateCacheServiceClient(context);
-                client.Terminate();
+                if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                {
+                    var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                    client.Terminate();
+                }
+                else
+                {
+                    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                    {
+                        terminateMatchingService();
+                    }
+                    else
+                    {
+                        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                        client.terminateMatchingService();
+                    }
+                }
                 manageCacheButton.Enabled = false;
             }
 
-//            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
-//            callback.MyEvent += MyEvent;
-//            InstanceContext context = new InstanceContext(callback);
+            //            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
+            //            callback.MyEvent += MyEvent;
+            //            InstanceContext context = new InstanceContext(callback);
 
-//            var client = new CachePopulateService.PopulateCacheServiceClient(context); 
-//            var fingerList = new System.Collections.ArrayList();
+            //            var client = new CachePopulateService.PopulateCacheServiceClient(context); 
+            //            var fingerList = new System.Collections.ArrayList();
 
-//            CheckBox cb; Label lb;
-//            for (int i = 1; i < 11; i++)
-//            {
-//                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-//                lb.BackColor = Color.Transparent;
+            //            CheckBox cb; Label lb;
+            //            for (int i = 1; i < 11; i++)
+            //            {
+            //                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+            //                lb.BackColor = Color.Transparent;
 
-//                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
-//                if (cb.Checked)
-//                    fingerList.Add(cb.Tag);
-//            }
+            //                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+            //                if (cb.Checked)
+            //                    fingerList.Add(cb.Tag);
+            //            }
 
 
-//            client.Run(fingerList);
-//            //client.Run(new string[] { });
-//            //client.Run(new string[] { "0" });
-////            _mre.WaitOne();
+            //            client.Run(fingerList);
+            //            //client.Run(new string[] { });
+            //            //client.Run(new string[] { "0" });
+            ////            _mre.WaitOne();
         }
 
         private void buttonRefreshScannerListBox_Click(object sender, EventArgs e)

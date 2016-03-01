@@ -1720,7 +1720,7 @@
     <value>35, 279</value>
   </metadata>
   <data name="toolStripStatusLabelError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>988, 17</value>
+    <value>1046, 17</value>
   </data>
   <data name="toolStripStatusLabelError.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1732,7 +1732,7 @@
     <value>0, 717</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1105, 22</value>
+    <value>1163, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -3430,7 +3430,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1105, 739</value>
+    <value>1163, 739</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>912, 556</value>

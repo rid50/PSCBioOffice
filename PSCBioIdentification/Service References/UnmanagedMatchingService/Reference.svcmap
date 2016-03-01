@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="420abeb2-e849-4ff3-a66a-f58c31d08737" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://pscservice/BiometricService/MatchingService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="4ded3a89-146a-4379-90e3-a81494a097e4" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?xsd=xsd3" />
+    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="2f144c44-2a7d-4ff2-acef-511612a151cd" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?disco" />
+    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="e98fec61-521b-4cbe-aeb9-acd81a206356" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?wsdl" />
+    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="67e54aa3-ab09-447c-b792-ffcf1bbe6667" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?xsd=xsd0" />
+    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="31ecf61b-741b-40c1-b05d-086786d7ffea" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService3.xsd" MetadataType="Schema" ID="58fbe88b-69c4-48d8-8d17-c2f2b16e7ee7" SourceId="1" SourceUrl="http://pscservice/BiometricService/MatchingService.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

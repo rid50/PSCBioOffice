@@ -44,7 +44,11 @@ namespace PSCBioIdentification
 
         public void OnCallback(ref CallBackStruct callBackParam)
         {
-            if (callBackParam.code == 1)
+            if (callBackParam.code == 0)
+            {
+                _callBack.CacheOperationComplete();
+            }
+            else if (callBackParam.code == 1)
             {
                 int result;
                 int.TryParse(callBackParam.text, out result);
@@ -108,7 +112,8 @@ namespace PSCBioIdentification
             }
             else
             {
-                var client = new MatchingService.MatchingServiceClient(context);
+                //var client = new UnmanagedMatchingService.
+                var client = new UnmanagedMatchingService.MatchingServiceClient(context);
                 backgroundWorkerCachingService.RunWorkerAsync(client);
 
                 //backgroundWorkerCachingService.RunWorkerAsync();
@@ -208,6 +213,9 @@ namespace PSCBioIdentification
                 list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
                 record.appSettings = list.ToArray(typeof(string)) as string[];
 
+                //CallBackDelegate deleg = new CallBackDelegate(OnCallback);
+                //record.callback = new CallBackDelegate(OnCallback);
+
                 //UInt32 score = 0;
                 unsafe
                 {
@@ -215,8 +223,8 @@ namespace PSCBioIdentification
                     {
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
-                            CallBackDelegate d = new CallBackDelegate(OnCallback);
-                            SetCallBack(d);
+                            //CallBackDelegate d = new CallBackDelegate(OnCallback);
+                            SetCallBack(new CallBackDelegate(OnCallback));
 
                             fillCache(record.fingerList, record.fingerListSize, record.appSettings);
                         }
@@ -225,11 +233,13 @@ namespace PSCBioIdentification
                             //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
                             //callback.MyEvent += MyEvent;
                             //InstanceContext context = new InstanceContext(callback);
-                            var client = e.Argument as MatchingService.MatchingServiceClient;
+                            var client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
+
+                            //client.setCallBack(deleg);
 
                             //var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
                             client.fillCache(record.fingerList, record.fingerListSize, record.appSettings);
-                            _mre.WaitOne();
+                            //_mre.WaitOne();
                         }
                     }
                 }

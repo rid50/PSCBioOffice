@@ -172,7 +172,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Service References\MatchingService\Reference.cs">
+    <Compile Include="Service References\UnmanagedMatchingService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -252,21 +252,28 @@
     <None Include="Service References\ConfigurationService\ConfigurationService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MatchingService\MatchingService.wsdl" />
-    <None Include="Service References\MatchingService\MatchingService.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService.wsdl" />
+    <None Include="Service References\UnmanagedMatchingService\MatchingService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MatchingService\MatchingService1.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MatchingService\MatchingService2.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MatchingService\MatchingService3.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService3.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\UnmanagedMatchingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\UnmanagedMatchingService\configuration.svcinfo" />
+    <None Include="Service References\UnmanagedMatchingService\configuration91.svcinfo" />
+    <None Include="Service References\UnmanagedMatchingService\MatchingService.disco" />
     <None Include="Resources\refresh32.png" />
     <None Include="Service References\CachePopulateService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
@@ -289,13 +296,6 @@
     <None Include="Service References\ConfigurationService\configuration.svcinfo" />
     <None Include="Service References\ConfigurationService\configuration91.svcinfo" />
     <None Include="Service References\ConfigurationService\ConfigurationService.disco" />
-    <None Include="Service References\MatchingService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\MatchingService\configuration.svcinfo" />
-    <None Include="Service References\MatchingService\configuration91.svcinfo" />
-    <None Include="Service References\MatchingService\MatchingService.disco" />
     <None Include="Resources\red_light.png" />
     <None Include="Resources\66.png" />
     <Content Include="Resources\checkmark.png" />
@@ -326,7 +326,7 @@
     <WCFMetadataStorage Include="Service References\CacheMatchingService\" />
     <WCFMetadataStorage Include="Service References\CachePopulateService\" />
     <WCFMetadataStorage Include="Service References\ConfigurationService\" />
-    <WCFMetadataStorage Include="Service References\MatchingService\" />
+    <WCFMetadataStorage Include="Service References\UnmanagedMatchingService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
