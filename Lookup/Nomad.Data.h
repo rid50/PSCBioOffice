@@ -9,6 +9,8 @@
 //#include <vector>
 //#include <malloc.h>
 
+#include "BlockingCollection.h"
+
 #include <Windows.h>
 //#include <memory>
 
@@ -128,9 +130,10 @@ namespace Nomad
 		public:
 			static bool	terminateLoop;
 			static bool	fillOnly;
+			static BlockingCollection<int> *_bc;
 
 		public:
-			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[]);		//probe template
+			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], BlockingCollection<int>*bc);		//probe template
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);

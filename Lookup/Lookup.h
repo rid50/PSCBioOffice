@@ -5,6 +5,7 @@
 using namespace std;
 
 namespace Nomad {
+	//Nomad::
 		//typedef struct _tagCallBackStruct
 		//{
 		//	short code;

@@ -1,3 +1,4 @@
+//#include "stdafx.h"
 #include "Lookup.h"
 
 //#include <cstdlib>
@@ -6,9 +7,15 @@
 #include <ppl.h>
 //#include <vector>
 
+//#include <windows.h>
+#include "threadsafe_queue.cpp"
+
 using namespace ::Concurrency;
 
+//using namespace System::Collections::Concurrent;
+//#using <mscorlib.dll>
 //using namespace System;
+
 //using namespace System::Runtime::Remoting;
 
 namespace Nomad {
@@ -83,7 +90,7 @@ namespace Nomad {
 
 			//std::cout << errorMessage << endl;
 			try {
-				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings);
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings, NULL);
 			} catch (std::exception& e) {
 				if (static_cast<unsigned __int32>(messageSize) < strlen(e.what()) + 1) {
 					char *pchar = const_cast<char *>(e.what());
@@ -151,6 +158,9 @@ namespace Nomad {
 			Nomad::Data::Odbc::terminateLoop = false;
 			//Nomad::Data::Odbc::enroll(record, size);
 
+			BlockingCollection<int> bc;
+			//threadsafe_queue<int> bc;
+
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
@@ -170,7 +180,7 @@ namespace Nomad {
 							//Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 							try {
-								odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
+								odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings, &bc);
 								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
 							} catch (std::exception& e) {
 								errMessage = "Error: ";
@@ -195,9 +205,32 @@ namespace Nomad {
 						} else
 							tg.cancel();
 					});
+					
+					while (true) {
+						shared_ptr<int> i = bc.wait_and_pop();
+						if (*i.get() == -1 && --topindex == 0)
+							break;
+
+						Concurrency::wait(100);
+						CallBackStruct callBackParam;
+						callBackParam.code = 1;
+
+						//std::stringstream strm;
+						//strm << NumRowsFetched;
+						string temp = to_string(*i.get());
+						char const* chars = temp.c_str();
+
+						size_t length = strlen(chars);
+
+						//size_t length = strlen("100");
+						mbstowcs_s(&length, callBackParam.text, chars, length);
+						//mbstowcs_s(&length, callBackParam.text, "100", length);
+						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+						callBack(&callBackParam);
+					}
 				});
 			} else {
-				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
+				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings, &bc);
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {
@@ -219,6 +252,11 @@ namespace Nomad {
 				delete odbcPtr;
 			}
 			
+
+
+
+
+
 //#ifdef _DEBUG
 			QueryPerformanceCounter(&end);
 			QueryPerformanceFrequency(&freq);
@@ -251,7 +289,7 @@ namespace Nomad {
 
 			if (retcode > 0) {
 				retcode--;
-				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings);
+				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, appSettings, NULL);
 				//std::string errMessage;
 				if (!odbcPtr->getAppId(&retcode, &errMessage))
 					retcode = 0;

@@ -33,6 +33,8 @@ namespace Nomad
 		//	terminateLoop = true;
 		//}
 
+		BlockingCollection<int> *Odbc::_bc;
+
 		bool Odbc::terminateLoop = false;
 		bool Odbc::fillOnly = false;
 
@@ -64,12 +66,13 @@ namespace Nomad
 		//					sizeof(ConnStrIn) - 1);		
 		//}
 
-		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[]) {
+		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], BlockingCollection<int>*bc) {
 			hEnv = SQL_NULL_HENV;
 			hDBC = SQL_NULL_HDBC;
 			matcherFacadePtr = NULL;
 			//buffer = NULL;
 			//buffer2 = NULL;
+			_bc = bc;
 
 			if (probeTemplate != NULL) {
 				matcherFacadePtr = new Nomad::Bio::MatcherFacade;
@@ -419,7 +422,9 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				short numOfMatches = 0;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {
 
-					if (false && i % 1000 == 0 && callBack != NULL) {
+					if (true && i % 1000 == 0 && _bc != NULL) {
+						_bc->push(1000);
+/*
 						Concurrency::wait(100);
 						CallBackStruct callBackParam;
 						callBackParam.code = 1;
@@ -434,6 +439,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 						mbstowcs_s(&length, callBackParam.text, "1000", length);
 						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
 						callBack(&callBackParam);
+*/
+
 					}
 
 					if (fillOnly)
@@ -595,6 +602,9 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 			delete[] Record;
 			//FreeStmtHandle(hStmt);
 			//delete matcherFacadePtr;
+
+			if (_bc != NULL)
+				_bc->push(-1);
 
 			return RowNumber;
 		}

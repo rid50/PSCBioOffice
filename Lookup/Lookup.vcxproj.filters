@@ -43,5 +43,8 @@
     <ClInclude Include="Lookup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BlockingCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
