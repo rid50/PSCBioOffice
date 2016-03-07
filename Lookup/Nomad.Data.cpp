@@ -28,14 +28,23 @@ namespace Nomad
 		//	Nomad::Bio::MatcherFacade::enroll(record, size);
 		//}
 
-		//void Odbc::terminate() {
-		//	//matcherFacadePtr->enroll(record, size);
-		//	terminateLoop = true;
-		//}
+		bool terminateLoop;
+
+		void Odbc::terminate(bool flag) {
+			//matcherFacadePtr->enroll(record, size);
+			terminateLoop = flag;
+		}
+
+		bool Odbc::getTerminationState() {
+			//matcherFacadePtr->enroll(record, size);
+			return terminateLoop;
+		}
 
 		BlockingCollection<int> *Odbc::_bc;
 
-		bool Odbc::terminateLoop = false;
+
+		//terminateLoop = false;
+		//bool Odbc::terminateLoop = false;
 		bool Odbc::fillOnly = false;
 
 		Odbc::~Odbc() {
@@ -413,44 +422,24 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				//	Log(ss.str(), false);
 				//}
 
-				if (terminateLoop)
+				if (getTerminationState())
 					break;
-
-					//if (fillOnly)
-					//	continue;
 
 				short numOfMatches = 0;
 				for (SQLUSMALLINT i = 0; i < NumRowsFetched; i++) {
 
-					if (true && i % 1000 == 0 && _bc != NULL) {
+					if (i % 1000 == 0 && _bc != NULL) {
 						_bc->push(1000);
-/*
-						Concurrency::wait(100);
-						CallBackStruct callBackParam;
-						callBackParam.code = 1;
-
-						//std::stringstream strm;
-						//strm << NumRowsFetched;
-						//std::string temp = strm.str();
-						//char const* chars = temp.c_str();
-
-						size_t length = strlen("1000");
-						//mbstowcs_s(&length, callBackParam.text, chars, length);
-						mbstowcs_s(&length, callBackParam.text, "1000", length);
-						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-						callBack(&callBackParam);
-*/
-
 					}
-
-					if (fillOnly)
-						continue;
 
 					numOfMatches = 0;
 					matched = false;
 
-					if (terminateLoop)
+					if (getTerminationState())
 						break;
+
+					if (fillOnly)
+						continue;
 
 					FIELDSTRUCT* f;
 
@@ -594,7 +583,7 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				if (matched)
 					break;
 
-				if (terminateLoop)
+				if (getTerminationState())
 					break;
 			}
 
@@ -603,8 +592,12 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 			//FreeStmtHandle(hStmt);
 			//delete matcherFacadePtr;
 
-			if (_bc != NULL)
-				_bc->push(-1);
+			if (_bc != NULL) {
+				if (getTerminationState())
+					_bc->push(-2);
+				else
+					_bc->push(-1);
+			}
 
 			return RowNumber;
 		}

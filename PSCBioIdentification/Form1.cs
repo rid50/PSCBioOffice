@@ -3200,8 +3200,9 @@ namespace PSCBioIdentification
             else
             {
                 backgroundWorkerCachingService.CancelAsync();
-                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-                InstanceContext context = new InstanceContext(callback);
+                //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                //InstanceContext context = new InstanceContext(callback);
+                InstanceContext context = null;
 
                 if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
                 {

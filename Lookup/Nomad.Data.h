@@ -72,6 +72,8 @@ namespace Nomad
 
 	namespace Data
 	{
+		extern "C" bool terminateLoop;
+
 		inline void Log(std::string str, bool file)
 		{
 			if (file) {
@@ -128,7 +130,7 @@ namespace Nomad
 			std::string dbSettings[4];
 
 		public:
-			static bool	terminateLoop;
+			//static bool	terminateLoop;
 			static bool	fillOnly;
 			static BlockingCollection<int> *_bc;
 
@@ -139,7 +141,7 @@ namespace Nomad
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
 			unsigned __int32 exec(unsigned long int, unsigned int, char *fingerList[], __int32 fingerListSize, std::string *errorMessage, fnCallBack callBack);
 			//static void enroll(unsigned char *record, unsigned __int32 size);
-			//static void terminate();
+			static void terminate(bool);
 			//void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);
@@ -148,6 +150,7 @@ namespace Nomad
 
 
 		private:
+			bool	getTerminationState();
 			/// <summary>
 			/// Executes a function and prints timing results
 			/// </summary>

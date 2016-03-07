@@ -1,4 +1,6 @@
 #pragma once
+#ifndef LOOKUP_H
+#define LOOKUP_H
 
 #include "Nomad.Data.h"
 
@@ -15,6 +17,7 @@ namespace Nomad {
 		////typedef void (__stdcall *fnNotify)(int notifyCode);
 		////typedef void (__stdcall *fnCallBack)(int callBackParam);
 		//typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
+
 
 	namespace Lookup {
 		Nomad::Data::Odbc *odbcPtr;
@@ -56,3 +59,4 @@ namespace Nomad {
 		}
 	}
 }
+#endif

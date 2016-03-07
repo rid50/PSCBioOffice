@@ -5,10 +5,12 @@
 
 #include <concrt.h>
 #include <ppl.h>
+//#include <pplawait.h>
+#include <ppltasks.h>
 //#include <vector>
 
 //#include <windows.h>
-#include "threadsafe_queue.cpp"
+//#include "threadsafe_queue.cpp"
 
 using namespace ::Concurrency;
 
@@ -40,8 +42,9 @@ namespace Nomad {
 		}
 
 		void __stdcall terminateMatchingService() {
-			Nomad::Data::Odbc::terminateLoop = true;
-			//Nomad::Data::Odbc::terminate();
+			//int k = 0;
+			//Nomad::Data::Odbc::terminateLoop = true;
+			Nomad::Data::Odbc::terminate(true);
 		}
 
 		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[]) {
@@ -71,6 +74,58 @@ namespace Nomad {
 			}
 
 			delete[] errorMessage;
+		}
+
+
+		//std::shared_ptr<T> wait_and_pop()
+		task<std::shared_ptr<int>> getQueueItemAsync(BlockingCollection<int>& bc)
+		{
+			return create_task([&bc]() {
+				return bc.wait_and_pop();
+			});
+		}
+
+		//task<void> process_queue_async(task<void> process_queue) __resumable {
+		//	return process_queue;
+		//	__await process_queue;
+		//	return create_task([]() { return; });
+		//}
+
+		//task<void> process_queue(fnCallBack callBack, BlockingCollection<int>& bc, int topindex)
+		void process_queue(fnCallBack callBack, BlockingCollection<int>& bc, int topindex)
+		{
+			while (true)
+			{
+				//if (Nomad::Data::Odbc::terminateLoop)
+				//	break;
+
+				//shared_ptr<int> i = 0;
+				shared_ptr<int> i = bc.wait_and_pop();
+				//shared_ptr<int> i = getQueueItemAsync(bc).get();
+				if (*i.get() == -2)
+					break;
+
+				if ((*i.get() == -1 && --topindex == 0) || *i.get() == -2)
+					break;
+
+				Concurrency::wait(100);
+				CallBackStruct callBackParam;
+				callBackParam.code = 1;
+
+				//std::stringstream strm;
+				//strm << NumRowsFetched;
+				string temp = to_string(*i.get());
+				char const* chars = temp.c_str();
+
+				size_t length = strlen(chars);
+
+				//size_t length = strlen("100");
+				mbstowcs_s(&length, callBackParam.text, chars, length);
+				//mbstowcs_s(&length, callBackParam.text, "100", length);
+				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+				callBack(&callBackParam);
+			}
+			//return create_task([]() { return; });
 		}
 
 		unsigned __int32 __stdcall match(char *fingerList[], __int32 fingerListSize,
@@ -154,8 +209,8 @@ namespace Nomad {
 			}
 			//return retcode;
 			//odbcPtr->enroll(record, size);
-			//Nomad::Data::Odbc::terminate(false);
-			Nomad::Data::Odbc::terminateLoop = false;
+			Nomad::Data::Odbc::terminate(false);
+			//Nomad::Data::Odbc::terminateLoop = false;
 			//Nomad::Data::Odbc::enroll(record, size);
 
 			BlockingCollection<int> bc;
@@ -170,42 +225,60 @@ namespace Nomad {
 			//limit = 5;
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
+
+//			process_queue(callBack, bc, topindex);
+
 			if (1) {
+				//process_queue_async(process_queue(callBack, bc, topindex));
 				task_group tg;
 				tg.run_and_wait([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
-						if (!Nomad::Data::Odbc::terminateLoop) {
+						if (!Nomad::Data::terminateLoop) {
 							unsigned __int32 ret = 0;
 							Nomad::Data::Odbc *odbcPtr = NULL;
 							//Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
 							//if ((ret = odbcPtr->exec((unsigned long int)(i * limit), limit, &errMessage)) > 0) {
 							try {
 								odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings, &bc);
-								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
+								ret = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, NULL);
 							} catch (std::exception& e) {
 								errMessage = "Error: ";
 								errMessage += e.what();
 								ret = 0;
+
+								if (&bc != NULL)
+									bc.push(-2);
 							}
 
 							if (ret > 0) {
 								retcode = ret;
-								Nomad::Data::Odbc::terminateLoop = true;
+								Nomad::Data::terminateLoop = true;
 								//Nomad::Data::Odbc::terminate();
 								tg.cancel();
 							} else if (ret == 0 && errMessage.length() != 0) {
 								retcode = 0;
-								Nomad::Data::Odbc::terminateLoop = true;
+								Nomad::Data::terminateLoop = true;
 								//Nomad::Data::Odbc::terminate();
 								tg.cancel();
+
+								if (&bc != NULL)
+									bc.push(-2);
 							}
 
 							if (odbcPtr != NULL) 
 								delete odbcPtr;
-						} else
+						}
+						else {
 							tg.cancel();
+						}
 					});
 					
+					//int k = 5;
+					process_queue(callBack, bc, topindex);
+					//process_queue_async(process_queue(callBack, bc, topindex)).get();
+
+					//int m = 5;
+/*
 					while (true) {
 						shared_ptr<int> i = bc.wait_and_pop();
 						if (*i.get() == -1 && --topindex == 0)
@@ -228,9 +301,10 @@ namespace Nomad {
 						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
 						callBack(&callBackParam);
 					}
+*/
 				});
 			} else {
-				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings, &bc);
+				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings, NULL);
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {
@@ -252,7 +326,8 @@ namespace Nomad {
 				delete odbcPtr;
 			}
 			
-
+			//if (&bc != NULL)
+			//	bc.push(-1);
 
 
 
