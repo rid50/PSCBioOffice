@@ -76,7 +76,7 @@ namespace PSCBioIdentification
 
             _mre = mre;
 
-            _callBack = new CallbackFromCacheFillingService();
+            _callBack = new CallbackFromCacheFillingService { TotalRecords = 0 };
             _callBack.MyEvent += MyEvent;
             InstanceContext context = new InstanceContext(_callBack);
 

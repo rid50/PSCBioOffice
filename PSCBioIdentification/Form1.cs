@@ -3200,12 +3200,13 @@ namespace PSCBioIdentification
             else
             {
                 backgroundWorkerCachingService.CancelAsync();
-                //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-                //InstanceContext context = new InstanceContext(callback);
-                InstanceContext context = null;
+                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                InstanceContext context = new InstanceContext(callback);
+                //InstanceContext context = null;
 
                 if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
                 {
+                    //context = new InstanceContext(callback);
                     var client = new CachePopulateService.PopulateCacheServiceClient(context);
                     client.Terminate();
                 }
@@ -3217,6 +3218,7 @@ namespace PSCBioIdentification
                     }
                     else
                     {
+                        //context = new InstanceContext(callback);
                         var client = new UnmanagedMatchingService.MatchingServiceClient(context);
                         client.terminateMatchingService();
                     }

@@ -24,6 +24,10 @@
 #include <fstream>      // std::ofstream
 #include <sstream>		// std::stringstream
 
+//#include <ppltasks.h>
+//#include <concrt.h>
+#include <ppl.h>
+
 //#include <conio.h>
 
 //#include <NFExtractor.h>
@@ -72,7 +76,7 @@ namespace Nomad
 
 	namespace Data
 	{
-		extern "C" bool terminateLoop;
+		//extern "C" bool terminateLoop;
 
 		inline void Log(std::string str, bool file)
 		{
@@ -135,13 +139,13 @@ namespace Nomad
 			static BlockingCollection<int> *_bc;
 
 		public:
-			Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], BlockingCollection<int>*bc);		//probe template
+			Odbc(BlockingCollection<int>*bc, unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], Concurrency::task_group *tg);		//probe template
 			~Odbc();
 			bool getRowCount(unsigned __int32 *rowcount, std::string *errorMessage);
 			bool getAppId(unsigned __int32 *appid, std::string *errorMessage);
 			unsigned __int32 exec(unsigned long int, unsigned int, char *fingerList[], __int32 fingerListSize, std::string *errorMessage, fnCallBack callBack);
 			//static void enroll(unsigned char *record, unsigned __int32 size);
-			static void terminate(bool);
+			//static void terminate(bool);
 			//void disconnect();
 
 			//void readImages(wchar_t * szFileName, wchar_t * szFileName2);
@@ -150,7 +154,7 @@ namespace Nomad
 
 
 		private:
-			bool	getTerminationState();
+			//bool	getTerminationState();
 			/// <summary>
 			/// Executes a function and prints timing results
 			/// </summary>

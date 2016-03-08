@@ -2,6 +2,7 @@
 #include "Nomad.Data.h"
 
 #include <concrt.h>
+#include <ppltasks.h>
 //#include <chrono>
 //#include <thread>
 
@@ -28,20 +29,20 @@ namespace Nomad
 		//	Nomad::Bio::MatcherFacade::enroll(record, size);
 		//}
 
-		bool terminateLoop;
+		//bool terminateLoop;
 
-		void Odbc::terminate(bool flag) {
-			//matcherFacadePtr->enroll(record, size);
-			terminateLoop = flag;
-		}
+		//void Odbc::terminate(bool flag) {
+		//	//matcherFacadePtr->enroll(record, size);
+		//	terminateLoop = flag;
+		//}
 
-		bool Odbc::getTerminationState() {
-			//matcherFacadePtr->enroll(record, size);
-			return terminateLoop;
-		}
+		//bool Odbc::getTerminationState() {
+		//	//matcherFacadePtr->enroll(record, size);
+		//	return terminateLoop;
+		//}
 
 		BlockingCollection<int> *Odbc::_bc;
-
+		Concurrency::task_group *_tg;
 
 		//terminateLoop = false;
 		//bool Odbc::terminateLoop = false;
@@ -75,13 +76,14 @@ namespace Nomad
 		//					sizeof(ConnStrIn) - 1);		
 		//}
 
-		Odbc::Odbc(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], BlockingCollection<int>*bc) {
+		Odbc::Odbc(BlockingCollection<int>*bc, unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char* appSettings[], Concurrency::task_group *tg) {
 			hEnv = SQL_NULL_HENV;
 			hDBC = SQL_NULL_HDBC;
 			matcherFacadePtr = NULL;
 			//buffer = NULL;
 			//buffer2 = NULL;
 			_bc = bc;
+			_tg = tg;
 
 			if (probeTemplate != NULL) {
 				matcherFacadePtr = new Nomad::Bio::MatcherFacade;
@@ -422,7 +424,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				//	Log(ss.str(), false);
 				//}
 
-				if (getTerminationState())
+				//if (getTerminationState())
+				if (_tg->is_canceling())
 					break;
 
 				short numOfMatches = 0;
@@ -435,7 +438,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 					numOfMatches = 0;
 					matched = false;
 
-					if (getTerminationState())
+					//if (getTerminationState())
+					if (_tg->is_canceling())
 						break;
 
 					if (fillOnly)
@@ -583,7 +587,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				if (matched)
 					break;
 
-				if (getTerminationState())
+				//if (getTerminationState())
+				if (_tg->is_canceling())
 					break;
 			}
 
@@ -593,7 +598,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 			//delete matcherFacadePtr;
 
 			if (_bc != NULL) {
-				if (getTerminationState())
+				//if (getTerminationState())
+				if (_tg->is_canceling())
 					_bc->push(-2);
 				else
 					_bc->push(-1);

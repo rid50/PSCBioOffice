@@ -21,8 +21,12 @@ namespace PSCBioIdentification
 
         public CallbackFromCacheFillingService()
         {
-            totalRecords = 0;
+            totalRecords = -1;
             runningSum = 0;
+        }
+
+        public int TotalRecords {
+            set { totalRecords = value; }
         }
 
         public void RespondWithRecordNumbers(int num)

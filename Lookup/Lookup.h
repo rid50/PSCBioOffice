@@ -2,22 +2,19 @@
 #ifndef LOOKUP_H
 #define LOOKUP_H
 
+#include <concrt.h>
+#include <ppl.h>
+//#include <pplawait.h>
+#include <ppltasks.h>
+
 #include "Nomad.Data.h"
 
 using namespace std;
 
 namespace Nomad {
-	//Nomad::
-		//typedef struct _tagCallBackStruct
-		//{
-		//	short code;
-		//	wchar_t text[MESSAGE_SIZE]; 
-		//} CallBackStruct;
 
-		////typedef void (__stdcall *fnNotify)(int notifyCode);
-		////typedef void (__stdcall *fnCallBack)(int callBackParam);
-		//typedef void (__stdcall *fnCallBack)(CallBackStruct* callBackParam);
-
+	//extern "C" Concurrency::task_group tg;
+	//Concurrency::task_group tg;
 
 	namespace Lookup {
 		Nomad::Data::Odbc *odbcPtr;
