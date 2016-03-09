@@ -111,13 +111,14 @@ namespace Nomad {
 				//shared_ptr<int> i = 0;
 				shared_ptr<int> i = bc.wait_and_pop();
 				//shared_ptr<int> i = getQueueItemAsync(bc).get();
-				//if (*i.get() == -2)
-				//	break;
-
-				if ((*i.get() == -1 && --topindex == 0) || *i.get() == -2)
+				if (*i.get() == 0)
 					break;
 
-				Concurrency::wait(1);
+				//if ((*i.get() == -1 && --topindex == 0) || *i.get() == -2)
+				if ((*i.get() == -1 && --topindex == 0))
+					break;
+
+				Concurrency::wait(2);
 				CallBackStruct callBackParam;
 				callBackParam.code = 1;
 
@@ -147,6 +148,9 @@ namespace Nomad {
 			unsigned char *probeTemplate, unsigned __int32 probeTemplateSize, char *appSettings[], char *errorMessage, __int32 messageSize, fnCallBack callBack) {
 
 			unsigned __int32 retcode = 0;
+
+			LARGE_INTEGER begin, end, freq;
+			QueryPerformanceCounter(&begin);
 
 			//std::stringstream ss2; 
 			//ss2 << "1------------------------------------:";
@@ -225,8 +229,8 @@ namespace Nomad {
 			BlockingCollection<int> bc;
 			//threadsafe_queue<int> bc;
 
-			LARGE_INTEGER begin, end, freq;
-			QueryPerformanceCounter(&begin);
+			//LARGE_INTEGER begin, end, freq;
+			//QueryPerformanceCounter(&begin);
 
 			unsigned int limit = BUFFERLEN;
 			unsigned int topindex = rowcount/limit + 1;
@@ -235,7 +239,12 @@ namespace Nomad {
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
 
-//			process_queue(callBack, bc, topindex);
+			//if (&bc != NULL) {
+			//	//process_queue(callBack, bc, topindex, tg);
+			//	create_task([&]() {
+			//		process_queue(callBack, bc, topindex, tg);
+			//	});
+			//}
 
 			if (1) {
 				//process_queue_async(process_queue(callBack, bc, topindex));
@@ -244,7 +253,7 @@ namespace Nomad {
 				tg.run([&] {
 					parallel_for(0u, topindex, [&](size_t i) {
 						//if (!Nomad::Data::terminateLoop) {
-						if (!tg.is_canceling()) {
+						//if (!tg.is_canceling()) {
 							unsigned __int32 ret = 0;
 							Nomad::Data::Odbc *odbcPtr = NULL;
 							//Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(probeTemplate, probeTemplateSize, appSettings);
@@ -256,9 +265,10 @@ namespace Nomad {
 								errMessage = "Error: ";
 								errMessage += e.what();
 								ret = 0;
+								tg.cancel();
 
-								if (&bc != NULL)
-									bc.push(-2);
+								//if (&bc != NULL)
+								//	bc.push(-2);
 							}
 
 							if (ret > 0) {
@@ -270,15 +280,16 @@ namespace Nomad {
 								retcode = 0;
 								//Nomad::Data::terminateLoop = true;
 								//Nomad::Data::Odbc::terminate();
-								tg.cancel();
+								if (!tg.is_canceling())
+									tg.cancel();
 
-								if (&bc != NULL)
-									bc.push(-2);
+								//if (&bc != NULL)
+								//	bc.push(-2);
 							}
 
 							if (odbcPtr != NULL) 
 								delete odbcPtr;
-						}
+						//}
 						//else {
 						//	tg.cancel();
 						//}
@@ -320,7 +331,9 @@ namespace Nomad {
 				//Nomad::Data::Odbc::terminate(true);
 
 				//int k = 5;
-				process_queue(callBack, bc, topindex, tg);
+
+				if (&bc != NULL)
+					process_queue(callBack, bc, topindex, tg);
 
 				tg.wait();
 			} else {
@@ -350,7 +363,11 @@ namespace Nomad {
 			//	bc.push(-1);
 
 
-
+			//if (&bc != NULL && !tg.is_canceling()) {
+			//	while (!bc.is_empty()) {}
+			//	bc.push(0);
+			//	//while (!bc.is_empty()) {}
+			//}
 
 //#ifdef _DEBUG
 			QueryPerformanceCounter(&end);
@@ -363,6 +380,8 @@ namespace Nomad {
 			char buffer [90];
 			sprintf_s(buffer, 90, "--- Time elapsed: %4.2f min", result / 60);
 			//sprintf(buffer, "%s : %4.2f min", "--- Time elapsed: ", result / 60);
+
+			//Concurrency::wait(10);
 
 			CallBackStruct callBackParam;
 			callBackParam.code = 2;

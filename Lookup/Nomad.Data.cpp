@@ -190,7 +190,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 
 				//"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL"
 				std::stringstream stmt;
-				stmt << "SELECT count(*) FROM " << dbSettings[1] << " WHERE datalength(" << dbSettings[3] << ") IS NOT NULL";
+				stmt << "SELECT count(*) FROM " << dbSettings[1];
+				//stmt << "SELECT count(*) FROM " << dbSettings[1] << " WHERE datalength(" << dbSettings[3] << ") IS NOT NULL";		// dbSettings[3] - "dbFingerColumn" 
 
 				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
 				//rc = SQLExecDirect(hStmt, (SQLCHAR*)"SELECT count(*) FROM Egy_T_FingerPrint WHERE datalength(AppWsq) IS NOT NULL", SQL_NTS);
@@ -219,7 +220,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 			rc = SQLAllocHandle( SQL_HANDLE_STMT, hDBC, &hStmt );
 			if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO) {
 				std::stringstream stmt;
-				stmt << "SELECT " << dbSettings[2] << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " <<  dbSettings[2] << " ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				stmt << "SELECT " << dbSettings[2] << " FROM " << dbSettings[1] << " WITH (NOLOCK) ORDER BY " << dbSettings[2] << " ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
+				//stmt << "SELECT " << dbSettings[2] << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " <<  dbSettings[2] << " ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
 				//stmt << "SELECT AppID FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << *appid << " ROWS FETCH NEXT 1 ROWS ONLY ";
 				rc = SQLExecDirect(hStmt, (SQLCHAR*)stmt.str().c_str(), SQL_NTS);
 				if (SQL_SUCCEEDED(rc) || rc == SQL_SUCCESS_WITH_INFO) {
@@ -371,7 +373,8 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 				stmt << fingerList[i];
 			}
 
-			stmt << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " << dbSettings[2] << " ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			stmt << " FROM " << dbSettings[1] << " WITH (NOLOCK) ORDER BY " << dbSettings[2] << " ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
+			//stmt << " FROM " << dbSettings[1] << " WITH (NOLOCK) WHERE datalength(" << dbSettings[3] << ") IS NOT NULL ORDER BY " << dbSettings[2] << " ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 
 			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
 			//stmt << " FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET " << from << " ROWS FETCH NEXT " << limit << " ROWS ONLY ";
@@ -599,9 +602,7 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 
 			if (_bc != NULL) {
 				//if (getTerminationState())
-				if (_tg->is_canceling())
-					_bc->push(-2);
-				else
+//				if (!_tg->is_canceling())
 					_bc->push(-1);
 			}
 

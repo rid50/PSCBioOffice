@@ -3061,8 +3061,26 @@ namespace PSCBioIdentification
                 backgroundWorkerCachingService.CancelAsync();
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 InstanceContext context = new InstanceContext(callback);
-                var client = new CachePopulateService.PopulateCacheServiceClient(context);
-                client.Terminate();
+
+                if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                {
+                    //context = new InstanceContext(callback);
+                    var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                    client.Terminate();
+                }
+                else
+                {
+                    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                    {
+                        terminateMatchingService();
+                    }
+                    else
+                    {
+                        //context = new InstanceContext(callback);
+                        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                        client.terminateMatchingService();
+                    }
+                }
 
                 manageCacheButton.Enabled = false;
 

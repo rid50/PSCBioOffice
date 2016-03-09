@@ -42,6 +42,14 @@ public:
 		return res;
 	}
 
+	bool is_empty()
+	{
+		std::lock_guard<std::mutex> lk(mut);
+		if (data_queue.empty())
+			return true;
+		return false;
+	}
+
 	bool try_pop(T& value)
 	{
 		std::lock_guard<std::mutex> lk(mut);

@@ -76,7 +76,7 @@ namespace PSCBioIdentification
 
             _mre = mre;
 
-            _callBack = new CallbackFromCacheFillingService { TotalRecords = 0 };
+            _callBack = new CallbackFromCacheFillingService { TotalRecords = 0, RunningSum = 0 };
             _callBack.MyEvent += MyEvent;
             InstanceContext context = new InstanceContext(_callBack);
 
@@ -239,7 +239,7 @@ namespace PSCBioIdentification
 
                             //var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
                             client.fillCache(record.fingerList, record.fingerListSize, record.appSettings);
-                            //_mre.WaitOne();
+                            _mre.WaitOne();
                         }
                     }
                 }
