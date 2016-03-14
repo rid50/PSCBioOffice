@@ -37,12 +37,12 @@ namespace Nomad {
 		//}
 		//fnNotify _callBack;
 
-		fnCallBack _callBack;
+		//fnCallBack _callBack;
 
-		//void MySetCallBack(fnNotify callBack) {
-		void __stdcall SetCallBack(fnCallBack callBack) {
-			_callBack = callBack;
-		}
+		////void MySetCallBack(fnNotify callBack) {
+		//void __stdcall SetCallBack(fnCallBack callBack) {
+		//	_callBack = callBack;
+		//}
 
 		void __stdcall terminateMatchingService() {
 			//int k = 0;
@@ -54,7 +54,7 @@ namespace Nomad {
 			catch (std::exception& e) {}
 		}
 
-		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[]) {
+		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[], fnCallBack callBack) {
 			Nomad::Data::Odbc::fillOnly = true;
 			__int32 messageSize = MESSAGE_SIZE;
 			//char errorMessage[messageSize];
@@ -69,7 +69,7 @@ namespace Nomad {
 			////strcpy_s(callBackParam.text, 5, "kuku" + '\0');
 			//_callBack(&callBackParam);
 				
-			run(fingerList, fingerListSize, NULL, 0, appSettings, errorMessage, messageSize, _callBack);
+			run(fingerList, fingerListSize, NULL, 0, appSettings, errorMessage, messageSize, callBack);
 
 			if (strlen(errorMessage) != 0) {
 				CallBackStruct callBackParam;
@@ -77,7 +77,7 @@ namespace Nomad {
 				size_t length = strlen(errorMessage);
 				mbstowcs_s(&length, callBackParam.text, errorMessage, length);
 				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-				_callBack(&callBackParam);
+				callBack(&callBackParam);
 			}
 
 			delete[] errorMessage;
@@ -218,7 +218,7 @@ namespace Nomad {
 				size_t length = strlen(chars);
 				mbstowcs_s(&length, callBackParam.text, chars, length);
 				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-				_callBack(&callBackParam);
+				callBack(&callBackParam);
 			}
 			//return retcode;
 			//odbcPtr->enroll(record, size);
@@ -239,9 +239,10 @@ namespace Nomad {
 			//for (int k = 0; k < 100; k++) {
 //			vector<int> results;
 
-			//if (&bc != NULL) {
+			//task<void> t;
+			//if (&bc != NULL && callBack != NULL) {
 			//	//process_queue(callBack, bc, topindex, tg);
-			//	create_task([&]() {
+			//	t = create_task([&]() {
 			//		process_queue(callBack, bc, topindex, tg);
 			//	});
 			//}
@@ -297,43 +298,15 @@ namespace Nomad {
 
 //					Nomad::Data::Odbc::terminate(true);
 
-					//int k = 5;
-//					process_queue(callBack, bc, topindex);
+
+					process_queue(callBack, bc, topindex, tg);
 					//process_queue_async(process_queue(callBack, bc, topindex)).get();
 
-					//int m = 5;
-/*
-					while (true) {
-						shared_ptr<int> i = bc.wait_and_pop();
-						if (*i.get() == -1 && --topindex == 0)
-							break;
-
-						Concurrency::wait(100);
-						CallBackStruct callBackParam;
-						callBackParam.code = 1;
-
-						//std::stringstream strm;
-						//strm << NumRowsFetched;
-						string temp = to_string(*i.get());
-						char const* chars = temp.c_str();
-
-						size_t length = strlen(chars);
-
-						//size_t length = strlen("100");
-						mbstowcs_s(&length, callBackParam.text, chars, length);
-						//mbstowcs_s(&length, callBackParam.text, "100", length);
-						//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-						callBack(&callBackParam);
-					}
-*/
 				});
 
-				//Nomad::Data::Odbc::terminate(true);
 
-				//int k = 5;
-
-				if (&bc != NULL)
-					process_queue(callBack, bc, topindex, tg);
+				//if (&bc != NULL)
+				//	process_queue(callBack, bc, topindex, tg);
 
 				tg.wait();
 			} else {
@@ -342,7 +315,7 @@ namespace Nomad {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {
 					try {
-						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, _callBack);
+						retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage, callBack);
 						//retcode = odbcPtr->exec((unsigned long int)(i * limit + 80000), limit, fingerList, fingerListSize, &errMessage, _callBack);
 					} catch (std::exception& e) {
 						errMessage = "Error: ";
@@ -369,27 +342,30 @@ namespace Nomad {
 			//	//while (!bc.is_empty()) {}
 			//}
 
+			//t.get();
+
 //#ifdef _DEBUG
-			QueryPerformanceCounter(&end);
-			QueryPerformanceFrequency(&freq);
+			if (callBack != NULL) {
+				QueryPerformanceCounter(&end);
+				QueryPerformanceFrequency(&freq);
 
-			double result = (end.QuadPart - begin.QuadPart) / (double) freq.QuadPart;
+				double result = (end.QuadPart - begin.QuadPart) / (double) freq.QuadPart;
 
-			//printf("%s : %4.2f ms\n", "ODBC - Time elapsed: ", result * 1000);
+				//printf("%s : %4.2f ms\n", "ODBC - Time elapsed: ", result * 1000);
 
-			char buffer [90];
-			sprintf_s(buffer, 90, "--- Time elapsed: %4.2f min", result / 60);
-			//sprintf(buffer, "%s : %4.2f min", "--- Time elapsed: ", result / 60);
+				char buffer [90];
+				sprintf_s(buffer, 90, "--- Time elapsed: %4.2f min", result / 60);
+				//sprintf(buffer, "%s : %4.2f min", "--- Time elapsed: ", result / 60);
 
-			//Concurrency::wait(10);
+				//Concurrency::wait(10);
 
-			CallBackStruct callBackParam;
-			callBackParam.code = 2;
-			size_t length = strlen(buffer);
-			mbstowcs_s(&length, callBackParam.text, buffer, length);
-			//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-			_callBack(&callBackParam);
-
+				CallBackStruct callBackParam;
+				callBackParam.code = 2;
+				size_t length = strlen(buffer);
+				mbstowcs_s(&length, callBackParam.text, buffer, length);
+				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+				callBack(&callBackParam);
+			}
 			//printf ("%s",buffer);
 
 			//printStatusStatement(result);
@@ -417,9 +393,15 @@ namespace Nomad {
 					strcpy_s(errorMessage, errMessage.length() + 1, errMessage.c_str());
 			}
 
-			//CallBackStruct callBackParam;
-			callBackParam.code = 0;
-			_callBack(&callBackParam);
+			if (callBack != NULL) {
+				CallBackStruct callBackParam;
+				callBackParam.code = 0;
+				callBack(&callBackParam);
+			}
+
+			if (&bc != NULL) {
+				bc.empty();
+			}
 
 			return retcode;
 		}

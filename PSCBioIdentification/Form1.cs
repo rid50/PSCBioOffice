@@ -452,7 +452,12 @@ namespace PSCBioIdentification
 
         private NDevice GetSelectedDevice()
         {
-            return scannersListBox.SelectedItem == null ? null : (NDevice)scannersListBox.SelectedItem;
+            return (NDevice)this.Invoke((Func<NDevice>)(() =>
+            {
+                return scannersListBox.SelectedItem == null ? null : (NDevice)scannersListBox.SelectedItem;
+            }));
+
+//            return scannersListBox.SelectedItem == null ? null : (NDevice)scannersListBox.SelectedItem;
         }
 
         private void UpdateScannerList(bool refresh)
@@ -648,7 +653,7 @@ namespace PSCBioIdentification
                 //subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
                 //fingerView2.Finger = subjectFinger;
 
-                _biometricClient.FingersTemplateSize = NTemplateSize.Large;
+                _biometricClient.FingersTemplateSize = NTemplateSize.Small;
                 //_biometricClient.FingersReturnProcessedImage = true;
 
                 AsyncCallback callback = new AsyncCallback(OnImage);

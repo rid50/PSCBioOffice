@@ -602,7 +602,9 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 
 			if (_bc != NULL) {
 				//if (getTerminationState())
-//				if (!_tg->is_canceling())
+				if (_tg->is_canceling())
+					_bc->push(0);
+				else
 					_bc->push(-1);
 			}
 

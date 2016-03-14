@@ -31,10 +31,10 @@ namespace Nomad {
 		//typedef void (__stdcall *fnNotify)(int notifyCode, NotifyStruct* notifyInfo);
 		//extern "C" void __declspec(dllexport) __stdcall MySetCallBack(fnNotify callBack);
 
-		extern "C" void __declspec(dllexport) __stdcall SetCallBack(fnCallBack callBack);
+		//extern "C" void __declspec(dllexport) __stdcall SetCallBack(fnCallBack callBack);
 
 		extern "C"
-		void __declspec(dllexport) __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[]);
+		void __declspec(dllexport) __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[], fnCallBack callBack);
 
 		extern "C"
 		unsigned __int32 __declspec(dllexport) __stdcall match(char *fingerList[], __int32 fingerListSize, 

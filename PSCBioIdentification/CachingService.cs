@@ -25,10 +25,10 @@ namespace PSCBioIdentification
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
             string[] fingerList, int fingerListSize,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] appSettings);
+            string[] appSettings, CallBackDelegate callback);
 
-        [DllImport("Lookup.dll", CharSet = CharSet.Auto)]
-        public static extern void SetCallBack(CallBackDelegate callback);
+        //[DllImport("Lookup.dll", CharSet = CharSet.Auto)]
+        //public static extern void SetCallBack(CallBackDelegate callback);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public struct CallBackStruct
@@ -224,9 +224,9 @@ namespace PSCBioIdentification
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
                             //CallBackDelegate d = new CallBackDelegate(OnCallback);
-                            SetCallBack(new CallBackDelegate(OnCallback));
+                            //SetCallBack(new CallBackDelegate(OnCallback));
 
-                            fillCache(record.fingerList, record.fingerListSize, record.appSettings);
+                            fillCache(record.fingerList, record.fingerListSize, record.appSettings, new CallBackDelegate(OnCallback));
                         }
                         else
                         {

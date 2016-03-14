@@ -15,11 +15,11 @@ namespace PSCBioIdentification.UnmanagedMatchingService {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="UnmanagedMatchingService.IMatchingService", CallbackContract=typeof(PSCBioIdentification.UnmanagedMatchingService.IMatchingServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IMatchingService {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchingService/fillCache2")]
-        void fillCache2(string[] fingerList, int fingerListSize, string[] appSettings);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/fillCache", ReplyAction="http://tempuri.org/IMatchingService/fillCacheResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchingService/fillCache")]
         void fillCache(string[] fingerList, int fingerListSize, string[] appSettings);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/fillCache2", ReplyAction="http://tempuri.org/IMatchingService/fillCache2Response")]
+        void fillCache2(string[] fingerList, int fingerListSize, string[] appSettings);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
         uint match(string[] fingerList, int fingerListSize, byte[] probeTemplate, uint probeTemplateSize, string[] appSettings, ref System.Text.StringBuilder errorMessage, int messageSize);
@@ -72,12 +72,12 @@ namespace PSCBioIdentification.UnmanagedMatchingService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void fillCache2(string[] fingerList, int fingerListSize, string[] appSettings) {
-            base.Channel.fillCache2(fingerList, fingerListSize, appSettings);
-        }
-        
         public void fillCache(string[] fingerList, int fingerListSize, string[] appSettings) {
             base.Channel.fillCache(fingerList, fingerListSize, appSettings);
+        }
+        
+        public void fillCache2(string[] fingerList, int fingerListSize, string[] appSettings) {
+            base.Channel.fillCache2(fingerList, fingerListSize, appSettings);
         }
         
         public uint match(string[] fingerList, int fingerListSize, byte[] probeTemplate, uint probeTemplateSize, string[] appSettings, ref System.Text.StringBuilder errorMessage, int messageSize) {
