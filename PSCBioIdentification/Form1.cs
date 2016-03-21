@@ -2252,13 +2252,22 @@ namespace PSCBioIdentification
 
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         //MessageBox.Show(string.Format("Error creating image retrieved from database {0}", ex.Message),
                         //  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                         //string text = string.Format("Error creating image retrieved from database {0}", ex.Message);
                         //ShowErrorMessage(text);
+                        if (ex.Message == "Operation is not activated")
+                        {
+
+                            this.Invoke((Action<string>)((text) =>
+                            {
+                                ShowErrorMessage(text);
+                            }), ex.Message);
+                            return false;
+                        }
 
                         continue;
                     }

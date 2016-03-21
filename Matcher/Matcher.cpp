@@ -188,6 +188,7 @@ namespace Nomad
 			//}
 		}
 
+//		bool Matcher::match(void *galleryTemplate, unsigned __int32 galleryTemplateSize) {
 		bool Matcher::match(void *galleryTemplate, unsigned __int32 galleryTemplateSize) {
 			NResult				result;
 			//HNBiometricClient	hBiometricClient;

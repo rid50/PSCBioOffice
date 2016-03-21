@@ -66,14 +66,22 @@ namespace PSCBioIdentification
                     if ((e.Result as byte[][])[0] != null)
                     {
                         if (!processEnrolledData(e.Result as byte[][]))
-                            EnableControls(true);
+                        {
+                            this.Invoke((Action)(() =>
+                            {
+                                EnableControls(true);
+                            }));
+                        }
                     }
                     else
                     {
-                        stopProgressBar();
-                        LogLine("ID is not valid", true);
-                        ShowErrorMessage("ID is not valid");
-                        EnableControls(true);
+                        this.Invoke((Action)(() =>
+                        {
+                            stopProgressBar();
+                            LogLine("ID is not valid", true);
+                            ShowErrorMessage("ID is not valid");
+                            EnableControls(true);
+                        }));
                     }
                 }
             }

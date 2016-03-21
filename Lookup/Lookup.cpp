@@ -247,7 +247,7 @@ namespace Nomad {
 			//	});
 			//}
 
-			if (1) {
+			if (0) {
 				//process_queue_async(process_queue(callBack, bc, topindex));
 				//task_group tg;
 				//tg.run_and_wait([&] {
@@ -310,7 +310,7 @@ namespace Nomad {
 
 				tg.wait();
 			} else {
-				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(NULL, probeTemplate, probeTemplateSize, appSettings, NULL);
+				Nomad::Data::Odbc *odbcPtr = new Nomad::Data::Odbc(NULL, probeTemplate, probeTemplateSize, appSettings, &tg);
 				for (unsigned int i = 0; i < topindex; i++) {
 					//if (odbc.exec(i * limit, i * limit + limit, limit) != 0)
 					//if ((retcode = odbcPtr->exec((unsigned long int)(i * limit), limit, fingerList, fingerListSize, &errMessage)) > 0) {

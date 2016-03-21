@@ -122,7 +122,8 @@ namespace PSCBioIdentification
                 record = new Record();
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
-                record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
+                //record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
+                record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
                 record.probeTemplate = e.Argument as byte[];
                 //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
                 record.errorMessage = new System.Text.StringBuilder(512);
