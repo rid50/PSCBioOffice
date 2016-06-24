@@ -20,33 +20,37 @@ namespace PSCBioIdentification
             ConfigurationServiceClient configurationServiceClient = null;
             //ServiceHost configurationServiceClient = null;
             Dictionary<string, string> settings = null;
-
-            String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
-            //configurationServiceClient.Endpoint.Address
-
-            //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            //var serviceModel = configFile.SectionGroups["system.serviceModel"];
-            //var clientSection = serviceModel.Sections["client"];
-
-            //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
-            ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
-            //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
-            //{
-            //    var address = cs.Address;
-            //}
-
-            String serviceName = "BasicHttpBinding_IConfigurationService";
-
-            Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
-                                                       .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
-
-            if (baseAddress.Length != 0)
-                baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
-            else
-                baseAddress = endPoint.AbsoluteUri;
+            String baseAddress = null;
+            ClientSection serviceModelClient = null;
 
             if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
             {
+                baseAddress = ConfigurationManager.AppSettings["endPointServer"];
+                //configurationServiceClient.Endpoint.Address
+
+                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                //var serviceModel = configFile.SectionGroups["system.serviceModel"];
+                //var clientSection = serviceModel.Sections["client"];
+
+                //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
+
+                serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+                //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
+                //{
+                //    var address = cs.Address;
+                //}
+
+                String serviceName = "BasicHttpBinding_IConfigurationService";
+
+                Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
+                                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
+
+                if (baseAddress.Length != 0)
+                    baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
+                //baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
+                else
+                    baseAddress = endPoint.AbsoluteUri;
+
                 configurationServiceClient = new ConfigurationServiceClient(serviceName, baseAddress);
                 //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));
 
@@ -59,10 +63,7 @@ namespace PSCBioIdentification
                 }
 
                 settings.Clear();
-            }
 
-            if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
-            {
                 connectionStringCollection = new ConnectionStringSettingsCollection();
 
                 settings = configurationServiceClient.ConnectionStrings();

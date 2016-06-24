@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 //using System.Configuration;
 //using System.Data.SqlClient;
 using System.Data;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using PSCBioIdentification;
+using System.Collections.Generic;
 
 namespace DataSourceServices
 {
@@ -271,6 +273,68 @@ namespace DataSourceServices
 
         }
 */
+        private String getConnectionString()
+        {
+            string conn = MyConfigurationSettings.ConnectionStrings["ConnectionString"].ToString();
+            string databaseServer = System.Configuration.ConfigurationManager.AppSettings["databaseServer"];
+
+            try
+            {
+
+                //var stw = new System.Diagnostics.Stopwatch();
+                //stw.Start();
+                //string[] parameters = conn.Split(';');
+                //KeyValuePair<String, int> element = parameters.Select((item, index) => new KeyValuePair<String, int>(item, index)).Where(item => item.Key.Contains("Server=") || item.Key.Contains("Data Source=")).First();
+                //string[] parameter = element.Key.Split('=');
+                //parameter[1] = databaseServer;
+                //parameters[element.Value] = String.Join("=", parameter);
+                //String conn2 = String.Join(";", parameters);
+                //System.Diagnostics.Debug.WriteLine("1: {0}: {1} us", conn2, stw.ElapsedTicks * 1000000 / System.Diagnostics.Stopwatch.Frequency);
+                ////System.Diagnostics.Debug.WriteLine("1: {0}: {1} ms", conn2, stw.Elapsed.TotalMilliseconds);
+
+                //stw.Restart();
+                //System.Collections.Generic.List<string> list = parameters.ToList();
+                //list.Select(stri => stri.Replace("Server=(localhost)", "Server=" + databaseServer));
+                //conn2 = String.Join(";", list);
+                //System.Diagnostics.Debug.WriteLine("2: {0}: {1} us", conn2, stw.ElapsedTicks * 1000000 / System.Diagnostics.Stopwatch.Frequency);
+                ////System.Diagnostics.Debug.WriteLine("2: {0}: {1} ms", conn2, stw.Elapsed.TotalMilliseconds);
+
+                //stw.Restart();
+                //System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"Server=[^;]*");
+                //conn = r.Replace(conn, "Server=" + databaseServer);
+                //System.Diagnostics.Debug.WriteLine("3: {0}: {1} us", conn, stw.ElapsedTicks * 1000000 / System.Diagnostics.Stopwatch.Frequency);
+                ////System.Diagnostics.Debug.WriteLine("3: {0}: {1} ms", conn2, stw.Elapsed.TotalMilliseconds);
+
+                //stw.Restart();
+
+                string server = "Server=";
+                int index1 = conn.IndexOf(server);
+                if (index1 == -1)
+                {
+                    server = "Data Source=";
+                    index1 = conn.IndexOf(server);
+                }
+
+                if (index1 == -1)
+                    throw new Exception("The database connection string is not valid");
+
+                int index2 = conn.IndexOf(";", index1);
+                var str = new StringBuilder();
+                str.Append(conn.Substring(0, index1 + server.Length));
+                str.Append(databaseServer);
+                if (index2 != -1)
+                    str.Append(conn.Substring(index2));
+                conn = str.ToString();
+                //System.Diagnostics.Debug.WriteLine("4: {0}: {1} us", conn2, stw.ElapsedTicks * 1000000 / System.Diagnostics.Stopwatch.Frequency);
+                //System.Diagnostics.Debug.WriteLine("4: {0}: {1} ms", conn2, stw.Elapsed.TotalMilliseconds);
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+                ///throw new Exception("Connection to a database is not available");
+            }
+
+            return conn;
+        }
+
         private SqlConnection buildConnectionString()
         {
             String serverName = MyConfigurationSettings.AppSettings["ServerName"];
@@ -279,14 +343,17 @@ namespace DataSourceServices
             else
                 serverName = "Data Source=" + serverName;
 
-            if (PSCBioIdentification.Credentials.Default.IntegratedSecurity == true) {
+            if (PSCBioIdentification.Credentials.Default.IntegratedSecurity == true)
+            {
                 return new SqlConnection(
                     serverName +
                     //"Data Source=." +
                     //"Data Source=" + decrypt(PSCBioIdentification.Credentials.Default.ServerName, "PSC") +
                     ";Database=" + decrypt(PSCBioIdentification.Credentials.Default.DataBaseName, "PSC") +
                     ";Integrated Security=True");
-            } else {
+            }
+            else
+            {
                 return new SqlConnection(
                     serverName +
                     //"Data Source=" + decrypt(PSCBioIdentification.Credentials.Default.ServerName, "PSC") +
@@ -294,19 +361,6 @@ namespace DataSourceServices
                     ";User ID=" + decrypt(PSCBioIdentification.Credentials.Default.DBUser, "PSC") +
                     ";Password=" + decrypt(PSCBioIdentification.Credentials.Default.DBPass, "PSC"));
             }
-        }
-
-        private String getConnectionString()
-        {
-            string conn = null;
-            try
-            {
-                conn = MyConfigurationSettings.ConnectionStrings["ConnectionString"].ToString();
-            } catch (Exception) {
-                throw new Exception("Connection to a database is not available");
-            }
-
-            return conn;
         }
 
         private static String decrypt(String strEncrypted, String strKey)
