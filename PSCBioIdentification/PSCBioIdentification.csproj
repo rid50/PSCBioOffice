@@ -111,6 +111,7 @@
       <HintPath>..\dotNET\Neurotec.Media.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -202,9 +203,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app - Copy.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -240,6 +238,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\CachePopulateService\PopulateCacheService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CachePopulateService\PopulateCacheService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CachePopulateService\PopulateCacheService31.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ConfigurationService\ConfigurationService.wsdl" />

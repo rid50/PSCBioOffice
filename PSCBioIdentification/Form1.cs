@@ -238,6 +238,8 @@ namespace PSCBioIdentification
 
             //var client = new CacheMatchingService.MatchingServiceClient();
 
+            var conf = new MyConfigurationSettings();
+
             CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
             InstanceContext context = new InstanceContext(callback);
             var client = new CachePopulateService.PopulateCacheServiceClient(context);
@@ -247,7 +249,7 @@ namespace PSCBioIdentification
             {
                 fingerList = client.getFingerList();
             }
-            catch (FaultException<string> fault) {
+            catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException> fault) {
                 //labelCacheUnavailable.Text = fault.Detail;
                 fingerList = null;
                 //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);

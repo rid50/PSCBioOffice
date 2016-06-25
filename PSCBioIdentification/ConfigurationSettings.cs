@@ -7,25 +7,29 @@ using PSCBioIdentification.ConfigurationService;
 using System.Collections.Specialized;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
+using System.Reflection;
 
 namespace PSCBioIdentification
 {
-    static class MyConfigurationSettings
+    public class MyConfigurationSettings
     {
         static private NameValueCollection appSettingsCollection = null;
         static private ConnectionStringSettingsCollection connectionStringCollection = null;
-        
+
+        public MyConfigurationSettings() { }
+
         static MyConfigurationSettings()
         {
             ConfigurationServiceClient configurationServiceClient = null;
             //ServiceHost configurationServiceClient = null;
             Dictionary<string, string> settings = null;
-            String baseAddress = null;
-            ClientSection serviceModelClient = null;
 
-            if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
+            //if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
+            String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
+            if (endPointHost != "localhost")
             {
-                baseAddress = ConfigurationManager.AppSettings["endPointServer"];
+
+                //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
                 //configurationServiceClient.Endpoint.Address
 
                 //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -34,24 +38,68 @@ namespace PSCBioIdentification
 
                 //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
 
-                serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+                //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
                 //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
                 //{
                 //    var address = cs.Address;
                 //}
 
-                String serviceName = "BasicHttpBinding_IConfigurationService";
+                //String serviceName = "BasicHttpBinding_IConfigurationService";
 
-                Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
-                                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
+                ClientSection serviceModelClientSection = serviceModelSection.Client;
+                if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
+                {
+                    foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
+                    {
+                        var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                        endPoint.Address = uri;
+                        //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                    }
+                    //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
+                      //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
 
-                if (baseAddress.Length != 0)
-                    baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
+                    //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
+                    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+
+                    //serviceModelClientSection.Endpoints[0].Address = uri;
+                    config.Save();
+
+                    ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
+                }
+
+                //var c = new ServiceEndpointElement();
+
+                //var element = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+                //var collection = typeof(ServiceElementCollection).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+                //element.SetValue(ConfigurationManager.GetSection("system.serviceModel/client"), false);
+                //collection.SetValue(ConfigurationManager.GetSection("system.serviceModel/client"), false);
+
+                //Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
+                //                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
+
+                //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+
+                //foreach (ChannelEndpointElement endPoint2 in serviceModelClient.Endpoints)
+                //{
+                //    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                //    var u = endPoint2.Address;
+                //    //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                //}
+
+                //Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
+                //                                           .Select(endpoint => { endpoint.Address.Host = endPointAddress; return endpoint; });
+
+
+                //if (endPointAddress.Length != 0)
+                //endPointAddress = endPoint.Scheme + "://" + endPointAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
                 //baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
-                else
-                    baseAddress = endPoint.AbsoluteUri;
+                //else
+                //  endPointAddress = endPoint.AbsoluteUri;
 
-                configurationServiceClient = new ConfigurationServiceClient(serviceName, baseAddress);
+                configurationServiceClient = new ConfigurationServiceClient();
+                //configurationServiceClient = new ConfigurationServiceClient(serviceName, endPointAddress);
                 //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));
 
                 appSettingsCollection = new NameValueCollection();
@@ -78,7 +126,7 @@ namespace PSCBioIdentification
         {
             get
             {
-                if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
+                if (appSettingsCollection != null)
                     return appSettingsCollection;
                 else
                     return ConfigurationManager.AppSettings;
@@ -89,7 +137,7 @@ namespace PSCBioIdentification
         {
             get
             {
-                if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
+                if (connectionStringCollection != null)
                     return connectionStringCollection;
                 else
                     return ConfigurationManager.ConnectionStrings;

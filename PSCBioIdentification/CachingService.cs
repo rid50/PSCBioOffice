@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -12,6 +13,7 @@ using System.ServiceModel;
 using System.Threading;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.ServiceModel.Configuration;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -87,6 +89,35 @@ namespace PSCBioIdentification
                 //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
                 //callback.MyEvent += MyEvent;
                 //InstanceContext context = new InstanceContext(callback);
+/*
+                String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
+                //configurationServiceClient.Endpoint.Address
+
+                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                //var serviceModel = configFile.SectionGroups["system.serviceModel"];
+                //var clientSection = serviceModel.Sections["client"];
+
+                //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
+
+                ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+                //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
+                //{
+                //    var address = cs.Address;
+                //}
+
+                String serviceName = "WSDualHttpBinding_IPopulateCacheService";
+
+                Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
+                                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
+
+                if (baseAddress.Length != 0)
+                    baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
+                //baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
+                else
+                    baseAddress = endPoint.AbsoluteUri;
+
+                var client = new CachePopulateService.PopulateCacheServiceClient(context, serviceName, baseAddress);
+*/
 
                 var client = new CachePopulateService.PopulateCacheServiceClient(context);
 
