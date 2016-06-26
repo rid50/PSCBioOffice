@@ -249,7 +249,7 @@ namespace PSCBioIdentification
             {
                 fingerList = client.getFingerList();
             }
-            catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException> fault) {
+            catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>) {
                 //labelCacheUnavailable.Text = fault.Detail;
                 fingerList = null;
                 //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
@@ -632,7 +632,8 @@ namespace PSCBioIdentification
                     //fingerView2.Finger = subjectFinger;
                     //fingerView2.ZoomToFit = true;
                     fingerView2.ShownImage = ShownImage.Result;
-                    _biometricClient.FingersReturnProcessedImage = true;
+                    //_biometricClient.FingersReturnProcessedImage = true;
+                    _biometricClient.FingersReturnBinarizedImage = true;
                 }
 
                 if (_subject2.Fingers.Count > 0)

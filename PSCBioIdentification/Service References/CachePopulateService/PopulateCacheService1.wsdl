@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PopulateCacheService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IPopulateCacheService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex" />
+        <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy" />
+        <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IPopulateCacheService_Run_InputMessage">
+    <wsdl:part name="parameters" element="tns:Run" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Run2_InputMessage">
+    <wsdl:part name="parameters" element="tns:Run2" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Run2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:Run2Response" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getFingerList_InputMessage">
+    <wsdl:part name="parameters" element="tns:getFingerList" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getFingerList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getFingerListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getFingerList_ValidationExceptionFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations" name="detail" element="q1:ValidationException" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getExpirationTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:getExpirationTime" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_getExpirationTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getExpirationTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Terminate_InputMessage">
+    <wsdl:part name="parameters" element="tns:Terminate" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Terminate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TerminateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_RespondWithRecordNumbers_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithRecordNumbers" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_RespondWithText_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithText" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_RespondWithError_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithError" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:CacheOperationComplete" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="IPopulateCacheService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run" message="tns:IPopulateCacheService_Run_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run2">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2" message="tns:IPopulateCacheService_Run2_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2Response" message="tns:IPopulateCacheService_Run2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getFingerList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerList" message="tns:IPopulateCacheService_getFingerList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListResponse" message="tns:IPopulateCacheService_getFingerList_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault" name="ValidationExceptionFault" message="tns:IPopulateCacheService_getFingerList_ValidationExceptionFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getExpirationTime">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTime" message="tns:IPopulateCacheService_getExpirationTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse" message="tns:IPopulateCacheService_getExpirationTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Terminate">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Terminate" message="tns:IPopulateCacheService_Terminate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/TerminateResponse" message="tns:IPopulateCacheService_Terminate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithRecordNumbers">
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithRecordNumbers" message="tns:IPopulateCacheService_RespondWithRecordNumbers_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithText">
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithText" message="tns:IPopulateCacheService_RespondWithText_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithError">
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithError" message="tns:IPopulateCacheService_RespondWithError_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CacheOperationComplete">
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/CacheOperationComplete" message="tns:IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSDualHttpBinding_IPopulateCacheService" type="tns:IPopulateCacheService">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_IPopulateCacheService_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Run">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Run2">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFingerList">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/getFingerList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ValidationExceptionFault">
+        <soap12:fault use="literal" name="ValidationExceptionFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getExpirationTime">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/getExpirationTime" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Terminate">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Terminate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithRecordNumbers">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/RespondWithRecordNumbers" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithText">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/RespondWithText" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithError">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/RespondWithError" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CacheOperationComplete">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/CacheOperationComplete" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PopulateCacheService">
+    <wsdl:port name="WSDualHttpBinding_IPopulateCacheService" binding="tns:WSDualHttpBinding_IPopulateCacheService">
+      <soap12:address location="http://localhost/AppFabricCacheService/PopulateCacheService.svc" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost/AppFabricCacheService/PopulateCacheService.svc</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

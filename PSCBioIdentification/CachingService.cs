@@ -201,10 +201,18 @@ namespace PSCBioIdentification
 
                 //ar.Clear();
                 //int id = Thread.CurrentThread.ManagedThreadId;
-                client.Run(fingerList);
+                try
+                {
+                    client.Run(fingerList);
+                    _mre.WaitOne();
+                } catch(Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
                 //client.Run(new string[] { });
                 //client.Run(new string[] { "0" });
-                _mre.WaitOne();
+
+                //_mre.WaitOne();
 
                 //if (!backgroundWorkerCachingService.CancellationPending)
                 //    e.Result = list;
