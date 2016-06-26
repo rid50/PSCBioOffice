@@ -15,22 +15,22 @@ namespace PSCBioIdentification.CachePopulateService {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="CachePopulateService.IPopulateCacheService", CallbackContract=typeof(PSCBioIdentification.CachePopulateService.IPopulateCacheServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IPopulateCacheService {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run2")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        void Run(System.Collections.ArrayList fingerList);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Run2", ReplyAction="http://tempuri.org/IPopulateCacheService/Run2Response")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         void Run2(System.Collections.ArrayList fingerList);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Run", ReplyAction="http://tempuri.org/IPopulateCacheService/RunResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
+        void Run(System.Collections.ArrayList fingerList);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/getFingerList", ReplyAction="http://tempuri.org/IPopulateCacheService/getFingerListResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException), Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault", Name="ValidationException", Namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         System.Collections.ArrayList getFingerList();
         
@@ -85,12 +85,12 @@ namespace PSCBioIdentification.CachePopulateService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void Run(System.Collections.ArrayList fingerList) {
-            base.Channel.Run(fingerList);
-        }
-        
         public void Run2(System.Collections.ArrayList fingerList) {
             base.Channel.Run2(fingerList);
+        }
+        
+        public void Run(System.Collections.ArrayList fingerList) {
+            base.Channel.Run(fingerList);
         }
         
         public System.Collections.ArrayList getFingerList() {

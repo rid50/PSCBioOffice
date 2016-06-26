@@ -20,16 +20,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://pscservice/AppFabricCacheService/PopulateCacheService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/AppFabricCacheService/PopulateCacheService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="PopulateCacheService.disco" MetadataType="Disco" ID="f73cbccc-dbdd-4d33-922c-4230c0b7745f" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?disco" />
-    <MetadataFile FileName="PopulateCacheService3.xsd" MetadataType="Schema" ID="485ef8d6-9a6c-4d73-81de-f2c4a1edeb21" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd4" />
-    <MetadataFile FileName="PopulateCacheService31.xsd" MetadataType="Schema" ID="c22a291c-e3e9-42ff-8a18-e60e4304bdc2" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd3" />
-    <MetadataFile FileName="PopulateCacheService.xsd" MetadataType="Schema" ID="ae6f3d3a-6864-4598-947b-232c795f1204" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd2" />
-    <MetadataFile FileName="PopulateCacheService1.xsd" MetadataType="Schema" ID="552f389f-6536-4b67-91e7-4882577cdc63" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd1" />
-    <MetadataFile FileName="PopulateCacheService2.xsd" MetadataType="Schema" ID="a800082d-6c48-4469-89ba-239510103ced" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd0" />
-    <MetadataFile FileName="PopulateCacheService.wsdl" MetadataType="Wsdl" ID="e3db9f74-ab53-48ce-9014-cf447e6ca152" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/PopulateCacheService.svc?wsdl" />
+    <MetadataFile FileName="PopulateCacheService4.xsd" MetadataType="Schema" ID="87e7ec2b-1f5c-4ae7-9640-6e637953d96d" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd1" />
+    <MetadataFile FileName="PopulateCacheService41.xsd" MetadataType="Schema" ID="736ccda7-ca18-4af6-992a-3e6175ac2af9" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd3" />
+    <MetadataFile FileName="PopulateCacheService42.xsd" MetadataType="Schema" ID="f84dc59e-465b-43e9-b21a-488cec452d9b" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd4" />
+    <MetadataFile FileName="PopulateCacheService43.xsd" MetadataType="Schema" ID="3da834ed-2e91-4e8f-8e93-7cc6e12b1755" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd0" />
+    <MetadataFile FileName="PopulateCacheService44.xsd" MetadataType="Schema" ID="42ce37db-1758-4f30-a697-dca2ce989032" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd2" />
+    <MetadataFile FileName="PopulateCacheService1.wsdl" MetadataType="Wsdl" ID="6585add8-600f-401c-a301-9f08fa3480ce" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?wsdl" />
+    <MetadataFile FileName="PopulateCacheService1.disco" MetadataType="Disco" ID="0f380e8d-0bba-47f0-8973-bbc6cb17c950" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/PopulateCacheService.svc?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

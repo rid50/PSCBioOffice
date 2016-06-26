@@ -26,8 +26,8 @@ namespace PSCBioIdentification
 
             //if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
             String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
-            if (endPointHost != "localhost")
-            {
+            //if (endPointHost != "localhost")
+            //{
 
                 //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
                 //configurationServiceClient.Endpoint.Address
@@ -119,7 +119,7 @@ namespace PSCBioIdentification
                 {
                     connectionStringCollection.Add(new ConnectionStringSettings(key, settings[key]));
                 }
-            }
+            //}
         }
 
         static public NameValueCollection AppSettings

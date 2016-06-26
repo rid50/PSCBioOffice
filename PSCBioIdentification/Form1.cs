@@ -3191,7 +3191,8 @@ namespace PSCBioIdentification
 
                     stopProgressBar();
                     ShowStatusMessage("");
-                    MessageBox.Show(e.Error);
+                    ShowErrorMessage(e.Error);
+                    //MessageBox.Show(e.Error);
                     EnableControls(true);
                 }));
 

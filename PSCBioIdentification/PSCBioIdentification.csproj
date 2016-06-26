@@ -230,20 +230,20 @@
     <None Include="Service References\CacheMatchingService\MatchingService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService.wsdl" />
-    <None Include="Service References\CachePopulateService\PopulateCacheService.xsd">
+    <None Include="Service References\CachePopulateService\PopulateCacheService1.wsdl" />
+    <None Include="Service References\CachePopulateService\PopulateCacheService4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService1.xsd">
+    <None Include="Service References\CachePopulateService\PopulateCacheService41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService2.xsd">
+    <None Include="Service References\CachePopulateService\PopulateCacheService42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService3.xsd">
+    <None Include="Service References\CachePopulateService\PopulateCacheService43.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService31.xsd">
+    <None Include="Service References\CachePopulateService\PopulateCacheService44.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ConfigurationService\ConfigurationService.wsdl" />
@@ -271,6 +271,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\CachePopulateService\PopulateCacheService1.disco" />
     <None Include="Service References\UnmanagedMatchingService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -285,7 +286,6 @@
     </None>
     <None Include="Service References\CachePopulateService\configuration.svcinfo" />
     <None Include="Service References\CachePopulateService\configuration91.svcinfo" />
-    <None Include="Service References\CachePopulateService\PopulateCacheService.disco" />
     <None Include="Service References\CacheMatchingService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
