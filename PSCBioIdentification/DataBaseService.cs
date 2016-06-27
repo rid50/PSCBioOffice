@@ -276,7 +276,7 @@ namespace DataSourceServices
         private String getConnectionString()
         {
             string conn = MyConfigurationSettings.ConnectionStrings["ConnectionString"].ToString();
-            string databaseServer = System.Configuration.ConfigurationManager.AppSettings["databaseServer"];
+            string databaseServer = System.Configuration.ConfigurationManager.AppSettings["endPointHost"];
 
             try
             {
@@ -319,12 +319,17 @@ namespace DataSourceServices
                     throw new Exception("The database connection string is not valid");
 
                 int index2 = conn.IndexOf(";", index1);
-                var str = new StringBuilder();
-                str.Append(conn.Substring(0, index1 + server.Length));
-                str.Append(databaseServer);
-                if (index2 != -1)
-                    str.Append(conn.Substring(index2));
-                conn = str.ToString();
+
+                int indx = index1 + server.Length;
+                if (databaseServer != "localhost" && (conn.Substring(indx, index2 - indx) == "(local)" || conn.Substring(indx, index2 - indx) == "localhost"))
+                {
+                    var str = new StringBuilder();
+                    str.Append(conn.Substring(0, indx));
+                    str.Append(databaseServer);
+                    if (index2 != -1)
+                        str.Append(conn.Substring(index2));
+                    conn = str.ToString();
+                }
                 //System.Diagnostics.Debug.WriteLine("4: {0}: {1} us", conn2, stw.ElapsedTicks * 1000000 / System.Diagnostics.Stopwatch.Frequency);
                 //System.Diagnostics.Debug.WriteLine("4: {0}: {1} ms", conn2, stw.Elapsed.TotalMilliseconds);
             } catch (Exception ex) {

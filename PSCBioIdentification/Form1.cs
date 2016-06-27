@@ -238,7 +238,23 @@ namespace PSCBioIdentification
 
             //var client = new CacheMatchingService.MatchingServiceClient();
 
-            var conf = new MyConfigurationSettings();
+            //var conf = new MyConfigurationSettings();
+            MyConfigurationSettings conf;
+
+            try
+            {
+                conf = new MyConfigurationSettings();
+            }
+            catch (Exception)
+            {
+                ShowErrorMessage("Error connecting to endpoint server");
+                ShowRadioHideCheckButtons(true);
+                EnableControls(false);
+                manageCacheButton.Enabled = false;
+                return;
+                //MessageBox.Show("Error connecting to endpoint server");
+                //Application.Exit();
+            }
 
             CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
             InstanceContext context = new InstanceContext(callback);

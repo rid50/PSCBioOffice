@@ -24,102 +24,70 @@ namespace PSCBioIdentification
             //ServiceHost configurationServiceClient = null;
             Dictionary<string, string> settings = null;
 
-            //if (ConfigurationManager.AppSettings["ConfigurationProvider"] == "remote")
             String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
-            //if (endPointHost != "localhost")
+
+            //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
+            //configurationServiceClient.Endpoint.Address
+
+            //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //var serviceModel = configFile.SectionGroups["system.serviceModel"];
+            //var clientSection = serviceModel.Sections["client"];
+
+            //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
+
+            //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
+            //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
             //{
-
-                //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
-                //configurationServiceClient.Endpoint.Address
-
-                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                //var serviceModel = configFile.SectionGroups["system.serviceModel"];
-                //var clientSection = serviceModel.Sections["client"];
-
-                //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
-
-                //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
-                //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
-                //{
-                //    var address = cs.Address;
-                //}
-
-                //String serviceName = "BasicHttpBinding_IConfigurationService";
-
-                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
-                ClientSection serviceModelClientSection = serviceModelSection.Client;
-                if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
-                {
-                    foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
-                    {
-                        var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                        endPoint.Address = uri;
-                        //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                    }
-                    //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
-                      //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
-
-                    //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
-                    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-
-                    //serviceModelClientSection.Endpoints[0].Address = uri;
-                    config.Save();
-
-                    ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
-                }
-
-                //var c = new ServiceEndpointElement();
-
-                //var element = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
-                //var collection = typeof(ServiceElementCollection).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
-                //element.SetValue(ConfigurationManager.GetSection("system.serviceModel/client"), false);
-                //collection.SetValue(ConfigurationManager.GetSection("system.serviceModel/client"), false);
-
-                //Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
-                //                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
-
-                //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
-
-                //foreach (ChannelEndpointElement endPoint2 in serviceModelClient.Endpoints)
-                //{
-                //    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                //    var u = endPoint2.Address;
-                //    //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                //}
-
-                //Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
-                //                                           .Select(endpoint => { endpoint.Address.Host = endPointAddress; return endpoint; });
-
-
-                //if (endPointAddress.Length != 0)
-                //endPointAddress = endPoint.Scheme + "://" + endPointAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
-                //baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
-                //else
-                //  endPointAddress = endPoint.AbsoluteUri;
-
-                configurationServiceClient = new ConfigurationServiceClient();
-                //configurationServiceClient = new ConfigurationServiceClient(serviceName, endPointAddress);
-                //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));
-
-                appSettingsCollection = new NameValueCollection();
-
-                settings = configurationServiceClient.AppSettings();
-                foreach (var key in settings.Keys)
-                {
-                    appSettingsCollection.Add(key, settings[key]);
-                }
-
-                settings.Clear();
-
-                connectionStringCollection = new ConnectionStringSettingsCollection();
-
-                settings = configurationServiceClient.ConnectionStrings();
-                foreach (var key in settings.Keys)
-                {
-                    connectionStringCollection.Add(new ConnectionStringSettings(key, settings[key]));
-                }
+            //    var address = cs.Address;
             //}
+
+            //String serviceName = "BasicHttpBinding_IConfigurationService";
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
+            ClientSection serviceModelClientSection = serviceModelSection.Client;
+            if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
+            {
+                foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
+                {
+                    var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                    endPoint.Address = uri;
+                    //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+                }
+                //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
+                    //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
+
+                //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
+                //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+
+                //serviceModelClientSection.Endpoints[0].Address = uri;
+                config.Save();
+
+                ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
+            }
+
+            configurationServiceClient = new ConfigurationServiceClient();
+                
+            //configurationServiceClient = new ConfigurationServiceClient(serviceName, endPointAddress);
+            //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));
+
+            appSettingsCollection = new NameValueCollection();
+
+            settings = configurationServiceClient.AppSettings();
+            foreach (var key in settings.Keys)
+            {
+                appSettingsCollection.Add(key, settings[key]);
+            }
+
+            settings.Clear();
+
+            connectionStringCollection = new ConnectionStringSettingsCollection();
+
+            settings = configurationServiceClient.ConnectionStrings();
+            foreach (var key in settings.Keys)
+            {
+                connectionStringCollection.Add(new ConnectionStringSettings(key, settings[key]));
+            }
         }
 
         static public NameValueCollection AppSettings
