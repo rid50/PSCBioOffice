@@ -9,9 +9,9 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://pscservice/CommonService/ConfigurationService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://pscservice/CommonService/ConfigurationService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://pscservice/CommonService/ConfigurationService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/CommonService/ConfigurationService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/CommonService/ConfigurationService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/CommonService/ConfigurationService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IConfigurationService_GetConfigurationManager_InputMessage">
@@ -117,7 +117,7 @@
   </wsdl:binding>
   <wsdl:service name="ConfigurationService">
     <wsdl:port name="BasicHttpBinding_IConfigurationService" binding="tns:BasicHttpBinding_IConfigurationService">
-      <soap:address location="http://pscservice/CommonService/ConfigurationService.svc" />
+      <soap:address location="http://localhost/CommonService/ConfigurationService.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

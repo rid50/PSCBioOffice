@@ -17,8 +17,8 @@ namespace PassportReaderNS
             toolStripStatusLabelError.ForeColor = System.Drawing.Color.Green;
             toolStripStatusLabelError.Text = string.Empty;
 
-            _max = toolStripProgressBar1.Maximum;
-            toolStripProgressBar1.Enabled = true;
+            _max = toolStripProgressBar.Maximum;
+            toolStripProgressBar.Enabled = true;
 
             //toolStripStatusLabelError.Text = _max.ToString();
 
@@ -35,40 +35,33 @@ namespace PassportReaderNS
             // This method will run on a thread other than the UI thread.
             // Be sure not to manipulate any Windows Forms controls created
             // on the UI thread from this method.
-            backgroundWorkerProgressBar.ReportProgress(0, "Working...");
+            backgroundWorkerProgressBar.ReportProgress(0);
             while (true)
             {
-                for (int i = 2; i < _max; ++i)
+                //System.Threading.Thread.Sleep(500);
+                for (int i = 0; i <= _max; i++)
                 {
                     // Introduce some delay to simulate a more complicated calculation.
-                    System.Threading.Thread.Sleep(10);
-                    backgroundWorkerProgressBar.ReportProgress((100 * i) / _max, "Working...");
+                    System.Threading.Thread.Sleep(50);
+                    backgroundWorkerProgressBar.ReportProgress(i);
                     if (backgroundWorkerProgressBar.CancellationPending)
                         break;
                 }
                 if (backgroundWorkerProgressBar.CancellationPending)
                     break;
             }
-
-            backgroundWorkerProgressBar.ReportProgress(100, "Complete!");
         }
 
         private void backgroundWorkerProgressBar_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
-            //toolStripStatusLabel.Text = e.UserState as String;
-            if (toolStripStatusLabelError.ForeColor != System.Drawing.Color.Red)
-            {
-                toolStripStatusLabelError.ForeColor = System.Drawing.Color.Green;
+            toolStripProgressBar.Value = e.ProgressPercentage;
+            if (toolStripStatusLabelError.Text == String.Empty)
                 toolStripStatusLabelError.Text = e.UserState as String;
-                //toolStripStatusLabelError.Text = e.ProgressPercentage.ToString();
-            }
         }
 
         private void backgroundWorkerProgressBar_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            toolStripProgressBar1.Value = 0;
-            toolStripProgressBar1.Enabled = false;
+            toolStripProgressBar.Value = 0;
         }
     }
 }

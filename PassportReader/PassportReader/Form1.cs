@@ -40,6 +40,7 @@ namespace PassportReaderNS
         private static extern bool HideCaret(IntPtr hWnd);
 
         private BackgroundWorker backgroundWorkerProgressBar;
+        private BackgroundWorker backgroundWorkerDataService;
         private BackgroundWorker backgroundWorkerConnect;
         private BackgroundWorker backgroundWorkerListen;
 
@@ -359,6 +360,11 @@ namespace PassportReaderNS
             backgroundWorkerProgressBar.DoWork += new DoWorkEventHandler(backgroundWorkerProgressBar_DoWork);
             backgroundWorkerProgressBar.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerProgressBar_RunWorkerCompleted);
             backgroundWorkerProgressBar.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerProgressBar_ProgressChanged);
+
+            backgroundWorkerDataService = new BackgroundWorker();
+            backgroundWorkerDataService.DoWork += new DoWorkEventHandler(backgroundWorkerDataService_DoWork);
+            backgroundWorkerDataService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerDataService_RunWorkerCompleted);
+            backgroundWorkerDataService.WorkerSupportsCancellation = true;
 
             backgroundWorkerListen = new BackgroundWorker();
             backgroundWorkerListen.DoWork += new DoWorkEventHandler(backgroundWorkerListen_Listen);
@@ -1139,175 +1145,129 @@ namespace PassportReaderNS
         {
             int id;
 
-            if (TextBoxID.Text.Length == 0 || !Int32.TryParse(TextBoxID.Text, out id)) {
+            if (TextBoxID.Text.Length == 0 || !Int32.TryParse(TextBoxID.Text, out id))
+            {
                 toolStripStatusLabelError.Text = "Please enter a valid ID";
                 toolStripStatusLabelError.ForeColor = Color.Red;
                 return;
-            } else
+            }
+            else
                 toolStripStatusLabelError.Text = "";
 
             toolStripStatusLabelError.Text = string.Empty;
-
-            startProgressBar();
-
-            //System.Threading.Thread.Sleep(5000);
 
             buttonLeftHand.Enabled = false;
             buttonRightHand.Enabled = false;
             buttonThumbs.Enabled = false;
 
             tabControl1.SelectTab("tabPage3");
-            Application.DoEvents();
+
+            startDataServiceProcess(id);
+        }
+
+        private void processReadFingers(byte[][] buffer)
+        {
+            //int id;
+
+            //if (TextBoxID.Text.Length == 0 || !Int32.TryParse(TextBoxID.Text, out id)) {
+            //    toolStripStatusLabelError.Text = "Please enter a valid ID";
+            //    toolStripStatusLabelError.ForeColor = Color.Red;
+            //    return;
+            //} else
+            //    toolStripStatusLabelError.Text = "";
+
+            //toolStripStatusLabelError.Text = string.Empty;
+
+            //startProgressBar();
+
+            //System.Threading.Thread.Sleep(5000);
+
+            //buttonLeftHand.Enabled = false;
+            //buttonRightHand.Enabled = false;
+            //buttonThumbs.Enabled = false;
+
+            //tabControl1.SelectTab("tabPage3");
+            //Application.DoEvents();
+
+
 
             //Dim fingersCollection As ArrayList
-            BioProcessor.BioProcessor bioProcessor = null;
+            //BioProcessor.BioProcessor bioProcessor = null;
 
-            byte[][] buffer = null;
+            //byte[][] buffer = null;
+            MemoryStream ms = null;
             //ArrayList _fingersCollection = null;
+
             try
             {
-                if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
+                if (buffer[0] == null || buffer[0].Length == 0)
                 {
-                    var db = new DBUtil();
-                    buffer[0] = db.GetImageFromWebService(IMAGE_TYPE.wsq, id);
-                } 
-                else
-                {
-                    Dictionary<string, string> settings = new Dictionary<string, string>(); 
-                    foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+                    toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
+                    toolStripStatusLabelError.ForeColor = Color.Red;
+                    PictureBox pbox;
+                    for (int i = 0; i < 10; i++)
                     {
-                        settings.Add(key, ConfigurationManager.AppSettings[key]);
+                        pbox = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
+                        pbox.Image = null;
                     }
-
-                    foreach (ConnectionStringSettings cs in ConfigurationManager.ConnectionStrings)
-                    {
-                        settings.Add(cs.Name, cs.ConnectionString);
-                    }
-
-                    var db = new DAO.Database(settings);
-                    buffer = db.GetImage(DAO.IMAGE_TYPE.wsq, id);
-                    if (buffer[0] == null || buffer[0].Length == 0)
-                    {
-                        toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
-                        toolStripStatusLabelError.ForeColor = Color.Red;
-                        PictureBox pbox;
-                        for (int i = 0; i < 10; i++)
-                        {
-                            pbox = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
-                            pbox.Image = null;
-                        }
-                        return;
-                    }
-                    //NFRecord record = new NFRecord(buffer[1]);
-                    //int pct = record.Quality;
-
-                    //var biometricService = new WSQImageServiceClient();
-                    //_fingersCollection = biometricService.processEnrolledData(buffer);
-
-                    bioProcessor = new BioProcessor.BioProcessor();
-                    //bioProcessor.processEnrolledData(buffer, out _fingersCollection);
-
-                    //ArrayList fingersCollection = null;
-                    //bioProcessor.DeserializeWSQArray(buffer[0], out fingersCollection);
-                    ////WsqSerializationBinder.WsqImage wsqImage = fingersCollection[0] as WsqSerializationBinder.WsqImage;
-                    //WsqSerializationBinder.WsqImage wsqImage = (WsqSerializationBinder.WsqImage)fingersCollection[0];
-
-
-                    //MemoryStream ms2 = null;
-                    //ms2 = new MemoryStream(buffer[0]);
-                    //var formatter = new BinaryFormatter();
-                    //formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
-                    //fingersCollection = formatter.Deserialize(ms2) as ArrayList;
-                    //WsqImage wsqImage = (WsqImage)fingersCollection[0];
-                    //ms2.Close();
-                    //NImage nImage = NImage.FromMemory(wsqImage.Content, NImageFormat.Wsq);
-
+                    return;
                 }
+                //if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
+                //{
+                //    var db = new DBUtil();
+                //    buffer[0] = db.GetImageFromWebService(IMAGE_TYPE.wsq, id);
+                //} 
+                //else
+                //{
+                //    Dictionary<string, string> settings = new Dictionary<string, string>();
+                //    foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+                //    {
+                //        settings.Add(key, ConfigurationManager.AppSettings[key]);
+                //    }
 
+                //    foreach (ConnectionStringSettings cs in ConfigurationManager.ConnectionStrings)
+                //    {
+                //        settings.Add(cs.Name, cs.ConnectionString);
+                //    }
 
-/*
-                if (fingersCollection[i] != null)
-                {
-                    wsqImage = fingersCollection[i] as WsqImage;
-                    try
-                    {
-                        NImage nImage = NImage.FromMemory(wsqImage.Content, NImageFormat.Wsq);
-                        if (serializedWSQArray[i + 1].Length != 0)
-                        {
-                            NFRecord record = new NFRecord(serializedWSQArray[i + 1]);
-                            pct = record.Quality;
-                            if (pct == 254)
-                                pct = 0;
-                        }
-                        else
-                            pct = 0;
+                //    var db = new DAO.Database(settings);
+                //    buffer = db.GetImage(DAO.IMAGE_TYPE.wsq, id);
+                //    if (buffer[0] == null || buffer[0].Length == 0)
+                //    {
+                //        toolStripStatusLabelError.Text = "Can't read fingers' images using ID provided";
+                //        toolStripStatusLabelError.ForeColor = Color.Red;
+                //        PictureBox pbox;
+                //        for (int i = 0; i < 10; i++)
+                //        {
+                //            pbox = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
+                //            pbox.Image = null;
+                //        }
+                //        return;
+                //    }
 
-                        //verify(nImage);
+                //    bioProcessor = new BioProcessor.BioProcessor();
+                //}
+                BioProcessor.BioProcessor bioProcessor = bioProcessor = new BioProcessor.BioProcessor();
 
-                        string label = ""; Brush brush = Brushes.Transparent;
-
-                        if (pct > 0) {
-                            label = string.Format("Q: {0:P0}", pct / 100.0);
-                            if (pct > 79)
-                                brush = Brushes.Green;
-                            else if (pct > 39)
-                                brush = Brushes.Orange;
-                            else
-                                brush = Brushes.Red;
-                        } else {
-                            label = string.Format("q: {0:P0}", 0);
-                            brush = Brushes.Red;
-                        }
-
-                        //Bitmap bmp = new Bitmap(nImage.ToBitmap(), new Size(65, 95));
-                        Bitmap bmp = new Bitmap(nImage.ToBitmap(), new Size(100, 120));
-                        //RectangleF rectf = new RectangleF(0.0f, 2.0f, 65.0f, 40.0f);
-                        RectangleF rectf = new RectangleF(0.0f, 2.0f, 90.0f, 60.0f);
-                        Graphics g = Graphics.FromImage(bmp);
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                        g.DrawString(label, new Font("Areal", 13), brush, rectf);
-                        g.Flush();
-
-                        using(var ms = new MemoryStream())
-                        {
-                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                            fingersCollection[i] = ms.ToArray();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw new Exception(ex.Message);
-                        fingersCollection[i] = getEmptyBitmap();
-
-                        continue;
-                    }
-*/
-
-
-                    //buff = db.GetImage(IMAGE_TYPE.wsq, id);
-
-                MemoryStream ms = null;
+                //MemoryStream ms = null;
                 ms = new MemoryStream(buffer[0]);
                 //Construct a BinaryFormatter and use it to deserialize the data to the stream.
                 var formatter = new BinaryFormatter();
 
-                try
-                {
+//                try
+//                {
                     formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
                     _fingersCollection = formatter.Deserialize(ms) as ArrayList;
-                }
-                catch (SerializationException ex)
-                {
-                    toolStripStatusLabelError.ForeColor = Color.Red;
-                    toolStripStatusLabelError.Text = ex.Message;
-                }
-                finally
-                {
-                    ms.Close();
-                }
+//                }
+//                catch (SerializationException ex)
+//                {
+//                    toolStripStatusLabelError.ForeColor = Color.Red;
+//                    toolStripStatusLabelError.Text = ex.Message;
+//                }
+//                finally
+//                {
+//                    ms.Close();
+//                }
 
                 PictureBox pb;
                 System.Object theLock = new System.Object();
@@ -1403,6 +1363,9 @@ namespace PassportReaderNS
             }
             finally
             {
+                if (ms != null)
+                    ms.Close();
+
                 buttonLeftHand.Enabled = true;
                 buttonRightHand.Enabled = true;
                 buttonThumbs.Enabled = true;

@@ -212,6 +212,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="DataService.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ProgressBar.cs">
       <SubType>Form</SubType>
     </Compile>

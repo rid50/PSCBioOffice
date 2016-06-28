@@ -272,16 +272,21 @@
     <None Include="Service References\CachePopulateService\PopulateCacheService44.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ConfigurationService\ConfigurationService.wsdl" />
-    <None Include="Service References\ConfigurationService\ConfigurationService.xsd">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ConfigurationService\ConfigurationService1.disco" />
+    <None Include="Service References\ConfigurationService\ConfigurationService1.wsdl" />
+    <None Include="Service References\ConfigurationService\ConfigurationService3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ConfigurationService\ConfigurationService1.xsd">
+    <None Include="Service References\ConfigurationService\ConfigurationService31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ConfigurationService\ConfigurationService2.xsd">
+    <None Include="Service References\ConfigurationService\ConfigurationService32.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\UnmanagedMatchingService\MatchingService.disco" />
+    <None Include="Service References\CachePopulateService\PopulateCacheService1.disco" />
     <None Include="Service References\UnmanagedMatchingService\MatchingService.wsdl" />
     <None Include="Service References\UnmanagedMatchingService\MatchingService.xsd">
       <SubType>Designer</SubType>
@@ -295,16 +300,12 @@
     <None Include="Service References\UnmanagedMatchingService\MatchingService3.xsd">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\CachePopulateService\PopulateCacheService1.disco" />
     <None Include="Service References\UnmanagedMatchingService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\UnmanagedMatchingService\configuration.svcinfo" />
     <None Include="Service References\UnmanagedMatchingService\configuration91.svcinfo" />
-    <None Include="Service References\UnmanagedMatchingService\MatchingService.disco" />
     <None Include="Resources\refresh32.png" />
     <None Include="Service References\CachePopulateService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
@@ -325,7 +326,6 @@
     </None>
     <None Include="Service References\ConfigurationService\configuration.svcinfo" />
     <None Include="Service References\ConfigurationService\configuration91.svcinfo" />
-    <None Include="Service References\ConfigurationService\ConfigurationService.disco" />
     <None Include="Resources\red_light.png" />
     <None Include="Resources\66.png" />
     <Content Include="Resources\checkmark.png" />
