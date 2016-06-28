@@ -291,11 +291,7 @@ namespace DBHelper
 
         private String getConnectionString()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-            if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
-                return connectionString + ";UID=rid50;Password=faiha-642;";
-
-            return connectionString;
+            return ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
         }
     }
 

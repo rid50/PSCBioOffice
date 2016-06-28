@@ -22,13 +22,13 @@
         "Entry"
         {
         "MsmKey" = "8:_0E9FA0D85F176CA6293903E039215BEB"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
+        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_0E9FA0D85F176CA6293903E039215BEB"
-        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -40,18 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_1BFF3D21579B7A4DB7C743AFF3176D7B"
-        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_1BFF3D21579B7A4DB7C743AFF3176D7B"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3196EA43C1FE073BA76E7F7DE6CC5317"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,8 +57,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_34B187B44B03424687D038248A03E2CF"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_3196EA43C1FE073BA76E7F7DE6CC5317"
+        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,12 +82,6 @@
         "Entry"
         {
         "MsmKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
         "OwnerKey" = "8:_868ABE7729425405B434057BFB3BA6AF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -101,6 +89,12 @@
         {
         "MsmKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -129,13 +123,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_930E6E0AE116468E964498F1745CA3FD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A612D83F957B5E6A280720CCE751A98E"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A6BF9309F3651F2BDC833FEB29206DCB"
+        "MsmKey" = "8:_D57BA50F3DA593955B377C863FDC6F37"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -160,13 +160,13 @@
         "Entry"
         {
         "MsmKey" = "8:_F3027B44F6B0368D1A361A7ED18180EC"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
+        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F3027B44F6B0368D1A361A7ED18180EC"
-        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -184,25 +184,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A6BF9309F3651F2BDC833FEB29206DCB"
+        "OwnerKey" = "8:_D57BA50F3DA593955B377C863FDC6F37"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_868ABE7729425405B434057BFB3BA6AF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A612D83F957B5E6A280720CCE751A98E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -233,12 +239,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A612D83F957B5E6A280720CCE751A98E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -302,6 +302,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -323,7 +339,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.6"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
                 }
@@ -424,26 +440,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34B187B44B03424687D038248A03E2CF"
-            {
-            "SourcePath" = "8:..\\psc_icon32.ico"
-            "TargetName" = "8:psc_icon32.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_08C44F45E48D4D3285708FEFF72E1EA5"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3B9B26D0E056282485F3CB3B0A5C50AB"
             {
             "AssemblyRegister" = "3:1"
@@ -537,6 +533,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_930E6E0AE116468E964498F1745CA3FD"
+            {
+            "SourcePath" = "8:..\\psc_icon32.ico"
+            "TargetName" = "8:psc_icon32.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A612D83F957B5E6A280720CCE751A98E"
             {
             "AssemblyRegister" = "3:1"
@@ -568,14 +584,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A6BF9309F3651F2BDC833FEB29206DCB"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D57BA50F3DA593955B377C863FDC6F37"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:PrFps22, Version=2.2.0.10, Culture=neutral, PublicKeyToken=4020ef1cb3f1980b, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_A6BF9309F3651F2BDC833FEB29206DCB"
+                    "_D57BA50F3DA593955B377C863FDC6F37"
                     {
                     "Name" = "8:PrFps22.dll"
                     "Attributes" = "3:512"
@@ -718,7 +734,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PassportReader"
         "ProductCode" = "8:{44457732-EE81-4212-9114-6A692508CB80}"
-        "PackageCode" = "8:{1092A785-567F-4CA1-BF60-F5AAFE2D6B30}"
+        "PackageCode" = "8:{BAB95F2A-ADBB-47AA-B36A-7FBB3ABAD199}"
         "UpgradeCode" = "8:{032D6C2A-2E0C-43FF-8139-056C9B24F591}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -849,7 +865,7 @@
             "Target" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
             "Folder" = "8:_08C44F45E48D4D3285708FEFF72E1EA5"
             "WorkingFolder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"
-            "Icon" = "8:_34B187B44B03424687D038248A03E2CF"
+            "Icon" = "8:_930E6E0AE116468E964498F1745CA3FD"
             "Feature" = "8:"
             }
         }
@@ -1253,7 +1269,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3E9A7EF1320C4895B32A8725A5B01A9A"
             {
-            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Debug\\PassportReader.exe"
+            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Release\\PassportReader.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"

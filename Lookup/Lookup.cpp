@@ -51,7 +51,7 @@ namespace Nomad {
 			try {
 				tg.cancel();
 			}
-			catch (std::exception& e) {}
+			catch (std::exception&) {}
 		}
 
 		void __stdcall fillCache(char *fingerList[], __int32 fingerListSize, char *appSettings[], fnCallBack callBack) {
@@ -160,12 +160,16 @@ namespace Nomad {
 			try {
 				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, NULL, appSettings, NULL);
 			} catch (std::exception& e) {
-				if (static_cast<unsigned __int32>(messageSize) < strlen(e.what()) + 1) {
-					char *pchar = const_cast<char *>(e.what());
+				//const char *errMessage = e.what();
+				const char *errMessage = "Cannot connect to a database, check a connection string";
+				if (static_cast<unsigned __int32>(messageSize) < strlen(errMessage) + 1) {
+					char *pchar = const_cast<char *>(errMessage);
+				//if (static_cast<unsigned __int32>(messageSize) < strlen("Cannot connect to database: check a connection string") + 1) {
+					//char *pchar = const_cast<char *>("Cannot connect to database: check a connection string");
 					pchar[messageSize - 1] = '\0';
 					strcpy_s(errorMessage, messageSize, pchar);
 				} else
-					strcpy_s(errorMessage, strlen(e.what()) + 1, e.what());
+					strcpy_s(errorMessage, strlen(errMessage) + 1, errMessage);
 
 				return 0;
 			}
@@ -247,7 +251,7 @@ namespace Nomad {
 			//	});
 			//}
 
-			if (0) {
+			if (1) {
 				//process_queue_async(process_queue(callBack, bc, topindex));
 				//task_group tg;
 				//tg.run_and_wait([&] {

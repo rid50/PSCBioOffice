@@ -100,7 +100,6 @@
             this.TextBoxID = new System.Windows.Forms.TextBox();
             this.buttonReadFingers = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -822,8 +821,6 @@
             this.Name = "Form1";
             this.Text = "Passport Reader & Scanner App";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
