@@ -3276,6 +3276,8 @@ namespace PSCBioIdentification
                     }
                 }
                 manageCacheButton.Enabled = false;
+                Application.DoEvents();
+                ShowStatusMessage("Terminating the request...");
             }
 
             //            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();

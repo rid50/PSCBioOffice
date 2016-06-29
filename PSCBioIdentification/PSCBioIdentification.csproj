@@ -274,6 +274,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\UnmanagedMatchingService\MatchingService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.wsdl" />
     <None Include="Service References\ConfigurationService\ConfigurationService3.xsd">
@@ -285,19 +286,18 @@
     <None Include="Service References\ConfigurationService\ConfigurationService32.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UnmanagedMatchingService\MatchingService.disco" />
     <None Include="Service References\CachePopulateService\PopulateCacheService1.disco" />
-    <None Include="Service References\UnmanagedMatchingService\MatchingService.wsdl" />
-    <None Include="Service References\UnmanagedMatchingService\MatchingService.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService1.wsdl" />
+    <None Include="Service References\UnmanagedMatchingService\MatchingService4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UnmanagedMatchingService\MatchingService1.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UnmanagedMatchingService\MatchingService2.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UnmanagedMatchingService\MatchingService3.xsd">
+    <None Include="Service References\UnmanagedMatchingService\MatchingService43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\UnmanagedMatchingService\Reference.svcmap">

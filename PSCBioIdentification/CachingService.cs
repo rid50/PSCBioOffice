@@ -302,6 +302,8 @@ namespace PSCBioIdentification
                 ArrayList fingerList = (ArrayList)e.Result;
                 if (fingerList == null)
                     fingerList = new ArrayList();
+                else
+                    labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
 
                 Label lb;
                 for (int i = 1; i < 11; i++)
@@ -322,8 +324,6 @@ namespace PSCBioIdentification
                     else
                         cb.Enabled = false;
                 }
-
-                labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
             }
 
             stopProgressBar();

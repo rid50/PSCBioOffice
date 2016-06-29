@@ -19,6 +19,8 @@ namespace Nomad {
 	namespace Lookup {
 		Nomad::Data::Odbc *odbcPtr;
 
+		bool _terminate;
+
 		//typedef struct _tagCallBackStruct
 		//{
 		//	short code;

@@ -50,6 +50,7 @@ namespace Nomad {
 			//Nomad::Data::Odbc::terminate(true);
 			try {
 				tg.cancel();
+				_terminate = true;
 			}
 			catch (std::exception&) {}
 		}
@@ -99,43 +100,55 @@ namespace Nomad {
 		//}
 
 		//task<void> process_queue(fnCallBack callBack, BlockingCollection<int>& bc, int topindex)
-		void process_queue(fnCallBack callBack, BlockingCollection<int>& bc, int topindex, task_group &tg)
+		//task<void> process_blocking_queue(fnCallBack callBack, BlockingCollection<int>*bc, int topindex, task_group &tg)
+		void process_blocking_queue(fnCallBack callBack, BlockingCollection<int>*bc, int topindex, task_group &tg)
 		{
-			while (true)
-			{
-				//if (Nomad::Data::Odbc::terminateLoop)
-				//	break;
-				if (tg.is_canceling())
-					break;
-
-				//shared_ptr<int> i = 0;
-				shared_ptr<int> i = bc.wait_and_pop();
-				//shared_ptr<int> i = getQueueItemAsync(bc).get();
-				if (*i.get() == 0)
-					break;
-
-				//if ((*i.get() == -1 && --topindex == 0) || *i.get() == -2)
-				if ((*i.get() == -1 && --topindex == 0))
-					break;
-
-				Concurrency::wait(2);
+			//return create_task([&]() {
+				shared_ptr<int> i;
 				CallBackStruct callBackParam;
-				callBackParam.code = 1;
+				string temp;
+				char const* chars;
+				while (true)
+				{
+					//if (Nomad::Data::Odbc::terminateLoop)
+					//	break;
+					if (tg.is_canceling())
+						break;
 
-				//std::stringstream strm;
-				//strm << NumRowsFetched;
-				string temp = to_string(*i.get());
-				char const* chars = temp.c_str();
+					//shared_ptr<int> i = 0;
+					i = bc->wait_and_pop();
+					//shared_ptr<int> i = getQueueItemAsync(bc).get();
+					if (*i.get() == 0)
+						break;
 
-				size_t length = strlen(chars);
+					//if ((*i.get() == -1 && --topindex == 0) || *i.get() == -2)
+					if ((*i.get() == -1 && --topindex == 0))
+						break;
 
-				//size_t length = strlen("100");
-				mbstowcs_s(&length, callBackParam.text, chars, length);
-				//mbstowcs_s(&length, callBackParam.text, "100", length);
-				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
-				callBack(&callBackParam);
-			}
-			//return create_task([]() { return; });
+					//Concurrency::wait(2);
+					//CallBackStruct callBackParam;
+
+
+
+					callBackParam.code = 1;
+
+
+					//std::stringstream strm;
+					//strm << NumRowsFetched;
+					temp = to_string(*i.get());
+					chars = temp.c_str();
+
+					size_t length = strlen(chars);
+
+					//size_t length = strlen("100");
+
+					mbstowcs_s(&length, callBackParam.text, chars, length);
+
+					//mbstowcs_s(&length, callBackParam.text, "100", length);
+					//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
+					callBack(&callBackParam);
+				}
+			//});
 		}
 
 		unsigned __int32 __stdcall match(char *fingerList[], __int32 fingerListSize,
@@ -152,6 +165,7 @@ namespace Nomad {
 			LARGE_INTEGER begin, end, freq;
 			QueryPerformanceCounter(&begin);
 
+			_terminate = false;
 			//std::stringstream ss2; 
 			//ss2 << "1------------------------------------:";
 			//Data::Log(ss2.str(), true);
@@ -252,6 +266,9 @@ namespace Nomad {
 			//}
 
 			if (1) {
+				//if (callBack != NULL)
+				//	process_blocking_queue(callBack, &bc, topindex, tg);
+
 				//process_queue_async(process_queue(callBack, bc, topindex));
 				//task_group tg;
 				//tg.run_and_wait([&] {
@@ -302,12 +319,14 @@ namespace Nomad {
 
 //					Nomad::Data::Odbc::terminate(true);
 
-
-					process_queue(callBack, bc, topindex, tg);
+					//if (callBack != NULL)
+					//	process_queue(callBack, bc, topindex, tg);
 					//process_queue_async(process_queue(callBack, bc, topindex)).get();
 
 				});
 
+				if (callBack != NULL)
+					process_blocking_queue(callBack, &bc, topindex, tg);
 
 				//if (&bc != NULL)
 				//	process_queue(callBack, bc, topindex, tg);
@@ -349,7 +368,7 @@ namespace Nomad {
 			//t.get();
 
 //#ifdef _DEBUG
-			if (callBack != NULL) {
+			if (callBack != NULL && !_terminate) {
 				QueryPerformanceCounter(&end);
 				QueryPerformanceFrequency(&freq);
 
@@ -370,6 +389,12 @@ namespace Nomad {
 				//wcscpy_s(callBackParam.text, messageSize, static_cast<wchar_t>(errorMessage));
 				callBack(&callBackParam);
 			}
+
+			if (_terminate) {
+				errMessage = "The request was cancelled";
+				retcode = 0;
+			}
+
 			//printf ("%s",buffer);
 
 			//printStatusStatement(result);

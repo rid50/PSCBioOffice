@@ -18,15 +18,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/BiometricService/MatchingService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="dd6b2d77-35e6-4d28-a4cd-fce38a3fd94e" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?disco" />
-    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="31287dff-c61a-4269-9895-cd04a8e80f74" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?wsdl" />
-    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="61ddbb16-8223-41f7-abdb-f063c51bf084" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?xsd=xsd2" />
-    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="3752310a-fc73-49a0-80d1-6bd96c135e66" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?xsd=xsd3" />
-    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="0b02df4f-3460-417f-945a-089f60527b56" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?xsd=xsd0" />
-    <MetadataFile FileName="MatchingService3.xsd" MetadataType="Schema" ID="bc54bfc9-dd4b-4d4a-90e6-aca5702c03c4" SourceId="1" SourceUrl="http://www.emefingerprint.psc.com.kw/BiometricService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService1.disco" MetadataType="Disco" ID="491b6328-2fc2-40f8-8ba4-6da5283dfce1" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?disco" />
+    <MetadataFile FileName="MatchingService4.xsd" MetadataType="Schema" ID="582483a9-890e-4524-8fd0-21148d7c6dc1" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MatchingService41.xsd" MetadataType="Schema" ID="a1ad80d8-0cf1-46c0-80d0-1478823e3b58" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?xsd=xsd3" />
+    <MetadataFile FileName="MatchingService42.xsd" MetadataType="Schema" ID="d37c5732-a21c-45ec-9ef9-d67fc874cc53" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?xsd=xsd0" />
+    <MetadataFile FileName="MatchingService43.xsd" MetadataType="Schema" ID="5db1b59b-d21f-4560-907e-7f7914006d60" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService1.wsdl" MetadataType="Wsdl" ID="54a7baef-5dca-4cd6-bd2a-6f41238f0535" SourceId="1" SourceUrl="http://localhost/BiometricService/MatchingService.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
