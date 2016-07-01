@@ -1537,12 +1537,36 @@ namespace PSCBioIdentification
                 NBiometricStatus status;
                 if (ConfigurationManager.AppSettings["verificationService"] == "local")
                 {
-                    status = _biometricClient.Verify(_subject, _subject2);
+                    try
+                    {
+                        status = _biometricClient.Verify(_subject, _subject2);
+                    } catch(Exception ex)
+                    {
+                        while(ex.InnerException != null)
+                            ex = ex.InnerException;
+
+                        ShowErrorMessage("Matcher: " + ex.Message);
+                        status = NBiometricStatus.MatchNotFound;
+                    }
                 }
                 else
                 {
+                    bool retcode = false;
                     var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                    var retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                    var b = _subject.GetTemplateBuffer().ToArray();
+                    var b2 = _subject2.GetTemplateBuffer().ToArray();
+                    try {
+                        //retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                        retcode = matchingServiceClient.verify(b, b2);
+                    }
+                    catch (Exception ex)
+                    {
+                        while (ex.InnerException != null)
+                            ex = ex.InnerException;
+
+                        ShowErrorMessage("Matcher: " + ex.Message);
+                    }
+
                     if (retcode)
                         status = NBiometricStatus.Ok;
                     else
@@ -2018,10 +2042,11 @@ namespace PSCBioIdentification
 
             clear();
             clearFingerBoxes();
-            EnableControls(false);
 
             if (!isUserIdValid())
                 return;
+
+            EnableControls(false);
 
             //startProgressBar();
             startDataServiceProcess();

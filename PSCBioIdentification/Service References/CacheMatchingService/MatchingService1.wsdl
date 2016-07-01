@@ -9,9 +9,9 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IMatchingService_getFingerList_InputMessage">
@@ -98,7 +98,7 @@
   </wsdl:binding>
   <wsdl:service name="MatchingService">
     <wsdl:port name="BasicHttpBinding_IMatchingService" binding="tns:BasicHttpBinding_IMatchingService">
-      <soap:address location="http://pscservice/AppFabricCacheService/MatchingService.svc" />
+      <soap:address location="http://localhost/AppFabricCacheService/MatchingService.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

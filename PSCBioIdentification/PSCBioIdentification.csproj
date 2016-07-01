@@ -210,6 +210,7 @@
     <Compile Include="WebService.cs" />
     <EmbeddedResource Include="Form1.ar-KW.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.en-US.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -246,14 +247,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\CacheMatchingService\MatchingService.wsdl" />
-    <None Include="Service References\CacheMatchingService\MatchingService.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService1.wsdl" />
+    <None Include="Service References\CacheMatchingService\MatchingService3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CacheMatchingService\MatchingService1.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CacheMatchingService\MatchingService2.xsd">
+    <None Include="Service References\CacheMatchingService\MatchingService32.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\CachePopulateService\PopulateCacheService1.wsdl" />
@@ -274,6 +275,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\CacheMatchingService\MatchingService1.disco" />
     <None Include="Service References\UnmanagedMatchingService\MatchingService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.wsdl" />
@@ -319,7 +321,6 @@
     </None>
     <None Include="Service References\CacheMatchingService\configuration.svcinfo" />
     <None Include="Service References\CacheMatchingService\configuration91.svcinfo" />
-    <None Include="Service References\CacheMatchingService\MatchingService.disco" />
     <None Include="Service References\ConfigurationService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

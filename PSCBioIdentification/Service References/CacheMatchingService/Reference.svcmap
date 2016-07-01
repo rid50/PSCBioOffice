@@ -20,14 +20,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://pscservice/AppFabricCacheService/MatchingService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/AppFabricCacheService/MatchingService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="f3be25f8-6177-4561-8830-b1feaaaa3393" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/MatchingService.svc?wsdl" />
-    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="8068f028-29d0-4ca3-bf0b-8e9eca246c26" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/MatchingService.svc?disco" />
-    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="22da9922-0bba-4555-8575-52dec958be5a" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd0" />
-    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="69cba1f7-21a4-485f-bfeb-b77bfee6ebc9" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd2" />
-    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="6de8f354-99a7-4b26-a0ef-9993ab377b75" SourceId="1" SourceUrl="http://pscservice/AppFabricCacheService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService3.xsd" MetadataType="Schema" ID="050006ba-bc9d-41c9-9e01-1e47c9ece212" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService31.xsd" MetadataType="Schema" ID="428450d7-af98-4ce7-8e54-cefc8bb4527b" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MatchingService1.disco" MetadataType="Disco" ID="333378dc-908b-4660-847c-f81f4c0ee584" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/MatchingService.svc?disco" />
+    <MetadataFile FileName="MatchingService1.wsdl" MetadataType="Wsdl" ID="960d2a69-21a0-4584-b3c7-0129dac6950f" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/MatchingService.svc?wsdl" />
+    <MetadataFile FileName="MatchingService32.xsd" MetadataType="Schema" ID="8389cf33-b133-4a85-a8fb-1e74c53bbf67" SourceId="1" SourceUrl="http://localhost/AppFabricCacheService/MatchingService.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
