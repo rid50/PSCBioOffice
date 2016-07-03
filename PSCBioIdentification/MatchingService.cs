@@ -190,7 +190,7 @@ namespace PSCBioIdentification
             if (e.Error != null)
             {
                 LogLine("Matching service: " + e.Error.Message, true);
-                ShowErrorMessage(e.Error.Message);
+                ShowErrorMessage("Matching service: " + e.Error.Message);
                 stopProgressBar();
                 EnableControls(true);
             }
@@ -223,8 +223,9 @@ namespace PSCBioIdentification
                     if (record != null && record.errorMessage != null && record.errorMessage.Length != 0)
                     {
                         //retcode = false;
-                        ShowErrorMessage("ERROR!!!");
-                        System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
+                        //ShowErrorMessage("ERROR!!!");
+                        //System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
+                        ShowErrorMessage(record.errorMessage.ToString());
                     }
                     stopProgressBar();
                     EnableControls(true);

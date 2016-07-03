@@ -173,7 +173,7 @@ namespace Nomad {
 			//std::cout << errorMessage << endl;
 			try {
 				odbcPtr = new Nomad::Data::Odbc(NULL, NULL, NULL, appSettings, NULL);
-			} catch (std::exception& e) {
+			} catch (std::exception&) {
 				//const char *errMessage = e.what();
 				const char *errMessage = "Cannot connect to a database, check a connection string";
 				if (static_cast<unsigned __int32>(messageSize) < strlen(errMessage) + 1) {
