@@ -7,7 +7,6 @@
 
 //#include "stdafx.h"
 //#include <WinDef.h>
-//#include <vector>
 //#include <malloc.h>
 //#include <iostream>
 //#include <memory>
@@ -22,6 +21,7 @@
 #include <memory>
 #include <map>
 #include <sstream>		// std::stringstream
+#include <vector>
 
 //#include <NFExtractor.h>
 //#include <NMatcher.h>
@@ -29,7 +29,7 @@
 //#include <NImageFile.h>
 
 #include <Core/NObject.h>
-#include <NLicensing.h>
+//#include <NLicensing.h>
 #include <NBiometricClient.h>
 #include <NBiometrics.h>
 #include <NMedia.h>
@@ -70,19 +70,20 @@ namespace Nomad
 			~MatcherFacade();
 			void enroll(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);
 			bool match(void *galleryTemplate, unsigned __int32 galleryTemplateSize);
+			bool match(std::vector<void*> &galleryTemplate, std::vector<unsigned __int32> &galleryTemplateSize);
 		};
 
 			NResult		result;
-			void LicenseRelease();
-			void LicenseObtain();
+			//void LicenseRelease();
+			//void LicenseObtain();
 
 		class License
 		{
 		private:
 			NResult		result;
 		public:
-			License();
-			~License();
+			//License();
+			//~License();
 			inline void printStatusStatement(const char * statusStatement) {
 #ifdef _DEBUG
 				//sprintf_s (Matcher::statusStatement, statusStatement);
@@ -110,8 +111,12 @@ namespace Nomad
 			~Matcher() noexcept(false);
 			//bool readImages(wchar_t * szFileName, wchar_t * szFileName2);
 			//int extract(HNImage nImage, NfeExtractionStatus* extractionStatus, HNFRecord* hRecord);
-			void enroll(unsigned char *enrolledTemplate, unsigned __int32 enrolledTemplateSize);
-			bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
+			//void enroll(unsigned char *enrolledTemplate, unsigned __int32 enrolledTemplateSize);
+			//bool match(void *prescannedTemplate, unsigned __int32 prescannedTemplateSize);
+			void enroll(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);
+			bool match(void *galleryTemplate, unsigned __int32 galleryTemplateSize);
+			bool match(std::vector<void*> &galleryTemplate, std::vector<unsigned __int32> &galleryTemplateSize);
+
 			//void __declspec(dllexport) enroll(void);
 			//void __declspec(dllexport) match(void *buffer2, int size);
 			//void run();

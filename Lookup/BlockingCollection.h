@@ -1,7 +1,8 @@
 #pragma once
 #ifndef BLOCKING_COLLECTION_H
 #define BLOCKING_COLLECTION_H
-#include <queue>
+
+#include <queue>	// #include <vector>
 #include <mutex>
 #include <condition_variable>
 #include <memory>

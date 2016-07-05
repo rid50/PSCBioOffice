@@ -78,8 +78,8 @@ namespace PSCBioIdentification
                         this.Invoke((Action)(() =>
                         {
                             stopProgressBar();
-                            LogLine("ID is not valid", true);
-                            ShowErrorMessage("ID is not valid");
+                            //LogLine("ID is not valid or no prescanned fingers found", true);
+                            ShowErrorMessage("ID is not valid or no prescanned fingers found");
                             EnableControls(true);
                         }));
                     }

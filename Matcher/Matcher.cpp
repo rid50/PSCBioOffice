@@ -56,45 +56,49 @@ namespace Nomad
 			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(galleryTemplate, galleryTemplateSize);
 		}
 
-		const NChar * components = N_T("Biometrics.FingerExtraction,Biometrics.FingerMatching");
-
-		//License::License() {
-		void LicenseObtain() {
-			NBool available = NFalse;
-
-			result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
-			if (NFailed(result))
-			{ 
-				char *str = "Biometrics: Failed to obtain licenses";
-				//printStatusStatement(str);
-				throw std::runtime_error(str);
-			}
-
-			if (!available)
-			{
-				std::stringstream stmt;
-				stmt << "Biometrics: Licenses for " << components << " are not available";
-				//printStatusStatement(stmt.str().c_str());
-				throw std::runtime_error(stmt.str().c_str());
-			}
-			OutputDebugString(" ************************  License constructor ************************************** ");
-
+		bool MatcherFacade::match(std::vector<void*> &galleryTemplate, std::vector<unsigned __int32> &galleryTemplateSize) {
+			return static_cast<Nomad::Bio::Matcher*>(matcherPtr)->match(galleryTemplate, galleryTemplateSize);
 		}
 
-		//License::~License() {
-		void LicenseRelease() {
-			OutputDebugString(" ************************  License ************************************** ");
-			result = NLicenseReleaseComponents(components);
-			OutputDebugString(" ************************  License2 ************************************** ");
-			if (NFailed(result))
-			{
-			OutputDebugString(" ************************  License3 ************************************** ");
-				//printStatusStatement("Error releasing license components");
-				throw std::runtime_error("Biometrics: Error releasing license components");
-			}
-			OutputDebugString(" ************************  License4 ************************************** ");
+		//const NChar * components = N_T("Biometrics.FingerExtraction,Biometrics.FingerMatching");
 
-		}
+		////License::License() {
+		//void LicenseObtain() {
+		//	NBool available = NFalse;
+
+		//	result = NLicenseObtainComponents(N_T("/local"), N_T("5000"), components, &available);
+		//	if (NFailed(result))
+		//	{ 
+		//		char *str = "Biometrics: Failed to obtain licenses";
+		//		//printStatusStatement(str);
+		//		throw std::runtime_error(str);
+		//	}
+
+		//	if (!available)
+		//	{
+		//		std::stringstream stmt;
+		//		stmt << "Biometrics: Licenses for " << components << " are not available";
+		//		//printStatusStatement(stmt.str().c_str());
+		//		throw std::runtime_error(stmt.str().c_str());
+		//	}
+		//	OutputDebugString(" ************************  License constructor ************************************** ");
+
+		//}
+
+		////License::~License() {
+		//void LicenseRelease() {
+		//	OutputDebugString(" ************************  License ************************************** ");
+		//	result = NLicenseReleaseComponents(components);
+		//	OutputDebugString(" ************************  License2 ************************************** ");
+		//	if (NFailed(result))
+		//	{
+		//	OutputDebugString(" ************************  License3 ************************************** ");
+		//		//printStatusStatement("Error releasing license components");
+		//		throw std::runtime_error("Biometrics: Error releasing license components");
+		//	}
+		//	OutputDebugString(" ************************  License4 ************************************** ");
+
+		//}
 
 		//NSizeType	Matcher::enrolledTemplateSize = 0;
 		//void		*Matcher::enrolledTemplate = 0;
@@ -120,9 +124,9 @@ namespace Nomad
 
 		Matcher::Matcher() {
 			hBiometricClient = NULL;
-			NInt				matchingThreshold = 40;
-			NMatchingSpeed		matchingSpeed =	nmsLow;
-			//NMatchingSpeed matchingSpeed = nmsHigh;
+			NInt				matchingThreshold = 48;
+			//NMatchingSpeed		matchingSpeed =	nmsLow;
+			NMatchingSpeed		matchingSpeed = nmsHigh;
 
 			//License license;
 
@@ -188,7 +192,84 @@ namespace Nomad
 			//}
 		}
 
-//		bool Matcher::match(void *galleryTemplate, unsigned __int32 galleryTemplateSize) {
+		bool Matcher::match(std::vector<void*> &galleryTemplate, std::vector<unsigned __int32> &galleryTemplateSize) {
+			bool				matched = true;
+			NResult				result;
+			NInt				matchScore = 0;
+			HNMatchingResult	hMatchingResult;
+			NBiometricStatus	biometricStatus = nbsNone;
+
+			hGallerySubject = NULL;
+
+			NSizeType pSize = 0;
+
+			for (int i = 0; i < galleryTemplate.size(); i++) {
+				result = NSubjectCreateFromMemory(galleryTemplate[i], (NSizeType)galleryTemplateSize[i], 0, &pSize, &hGallerySubject);
+				if (NFailed(result))
+				{
+					//printStatusStatement("Error creating a subject for prescanned template:", result);
+					throw std::runtime_error("Biometrics: Error creating a subject for gallery template");
+				}
+
+				result = NBiometricEngineVerifyOffline(hBiometricClient, hGallerySubject, hProbeSubject, &biometricStatus);
+
+				//QueryPerformanceCounter(&end);
+				//QueryPerformanceFrequency(&freq);
+				//double res = (end.QuadPart - begin.QuadPart) / (double) freq.QuadPart;
+				//std::stringstream ss; 
+				//ss << res << " sec  ======================================================\n";
+				//OutputDebugString(ss.str().c_str());
+
+				if (NFailed(result))
+				{
+					//printStatusStatement("Error matching records:", result);
+					throw std::runtime_error("Biometrics: Error matching records");
+				}
+
+				if (biometricStatus == nbsOk) {
+					// retrieve matching results array for hProbeSubject
+					result = NSubjectGetMatchingResult(hProbeSubject, 0, &hMatchingResult);
+					//result = NSubjectGetMatchingResults(hProbeSubject, &hMatchingResults, &resultsCount);
+					if (NFailed(result))
+					{
+						//printStatusStatement("Error retrieve matching results from emrolled template:", result);
+						throw std::runtime_error("Biometrics: Error retrieving matching results from probe template");
+					}
+
+					result = NMatchingResultGetScore(hMatchingResult, &matchScore);
+					if (NFailed(result))
+					{
+						throw std::runtime_error("Biometrics: Error retrieving matching score from matching results");
+					}
+
+					result = NObjectSet(NULL, (HNObject *)&hMatchingResult);
+					if (NFailed(result))
+					{
+						//printStatusStatement("Error clearing resources");
+						throw std::runtime_error("Biometrics: Error deleting matching result");
+					}
+				}
+
+				// free unneeded hGallerySubject
+				result = NObjectSet(NULL, (HNObject *)&hGallerySubject);
+				if (NFailed(result))
+				{
+					throw std::runtime_error("Biometrics: Error deleting gallery subject");
+				}
+
+				if (!(matchScore > 0 && biometricStatus == nbsOk))
+				{
+					matched = false;
+					break;
+					//matchingStatus = true;
+					//printStatusStatement("templates match");
+					//sprintf_s (statusStatement, "templates match! score: %d", score);
+				}
+			}
+
+			return matched;
+		}
+
 		bool Matcher::match(void *galleryTemplate, unsigned __int32 galleryTemplateSize) {
 			NResult				result;
 			//HNBiometricClient	hBiometricClient;

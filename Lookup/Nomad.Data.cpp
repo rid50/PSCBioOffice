@@ -1,8 +1,9 @@
 //#include "stdafx.h"
 #include "Nomad.Data.h"
 
-#include <concrt.h>
-#include <ppltasks.h>
+//#include <concrt.h>
+//#include <ppltasks.h>
+
 //#include <chrono>
 //#include <thread>
 
@@ -450,6 +451,9 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 
 					FIELDSTRUCT* f;
 
+					std::vector<void*> galleryTemplateList;
+					std::vector<unsigned __int32> galleryTemplateSizeList;
+
 					for (SQLUSMALLINT j = 0; j < numOfFieldsToMatch; j++) {
 						if (RowStatus[i] == SQL_ROW_SUCCESS) {
 							//matched = true;
@@ -470,11 +474,19 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(*index));
 
 									//if (!fillOnly)
-										matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
 
-									if (matched) {
-										numOfMatches++;
-									}
+									//if (i == 4939) {
+									//	int k = 0;
+
+									//}
+
+									galleryTemplateList.push_back(f->f);
+									galleryTemplateSizeList.push_back(static_cast<unsigned __int32>(f->fInd));
+
+									//matched = matcherFacadePtr->match(f->f, static_cast<unsigned __int32>(f->fInd));
+									//if (matched) {
+									//	numOfMatches++;
+									//}
 
 									//if (1) {
 									//	std::stringstream ss; 
@@ -518,11 +530,19 @@ if (!SQL_SUCCEEDED(SQLSetEnvAttr(
 						}
 					}
 
-					if (numOfFieldsToMatch == numOfMatches) {
-						RowNumber = i + from + 1;
-						break;
-					}
+					//if (numOfFieldsToMatch == numOfMatches) {
+					//	RowNumber = i + from + 1;
+					//	break;
+					//}
 
+					if (galleryTemplateList.size() == numOfFieldsToMatch) {
+						matched = matcherFacadePtr->match(galleryTemplateList, galleryTemplateSizeList);
+
+						if (matched) {
+							RowNumber = i + from + 1;
+							break;
+						}
+					}
 /*
 					// Call SQLGetData to determine the amount of data that's waiting.
 					rc = SQLSetPos(hStmt, i + 1, SQL_POSITION, SQL_LOCK_NO_CHANGE);

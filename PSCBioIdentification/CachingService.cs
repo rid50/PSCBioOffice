@@ -303,7 +303,10 @@ namespace PSCBioIdentification
                 if (fingerList == null)
                     fingerList = new ArrayList();
                 else
-                    labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
+                {
+                    if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                        labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
+                }
 
                 Label lb;
                 for (int i = 1; i < 11; i++)

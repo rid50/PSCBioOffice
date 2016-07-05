@@ -6,7 +6,6 @@
 
 //#include "stdafx.h"
 //#include <WinDef.h>
-//#include <vector>
 //#include <malloc.h>
 
 #include "BlockingCollection.h"
@@ -15,7 +14,6 @@
 //#include <memory>
 
 #include <string>
-
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
@@ -23,6 +21,7 @@
 #include <iostream>     // std::streambuf, std::cout
 #include <fstream>      // std::ofstream
 #include <sstream>		// std::stringstream
+//#include <vector>
 
 //#include <ppltasks.h>
 //#include <concrt.h>
@@ -71,6 +70,7 @@ namespace Nomad
 			void enroll(unsigned char *probeTemplate, unsigned __int32 probeTemplateSize);
 			//static void terminateLoop();
 			bool match(void *galleryTemplate, unsigned __int32 galleryTemplateSize);
+			bool match(std::vector<void*> &galleryTemplate, std::vector<unsigned __int32> &galleryTemplateSize);
 		};
 	}
 

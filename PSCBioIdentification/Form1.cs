@@ -256,34 +256,40 @@ namespace PSCBioIdentification
                 //Application.Exit();
             }
 
-            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-            InstanceContext context = new InstanceContext(callback);
-            var client = new CachePopulateService.PopulateCacheServiceClient(context);
-
             ArrayList fingerList = null;
-            try
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
             {
-                fingerList = client.getFingerList();
-            }
-            catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>) {
-                //labelCacheUnavailable.Text = fault.Detail;
-                fingerList = null;
-                //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
-                labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
-                //MessageBox.Show(string.Format("{0}", fault.Detail));
-                //EnableControls(false);
-                manageCacheButton.Tag = "off";
-                manageCacheButton.Enabled = false;
-                radioButtonIdentify.Tag = "off";
-                radioButtonIdentify.Enabled = false;
-                buttonScan.Enabled = false;
- //               return;
+                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                InstanceContext context = new InstanceContext(callback);
+                var client = new CachePopulateService.PopulateCacheServiceClient(context);
+
+                try
+                {
+                    fingerList = client.getFingerList();
+                    if (fingerList != null)
+                        labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
+                }
+                catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>)
+                {
+                    //labelCacheUnavailable.Text = fault.Detail;
+                    fingerList = null;
+                    //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
+                    labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
+                    //MessageBox.Show(string.Format("{0}", fault.Detail));
+                    //EnableControls(false);
+                    manageCacheButton.Tag = "off";
+                    manageCacheButton.Enabled = false;
+                    radioButtonIdentify.Tag = "off";
+                    radioButtonIdentify.Enabled = false;
+                    buttonScan.Enabled = false;
+                    //               return;
+                }
             }
 
             if (fingerList == null)
                 fingerList = new ArrayList();
-            else
-                labelCacheValidationTime.Text += string.Format(" {0:MMM dd} {0:t}", client.getExpirationTime());
+            //else
+              //  labelCacheValidationTime.Text += string.Format(" {0:MMM dd} {0:t}", client.getExpirationTime());
 
             Label lab; CheckBox cb;
             for (int i = 1; i < 11; i++)
@@ -2536,6 +2542,15 @@ namespace PSCBioIdentification
                                 var rb = this.Controls.Find("radioButton" + best.ToString(), true)[0] as RadioButton;
                                 BeginInvoke(new MethodInvoker(delegate () { checkRadioButton(rb.Name); }));
                             }), bestQualityImageIndex);
+                        } else
+                        {
+                            this.Invoke((Action)(() =>
+                            {
+                                stopProgressBar();
+                                //LogLine("No prescanned fingers found", true);
+                                ShowErrorMessage("No prescanned fingers found");
+                                EnableControls(true);
+                            }));
                         }
                     }
                     else if (radioButtonIdentify.Checked)
