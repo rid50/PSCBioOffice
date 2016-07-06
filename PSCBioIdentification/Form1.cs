@@ -377,7 +377,9 @@ namespace PSCBioIdentification
             //personId.Focus();
 
             //personId.Text = "123"; 20010235
-            personId.Text = "20005140";
+            personId.Text = "210067490";
+            //personId.Text = "20005140";
+            
             //personId.Text = "20005232";
             //personId.Text = "20002346";            
 
@@ -536,8 +538,9 @@ namespace PSCBioIdentification
                     finger.Position = NFPosition.UnknownTwoFingers;
                     break;
                 //case 3:
-                //    finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.RightIndex;
-                //    break;
+                    //finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.LeftRing;
+                    //finger.Position = NFPosition.UnknownThreeFingers;
+                    //break;
                 case 4:
                     finger.Position = NFPosition.PlainLeftFourFingers;
                     break;
@@ -609,14 +612,20 @@ namespace PSCBioIdentification
                     var supportedPositions = fScanner.GetSupportedPositions();
                     if (supportedPositions.Contains<NFPosition>(NFPosition.PlainLeftFourFingers))
                     {
-                        if (count != 2 && count != 4) {
-                            ShowErrorMessage("2 or 4 fingers should be selected");
+                        //if (count < 2)
+                        //{
+                        //    ShowErrorMessage("At least 2 fingers should be selected");
+                        //    return;
+                        //}
+                        if (count != 2 && count != 4)
+                        {
+                            ShowErrorMessage("2 or 4 fingers might be selected");
                             return;
                         }
                     }
                     else if (count != 2)
                     {
-                        ShowErrorMessage("2 fingers should be selected");
+                        ShowErrorMessage("2 fingers might be selected");
                         return;
                     }
                 }
@@ -1086,6 +1095,15 @@ namespace PSCBioIdentification
                         LogLine(txt, true);
                         EnableControls(true);
                     }), string.Format("Segmentation failed: {0}", error));
+
+                    System.Timers.Timer timer = new System.Timers.Timer(1000);
+                    //timer.Elapsed += async (sender, e) => await HandleTimer();
+                    timer.Elapsed += OnTimedEvent;
+                    timer.AutoReset = false;
+                    timer.Start();
+
+                    //startCapturing();
+
                 }
 
                 //NFAttributes attributes = finger.Objects.FirstOrDefault();
@@ -1097,6 +1115,17 @@ namespace PSCBioIdentification
                 //}
 
             }
+        }
+
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            startCapturing();
+        }
+
+        private Task HandleTimer()
+        {
+            startCapturing();
+            return null;
         }
 
         private NFPosition getFingerPositionByTag(string tag)
@@ -3034,11 +3063,15 @@ namespace PSCBioIdentification
                 bb.Visible = show;
                 bb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as ButtonBase;
                 bb.Visible = !show;
-
-                radioButtonMan.Visible = !show;
-                radioButtonWoman.Visible = !show;
-                radioButtonManAndWoman.Visible = !show;
             }
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] != "managed")
+                show = true;
+
+            radioButtonMan.Visible = !show;
+            radioButtonWoman.Visible = !show;
+            radioButtonManAndWoman.Visible = !show;
+
         }
 
         private void setCulture()
