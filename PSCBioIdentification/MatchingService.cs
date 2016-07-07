@@ -92,39 +92,65 @@ namespace PSCBioIdentification
 
             _stw.Restart();
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+            record = new Record();
+            record.probeTemplate = e.Argument as byte[];
+
+            dynamic client = null;
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                client = new MemoryCacheMatchingService.MatchingServiceClient();
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                client = new AppFabricCacheMatchingService.MatchingServiceClient();
+
+            //if (!ReferenceEquals(null, client))
+            if (client != null)
             {
-                //var fingerList = new ArrayList();
-
-                //CheckBox cb;
-                //for (int i = 1; i < 11; i++)
-                //{
-                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                //    if (cb.Checked)
-                //        fingerList.Add(cb.Tag);
-                //}
-
-                record = new Record();
-                record.probeTemplate = e.Argument as byte[];
-                //record.probeTemplate = new byte[4][];
-                //byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
-                //int k = 0;
-                //foreach (var template in e.Argument as NSubject.FingerCollection)
-                //{
-                //    record.probeTemplate[k++] = template.Save().ToArray();
-                //}
-
-                var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
-                e.Result = matchingServiceClient.match(fingerList, gender, record.probeTemplate);
+                try
+                {
+                    e.Result = client.match(fingerList, gender, record.probeTemplate);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
-            else
+            else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
+            //{
+            //}
+
+            //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+            //{
+            //    //var fingerList = new ArrayList();
+
+            //    //CheckBox cb;
+            //    //for (int i = 1; i < 11; i++)
+            //    //{
+            //    //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+            //    //    if (cb.Checked)
+            //    //        fingerList.Add(cb.Tag);
+            //    //}
+
+            //    record = new Record();
+            //    record.probeTemplate = e.Argument as byte[];
+            //    //record.probeTemplate = new byte[4][];
+            //    //byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
+            //    //int k = 0;
+            //    //foreach (var template in e.Argument as NSubject.FingerCollection)
+            //    //{
+            //    //    record.probeTemplate[k++] = template.Save().ToArray();
+            //    //}
+
+            //    var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
+            //    e.Result = matchingServiceClient.match(fingerList, gender, record.probeTemplate);
+            //}
+            //else
             {
-                record = new Record();
+                //record = new Record();
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
                 //record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
                 record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
-                record.probeTemplate = e.Argument as byte[];
+                //record.probeTemplate = e.Argument as byte[];
                 //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
                 record.errorMessage = new System.Text.StringBuilder(512);
 

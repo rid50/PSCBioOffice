@@ -82,7 +82,9 @@ namespace PSCBioIdentification
             _callBack.MyEvent += MyEvent;
             InstanceContext context = new InstanceContext(_callBack);
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+            dynamic client;
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
             {
                 //_mre = mre;
 
@@ -119,37 +121,21 @@ namespace PSCBioIdentification
                 var client = new CachePopulateService.PopulateCacheServiceClient(context, serviceName, baseAddress);
 */
 
-                var client = new CachePopulateService.PopulateCacheServiceClient(context);
-
-                //try
-                //{
-                //    client.Run(new string[] { });
-                //    //client.Run(new string[] { "0" });
-                //}
-                //catch (FaultException ex)
-                //{
-                //    MessageBox.Show(ex.Message);
-                //    //ShowErrorMessage(ex.Message);
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(ex.Message);
-                //    //ShowErrorMessage(ex.Message);
-                //}
-
-                //buttonRequest.Enabled = false;
-
-                backgroundWorkerCachingService.RunWorkerAsync(client);
+                client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                //backgroundWorkerCachingService.RunWorkerAsync(client);
+            }
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            {
+                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                //backgroundWorkerCachingService.RunWorkerAsync(client);
             }
             else
             {
-                //var client = new UnmanagedMatchingService.
-                var client = new UnmanagedMatchingService.MatchingServiceClient(context);
-                backgroundWorkerCachingService.RunWorkerAsync(client);
-
-                //backgroundWorkerCachingService.RunWorkerAsync();
-
+                client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                //backgroundWorkerCachingService.RunWorkerAsync(client);
             }
+
+            backgroundWorkerCachingService.RunWorkerAsync(client);
         }
 
         private void backgroundWorkerCachingService_DoWork(object sender, DoWorkEventArgs e)
@@ -173,78 +159,57 @@ namespace PSCBioIdentification
                 return;
             }
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+            dynamic client = null;
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
             {
-                var client = e.Argument as CachePopulateService.PopulateCacheServiceClient;
-
-                //var fingerList = new System.Collections.ArrayList();
-
-                //CheckBox cb; Label lb;
-                //for (int i = 1; i < 11; i++)
+                client = e.Argument as MemoryCachePopulateService.PopulateCacheServiceClient;
+                //try
                 //{
-                //    lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                //    lb.BackColor = Color.Transparent;
-
-                //    cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
-                //    if (cb.Checked)
-                //        fingerList.Add(cb.Tag);
-                //}
-
-                //if (fingerList.Count == 0)
+                //    client.Run(fingerList);
+                //    _mre.WaitOne();
+                //} catch(Exception ex)
                 //{
-                //    e.Result = fingerList;
-                //    return;
+                //    throw new Exception(ex.Message);
                 //}
-                //record.fingerListSize = ar.Count;
-                //record.fingerList = new string[ar.Count];
-                //record.fingerList = ar.ToArray(typeof(string)) as string[];
+            }
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            {
+                client = e.Argument as AppFabricCachePopulateService.PopulateCacheServiceClient;
+                //try
+                //{
+                //    client.Run(fingerList);
+                //    _mre.WaitOne();
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new Exception(ex.Message);
+                //}
+            }
 
-                //ar.Clear();
-                //int id = Thread.CurrentThread.ManagedThreadId;
+            //if (!ReferenceEquals(null, client))
+            if (client != null)
+                {
                 try
                 {
                     client.Run(fingerList);
                     _mre.WaitOne();
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     throw new Exception(ex.Message);
                 }
-                //client.Run(new string[] { });
-                //client.Run(new string[] { "0" });
-
-                //_mre.WaitOne();
-
-                //if (!backgroundWorkerCachingService.CancellationPending)
-                //    e.Result = list;
-                //else
-                //    e.Result = null;
             }
-            else
+            else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
             {
                 record = new Record();
                 record.errorMessage = new System.Text.StringBuilder(512);
 
-                //var ar = new ArrayList();
-
-                ////record.fingerList = new string[3] { "ri", "rm", "rr" };
-                ////record.fingerListSize = 3;
-                //CheckBox cb;
-                //for (int i = 1; i < 11; i++)
-                //{
-                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                //    if (cb.Checked)
-                //        ar.Add(cb.Tag);
-                //}
                 record.fingerListSize = fingerList.Count;
-                //record.fingerList = new string[ar.Count];
                 record.fingerList = fingerList.ToArray(typeof(string)) as string[];
 
 
                 var list = new System.Collections.ArrayList();
-
-                //record.appSettings = new System.Text.StringBuilder(4);
-                //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
-                //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
 
                 list.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
                 list.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
@@ -252,10 +217,6 @@ namespace PSCBioIdentification
                 list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
                 record.appSettings = list.ToArray(typeof(string)) as string[];
 
-                //CallBackDelegate deleg = new CallBackDelegate(OnCallback);
-                //record.callback = new CallBackDelegate(OnCallback);
-
-                //UInt32 score = 0;
                 unsafe
                 {
                     fixed (UInt32* ptr = &record.probeTemplateSize)
@@ -272,7 +233,7 @@ namespace PSCBioIdentification
                             //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
                             //callback.MyEvent += MyEvent;
                             //InstanceContext context = new InstanceContext(callback);
-                            var client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
+                            client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
 
                             //client.setCallBack(deleg);
 
@@ -304,7 +265,7 @@ namespace PSCBioIdentification
                     fingerList = new ArrayList();
                 else
                 {
-                    if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                    if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                         labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
                 }
 

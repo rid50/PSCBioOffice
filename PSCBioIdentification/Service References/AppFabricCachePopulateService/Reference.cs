@@ -8,24 +8,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PSCBioIdentification.CachePopulateService {
+namespace PSCBioIdentification.AppFabricCachePopulateService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="CachePopulateService.IPopulateCacheService", CallbackContract=typeof(PSCBioIdentification.CachePopulateService.IPopulateCacheServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="AppFabricCachePopulateService.IPopulateCacheService", CallbackContract=typeof(PSCBioIdentification.AppFabricCachePopulateService.IPopulateCacheServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IPopulateCacheService {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        void Run(System.Collections.ArrayList fingerList);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Run2", ReplyAction="http://tempuri.org/IPopulateCacheService/Run2Response")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run2")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         void Run2(System.Collections.ArrayList fingerList);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Run", ReplyAction="http://tempuri.org/IPopulateCacheService/RunResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
+        void Run(System.Collections.ArrayList fingerList);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/getFingerList", ReplyAction="http://tempuri.org/IPopulateCacheService/getFingerListResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException), Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault", Name="ValidationException", Namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations")]
@@ -58,12 +58,12 @@ namespace PSCBioIdentification.CachePopulateService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IPopulateCacheServiceChannel : PSCBioIdentification.CachePopulateService.IPopulateCacheService, System.ServiceModel.IClientChannel {
+    public interface IPopulateCacheServiceChannel : PSCBioIdentification.AppFabricCachePopulateService.IPopulateCacheService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class PopulateCacheServiceClient : System.ServiceModel.DuplexClientBase<PSCBioIdentification.CachePopulateService.IPopulateCacheService>, PSCBioIdentification.CachePopulateService.IPopulateCacheService {
+    public partial class PopulateCacheServiceClient : System.ServiceModel.DuplexClientBase<PSCBioIdentification.AppFabricCachePopulateService.IPopulateCacheService>, PSCBioIdentification.AppFabricCachePopulateService.IPopulateCacheService {
         
         public PopulateCacheServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -85,12 +85,12 @@ namespace PSCBioIdentification.CachePopulateService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void Run(System.Collections.ArrayList fingerList) {
-            base.Channel.Run(fingerList);
-        }
-        
         public void Run2(System.Collections.ArrayList fingerList) {
             base.Channel.Run2(fingerList);
+        }
+        
+        public void Run(System.Collections.ArrayList fingerList) {
+            base.Channel.Run(fingerList);
         }
         
         public System.Collections.ArrayList getFingerList() {

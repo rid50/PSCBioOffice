@@ -257,11 +257,11 @@ namespace PSCBioIdentification
             }
 
             ArrayList fingerList = null;
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+            if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
             {
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 InstanceContext context = new InstanceContext(callback);
-                var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
 
                 try
                 {
@@ -731,9 +731,9 @@ namespace PSCBioIdentification
             {
                 if (IsMatchingServiceRunning)
                 {
-                    if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                    if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                     {
-                        var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
+                        var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
                         matchingServiceClient.Terminate();
                     }
                     else
@@ -1587,7 +1587,7 @@ namespace PSCBioIdentification
                 else
                 {
                     bool retcode = false;
-                    var matchingServiceClient = new PSCBioIdentification.CacheMatchingService.MatchingServiceClient();
+                    var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
                     var b = _subject.GetTemplateBuffer().ToArray();
                     var b2 = _subject2.GetTemplateBuffer().ToArray();
                     try {
@@ -3065,7 +3065,7 @@ namespace PSCBioIdentification
                 bb.Visible = !show;
             }
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] != "managed")
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
                 show = true;
 
             radioButtonMan.Visible = !show;
@@ -3168,10 +3168,10 @@ namespace PSCBioIdentification
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 InstanceContext context = new InstanceContext(callback);
 
-                if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                 {
                     //context = new InstanceContext(callback);
-                    var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
                     client.Terminate();
                 }
                 else
@@ -3329,10 +3329,10 @@ namespace PSCBioIdentification
                 InstanceContext context = new InstanceContext(callback);
                 //InstanceContext context = null;
 
-                if (ConfigurationManager.AppSettings["cachingProvider"] == "managed")
+                if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                 {
                     //context = new InstanceContext(callback);
-                    var client = new CachePopulateService.PopulateCacheServiceClient(context);
+                    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
                     client.Terminate();
                 }
                 else

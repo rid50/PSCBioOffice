@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="b657bd51-6e3f-49e4-a1c8-d18d4f49ed01" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ArrayList" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/MemoryCacheService/MatchingService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="218b53c6-557d-4ddd-a51b-09e1b02f7613" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?wsdl" />
+    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="328eafdc-02a2-408d-926c-3a16696220c9" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="1727f67d-db7c-4175-a1be-f2a31bc4f0b6" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?disco" />
+    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="544df81a-ad5c-4ae1-bf9e-76aa1a5bf692" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd0" />
+    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="007d1049-d292-4204-9420-68845bd04831" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

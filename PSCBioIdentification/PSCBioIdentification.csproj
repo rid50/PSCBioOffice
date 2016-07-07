@@ -110,6 +110,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Neurotec, Version=3.1.1.3, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\dotNET\Neurotec.dll</HintPath>
@@ -184,17 +185,27 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\CacheMatchingService\Reference.cs">
+    <Compile Include="Service References\AppFabricCacheMatchingService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Service References\CachePopulateService\Reference.cs">
+    <Compile Include="Service References\AppFabricCachePopulateService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ConfigurationService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\MemoryCacheMatchingService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\MemoryCachePopulateService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -247,35 +258,75 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\CacheMatchingService\MatchingService1.wsdl" />
-    <None Include="Service References\CacheMatchingService\MatchingService3.xsd">
+    <None Include="Service References\AppFabricCacheMatchingService\MatchingService1.wsdl" />
+    <None Include="Service References\AppFabricCacheMatchingService\MatchingService3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CacheMatchingService\MatchingService31.xsd">
+    <None Include="Service References\AppFabricCacheMatchingService\MatchingService31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CacheMatchingService\MatchingService32.xsd">
+    <None Include="Service References\AppFabricCacheMatchingService\MatchingService32.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService1.wsdl" />
-    <None Include="Service References\CachePopulateService\PopulateCacheService4.xsd">
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService1.wsdl" />
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService41.xsd">
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService42.xsd">
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService43.xsd">
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService43.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService44.xsd">
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService44.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\CacheMatchingService\MatchingService1.disco" />
+    <None Include="Service References\MemoryCacheMatchingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MemoryCacheMatchingService\configuration.svcinfo" />
+    <None Include="Service References\MemoryCacheMatchingService\configuration91.svcinfo" />
+    <None Include="Service References\MemoryCacheMatchingService\MatchingService.disco" />
+    <None Include="Service References\MemoryCacheMatchingService\MatchingService.wsdl" />
+    <None Include="Service References\MemoryCacheMatchingService\MatchingService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCacheMatchingService\MatchingService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCacheMatchingService\MatchingService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\configuration.svcinfo" />
+    <None Include="Service References\MemoryCachePopulateService\configuration91.svcinfo" />
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService.disco" />
+    <None Include="Service References\AppFabricCacheMatchingService\MatchingService1.disco" />
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService.wsdl" />
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\UnmanagedMatchingService\MatchingService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.wsdl" />
@@ -288,7 +339,7 @@
     <None Include="Service References\ConfigurationService\ConfigurationService32.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\CachePopulateService\PopulateCacheService1.disco" />
+    <None Include="Service References\AppFabricCachePopulateService\PopulateCacheService1.disco" />
     <None Include="Service References\UnmanagedMatchingService\MatchingService1.wsdl" />
     <None Include="Service References\UnmanagedMatchingService\MatchingService4.xsd">
       <SubType>Designer</SubType>
@@ -309,18 +360,18 @@
     <None Include="Service References\UnmanagedMatchingService\configuration.svcinfo" />
     <None Include="Service References\UnmanagedMatchingService\configuration91.svcinfo" />
     <None Include="Resources\refresh32.png" />
-    <None Include="Service References\CachePopulateService\Reference.svcmap">
+    <None Include="Service References\AppFabricCachePopulateService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\CachePopulateService\configuration.svcinfo" />
-    <None Include="Service References\CachePopulateService\configuration91.svcinfo" />
-    <None Include="Service References\CacheMatchingService\Reference.svcmap">
+    <None Include="Service References\AppFabricCachePopulateService\configuration.svcinfo" />
+    <None Include="Service References\AppFabricCachePopulateService\configuration91.svcinfo" />
+    <None Include="Service References\AppFabricCacheMatchingService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\CacheMatchingService\configuration.svcinfo" />
-    <None Include="Service References\CacheMatchingService\configuration91.svcinfo" />
+    <None Include="Service References\AppFabricCacheMatchingService\configuration.svcinfo" />
+    <None Include="Service References\AppFabricCacheMatchingService\configuration91.svcinfo" />
     <None Include="Service References\ConfigurationService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -354,9 +405,11 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\CacheMatchingService\" />
-    <WCFMetadataStorage Include="Service References\CachePopulateService\" />
+    <WCFMetadataStorage Include="Service References\AppFabricCacheMatchingService\" />
+    <WCFMetadataStorage Include="Service References\AppFabricCachePopulateService\" />
     <WCFMetadataStorage Include="Service References\ConfigurationService\" />
+    <WCFMetadataStorage Include="Service References\MemoryCacheMatchingService\" />
+    <WCFMetadataStorage Include="Service References\MemoryCachePopulateService\" />
     <WCFMetadataStorage Include="Service References\UnmanagedMatchingService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

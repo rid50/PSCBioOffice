@@ -16,21 +16,21 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations" />
-      <xsd:import schemaLocation="http://localhost/AppFabricCacheService/PopulateCacheService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System" />
+      <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations" />
+      <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IPopulateCacheService_Run_InputMessage">
-    <wsdl:part name="parameters" element="tns:Run" />
-  </wsdl:message>
   <wsdl:message name="IPopulateCacheService_Run2_InputMessage">
     <wsdl:part name="parameters" element="tns:Run2" />
   </wsdl:message>
-  <wsdl:message name="IPopulateCacheService_Run2_OutputMessage">
-    <wsdl:part name="parameters" element="tns:Run2Response" />
+  <wsdl:message name="IPopulateCacheService_Run_InputMessage">
+    <wsdl:part name="parameters" element="tns:Run" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Run_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RunResponse" />
   </wsdl:message>
   <wsdl:message name="IPopulateCacheService_getFingerList_InputMessage">
     <wsdl:part name="parameters" element="tns:getFingerList" />
@@ -66,12 +66,12 @@
     <wsdl:part name="parameters" element="tns:CacheOperationComplete" />
   </wsdl:message>
   <wsdl:portType msc:usingSession="true" name="IPopulateCacheService">
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run">
-      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run" message="tns:IPopulateCacheService_Run_InputMessage" />
-    </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run2">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2" message="tns:IPopulateCacheService_Run2_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2Response" message="tns:IPopulateCacheService_Run2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run" message="tns:IPopulateCacheService_Run_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RunResponse" message="tns:IPopulateCacheService_Run_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getFingerList">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerList" message="tns:IPopulateCacheService_getFingerList_InputMessage" />
@@ -102,14 +102,14 @@
   <wsdl:binding name="WSDualHttpBinding_IPopulateCacheService" type="tns:IPopulateCacheService">
     <wsp:PolicyReference URI="#WSDualHttpBinding_IPopulateCacheService_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="Run">
-      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
+    <wsdl:operation name="Run2">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run2" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
-    <wsdl:operation name="Run2">
-      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run2" style="document" />
+    <wsdl:operation name="Run">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -174,9 +174,9 @@
   </wsdl:binding>
   <wsdl:service name="PopulateCacheService">
     <wsdl:port name="WSDualHttpBinding_IPopulateCacheService" binding="tns:WSDualHttpBinding_IPopulateCacheService">
-      <soap12:address location="http://localhost/AppFabricCacheService/PopulateCacheService.svc" />
+      <soap12:address location="http://localhost/MemoryCacheService/PopulateCacheService.svc" />
       <wsa10:EndpointReference>
-        <wsa10:Address>http://localhost/AppFabricCacheService/PopulateCacheService.svc</wsa10:Address>
+        <wsa10:Address>http://localhost/MemoryCacheService/PopulateCacheService.svc</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
           <Dns>localhost</Dns>
         </Identity>

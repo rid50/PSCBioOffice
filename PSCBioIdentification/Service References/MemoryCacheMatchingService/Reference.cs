@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PSCBioIdentification.CacheMatchingService {
+namespace PSCBioIdentification.MemoryCacheMatchingService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="CacheMatchingService.IMatchingService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService")]
     public interface IMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/getFingerList", ReplyAction="http://tempuri.org/IMatchingService/getFingerListResponse")]
@@ -31,12 +31,12 @@ namespace PSCBioIdentification.CacheMatchingService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IMatchingServiceChannel : PSCBioIdentification.CacheMatchingService.IMatchingService, System.ServiceModel.IClientChannel {
+    public interface IMatchingServiceChannel : PSCBioIdentification.MemoryCacheMatchingService.IMatchingService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class MatchingServiceClient : System.ServiceModel.ClientBase<PSCBioIdentification.CacheMatchingService.IMatchingService>, PSCBioIdentification.CacheMatchingService.IMatchingService {
+    public partial class MatchingServiceClient : System.ServiceModel.ClientBase<PSCBioIdentification.MemoryCacheMatchingService.IMatchingService>, PSCBioIdentification.MemoryCacheMatchingService.IMatchingService {
         
         public MatchingServiceClient() {
         }

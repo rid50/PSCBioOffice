@@ -12,7 +12,7 @@ namespace PSCBioIdentification
     //}
 
     //class CallbackFromCacheFillingService : CallbackFromUnmanagedCacheService, CallbackFromManagedCacheService
-    class CallbackFromCacheFillingService : UnmanagedMatchingService.IMatchingServiceCallback, CachePopulateService.IPopulateCacheServiceCallback
+    class CallbackFromCacheFillingService : UnmanagedMatchingService.IMatchingServiceCallback, MemoryCachePopulateService.IPopulateCacheServiceCallback, AppFabricCachePopulateService.IPopulateCacheServiceCallback
     {
         private static int totalRecords;
         private static double runningSum;
