@@ -59,7 +59,7 @@ namespace PassportReaderNS
         public Form1()
         {
             InitializeComponent();
-            TextBoxID.Text = "20005140";
+            TextBoxID.Text = "210067490";
             tabControl1.SelectedTab = tabPage3;
         }
 

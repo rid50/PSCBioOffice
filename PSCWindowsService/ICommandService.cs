@@ -7,7 +7,7 @@ using System.Collections;
 namespace PSCWindowsService
 {
     [ServiceContract]
-    public interface ICommandServices
+    public interface ICommandService
     {
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "CheckConnection/")]

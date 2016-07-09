@@ -210,6 +210,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\MemoryCache\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\UnmanagedMatchingService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -286,6 +291,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\MemoryCache\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MemoryCache\configuration.svcinfo" />
+    <None Include="Service References\MemoryCache\configuration91.svcinfo" />
+    <None Include="Service References\MemoryCache\MemoryCacheService.disco" />
     <None Include="Service References\MemoryCacheMatchingService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -325,6 +337,22 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\MemoryCachePopulateService\PopulateCacheService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCache\MemoryCacheService.wsdl" />
+    <None Include="Service References\MemoryCache\MemoryCacheService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCache\MemoryCacheService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCache\MemoryCacheService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCache\MemoryCacheService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MemoryCache\MemoryCacheService4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\UnmanagedMatchingService\MatchingService1.disco" />
@@ -410,6 +438,7 @@
     <WCFMetadataStorage Include="Service References\ConfigurationService\" />
     <WCFMetadataStorage Include="Service References\MemoryCacheMatchingService\" />
     <WCFMetadataStorage Include="Service References\MemoryCachePopulateService\" />
+    <WCFMetadataStorage Include="Service References\MemoryCache\" />
     <WCFMetadataStorage Include="Service References\UnmanagedMatchingService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

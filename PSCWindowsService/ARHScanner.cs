@@ -5,6 +5,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using Pr22.Task;
 using Pr22.Util;
+using WsqSerializationBinder;
+//using WindowsService.CacheService;
 
 enum BarcodeTypes {
         // Summary:
@@ -1020,7 +1022,7 @@ class ARHScanner
         _wsqImg = null;
     }
 }
-
+/*
 [Serializable]
 public class WsqImage
 {
@@ -1031,4 +1033,4 @@ public class WsqImage
     public int PixelFormat { get; set; }
     public byte[] Content { get; set; }
 }
-
+*/

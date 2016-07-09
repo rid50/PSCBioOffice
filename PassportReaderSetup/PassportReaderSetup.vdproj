@@ -316,6 +316,11 @@
                     "Name" = "8:Microsoft .NET Framework 4.6 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.6"
                     }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.4.5"
+                    {
+                    "Name" = "8:Windows Installer 4.5"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.4.5"
+                    }
                 }
             }
         }
@@ -351,7 +356,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_0E9FA0D85F176CA6293903E039215BEB"
@@ -382,7 +387,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics.Client, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1BFF3D21579B7A4DB7C743AFF3176D7B"
@@ -475,7 +480,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_75AB0DD7145CF7CBD34BF20329F66E8A"
@@ -506,7 +511,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec.Licensing, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec.Licensing, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_868ABE7729425405B434057BFB3BA6AF"
@@ -619,7 +624,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec.Devices, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec.Devices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_E0A42EE30B664427498605343255C3E7"
@@ -650,7 +655,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Neurotec.Media, Version=6.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Neurotec.Media, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F3027B44F6B0368D1A361A7ED18180EC"
@@ -734,7 +739,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PassportReader"
         "ProductCode" = "8:{44457732-EE81-4212-9114-6A692508CB80}"
-        "PackageCode" = "8:{BAB95F2A-ADBB-47AA-B36A-7FBB3ABAD199}"
+        "PackageCode" = "8:{8A0198FD-39F4-4D70-B8BE-23636159E661}"
         "UpgradeCode" = "8:{032D6C2A-2E0C-43FF-8139-056C9B24F591}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1269,7 +1274,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3E9A7EF1320C4895B32A8725A5B01A9A"
             {
-            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Release\\PassportReader.exe"
+            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Debug\\PassportReader.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"

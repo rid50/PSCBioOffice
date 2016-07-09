@@ -257,6 +257,43 @@ namespace PSCBioIdentification
             }
 
             ArrayList fingerList = null;
+
+            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+            InstanceContext context = new InstanceContext(callback);
+
+            dynamic client = null;
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+            if (client != null)
+            {
+                try
+                {
+                    fingerList = client.getFingerList();
+                    if (fingerList != null)
+                        labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
+                }
+                catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>)
+                {
+                    //labelCacheUnavailable.Text = fault.Detail;
+                    fingerList = null;
+                    //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
+                    labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
+                    //MessageBox.Show(string.Format("{0}", fault.Detail));
+                    //EnableControls(false);
+                    manageCacheButton.Tag = "off";
+                    manageCacheButton.Enabled = false;
+                    radioButtonIdentify.Tag = "off";
+                    radioButtonIdentify.Enabled = false;
+                    buttonScan.Enabled = false;
+                }
+            }
+
+
+/*
             if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
             {
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
@@ -285,7 +322,7 @@ namespace PSCBioIdentification
                     //               return;
                 }
             }
-
+*/
             if (fingerList == null)
                 fingerList = new ArrayList();
             //else
@@ -379,7 +416,7 @@ namespace PSCBioIdentification
             //personId.Text = "123"; 20010235
             personId.Text = "210067490";
             //personId.Text = "20005140";
-            
+
             //personId.Text = "20005232";
             //personId.Text = "20002346";            
 
@@ -387,6 +424,11 @@ namespace PSCBioIdentification
             //buttonScan.Enabled = false;
             //if (!initFingerMatcher())
             //    ShowErrorMessage("Lookup service: Error connecting to database");
+
+
+            var cl = new MemoryCache.MemoryCacheServiceClient();
+            var fingersCollection = cl.GetQualityFingerCollection("210067490");
+            //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 
         private void EnableSemaphorControls(bool capturing)
@@ -731,13 +773,25 @@ namespace PSCBioIdentification
             {
                 if (IsMatchingServiceRunning)
                 {
-                    if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-                    {
-                        var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
-                        matchingServiceClient.Terminate();
-                    }
+                    dynamic client = null;
+                    if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                        client = new MemoryCacheMatchingService.MatchingServiceClient();
+                    else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                        client = new AppFabricCacheMatchingService.MatchingServiceClient();
+
+
+                    if (client != null)
+                        client.Terminate();
                     else
                         terminateMatchingService();
+
+                    //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+                    //{
+                    //    var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
+                    //    matchingServiceClient.Terminate();
+                    //}
+                    //else
+                    //    terminateMatchingService();
                 }
             }
 
@@ -1587,12 +1641,13 @@ namespace PSCBioIdentification
                 else
                 {
                     bool retcode = false;
-                    var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
-                    var b = _subject.GetTemplateBuffer().ToArray();
-                    var b2 = _subject2.GetTemplateBuffer().ToArray();
+
+                    var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient();
+                    //var b = _subject.GetTemplateBuffer().ToArray();
+                    //var b2 = _subject2.GetTemplateBuffer().ToArray();
                     try {
-                        //retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
-                        retcode = matchingServiceClient.verify(b, b2);
+                        retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                        //retcode = matchingServiceClient.verify(b, b2);
                     }
                     catch (Exception ex)
                     {
@@ -2167,7 +2222,7 @@ namespace PSCBioIdentification
 
             _biometricClient.FingersTemplateSize = NTemplateSize.Small;
             _biometricClient.FingersFastExtraction = false;
-            _biometricClient.FingersQualityThreshold = 40;
+            _biometricClient.FingersQualityThreshold = 48;
             //TimeSpan ts;
             //string elapsedTime;
             //var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -3146,10 +3201,15 @@ namespace PSCBioIdentification
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            new Action(delegate()
+            new Action(delegate ()
             {
                 EnableControls(false);
-            }).BeginInvoke(null, null);
+            }).Invoke();
+
+            //this.Invoke((Action)(() =>
+            //{
+            //    EnableControls(false);
+            //}));
 
             //act();
 
@@ -3168,12 +3228,16 @@ namespace PSCBioIdentification
                 CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 InstanceContext context = new InstanceContext(callback);
 
-                if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-                {
-                    //context = new InstanceContext(callback);
-                    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+                dynamic client = null;
+                if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+
+                if (client != null)
                     client.Terminate();
-                }
                 else
                 {
                     if (ConfigurationManager.AppSettings["cachingService"] == "local")
@@ -3183,10 +3247,30 @@ namespace PSCBioIdentification
                     else
                     {
                         //context = new InstanceContext(callback);
-                        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                        client = new UnmanagedMatchingService.MatchingServiceClient(context);
                         client.terminateMatchingService();
                     }
                 }
+
+                //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+                //{
+                //    //context = new InstanceContext(callback);
+                //    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                //    client.Terminate();
+                //}
+                //else
+                //{
+                //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                //    {
+                //        terminateMatchingService();
+                //    }
+                //    else
+                //    {
+                //        //context = new InstanceContext(callback);
+                //        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                //        client.terminateMatchingService();
+                //    }
+                //}
 
                 manageCacheButton.Enabled = false;
 
@@ -3329,12 +3413,15 @@ namespace PSCBioIdentification
                 InstanceContext context = new InstanceContext(callback);
                 //InstanceContext context = null;
 
-                if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-                {
-                    //context = new InstanceContext(callback);
-                    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                dynamic client = null;
+                if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+
+                if (client != null)
                     client.Terminate();
-                }
                 else
                 {
                     if (ConfigurationManager.AppSettings["cachingService"] == "local")
@@ -3344,10 +3431,31 @@ namespace PSCBioIdentification
                     else
                     {
                         //context = new InstanceContext(callback);
-                        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                        client = new UnmanagedMatchingService.MatchingServiceClient(context);
                         client.terminateMatchingService();
                     }
                 }
+
+                //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+                //{
+                //    //context = new InstanceContext(callback);
+                //    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                //    client.Terminate();
+                //}
+                //else
+                //{
+                //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                //    {
+                //        terminateMatchingService();
+                //    }
+                //    else
+                //    {
+                //        //context = new InstanceContext(callback);
+                //        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                //        client.terminateMatchingService();
+                //    }
+                //}
+
                 manageCacheButton.Enabled = false;
                 Application.DoEvents();
                 ShowStatusMessage("Terminating the request...");

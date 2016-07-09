@@ -4,5 +4,5 @@ installutil C:\psc\PSCBioOffice\PSCWindowsService\bin\PSCWindowsService.exe
 net start PSCWindowsService
 
 
-net stop PSCWCFWindowsService
+net stop PSCWindowsService
 installutil /u C:\psc\PSCBioOffice\PSCWindowsService\bin\PSCWindowsService.exe

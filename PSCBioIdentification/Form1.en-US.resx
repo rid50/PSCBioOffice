@@ -215,7 +215,7 @@
     <value>NoControl</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>PSC Fingerprint Verification</value>
+    <value>PSC Fingerprint Verification/Identification</value>
   </data>
   <data name="msgEnterPersonId" xml:space="preserve">
     <value>Enter Person Id</value>

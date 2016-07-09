@@ -85,55 +85,11 @@ namespace PSCBioIdentification
             dynamic client;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-            {
-                //_mre = mre;
-
-                //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
-                //callback.MyEvent += MyEvent;
-                //InstanceContext context = new InstanceContext(callback);
-/*
-                String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
-                //configurationServiceClient.Endpoint.Address
-
-                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                //var serviceModel = configFile.SectionGroups["system.serviceModel"];
-                //var clientSection = serviceModel.Sections["client"];
-
-                //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
-
-                ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
-                //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
-                //{
-                //    var address = cs.Address;
-                //}
-
-                String serviceName = "WSDualHttpBinding_IPopulateCacheService";
-
-                Uri endPoint = serviceModelClient.Endpoints.Cast<ChannelEndpointElement>()
-                                                           .SingleOrDefault(endpoint => endpoint.Name == serviceName).Address;
-
-                if (baseAddress.Length != 0)
-                    baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + endPoint.PathAndQuery;
-                //baseAddress = endPoint.Scheme + "://" + baseAddress + ":" + endPoint.Port + "/" + endPoint.Host + endPoint.PathAndQuery;
-                else
-                    baseAddress = endPoint.AbsoluteUri;
-
-                var client = new CachePopulateService.PopulateCacheServiceClient(context, serviceName, baseAddress);
-*/
-
                 client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
-                //backgroundWorkerCachingService.RunWorkerAsync(client);
-            }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-            {
                 client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
-                //backgroundWorkerCachingService.RunWorkerAsync(client);
-            }
             else
-            {
                 client = new UnmanagedMatchingService.MatchingServiceClient(context);
-                //backgroundWorkerCachingService.RunWorkerAsync(client);
-            }
 
             backgroundWorkerCachingService.RunWorkerAsync(client);
         }
@@ -162,30 +118,9 @@ namespace PSCBioIdentification
             dynamic client = null;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-            {
                 client = e.Argument as MemoryCachePopulateService.PopulateCacheServiceClient;
-                //try
-                //{
-                //    client.Run(fingerList);
-                //    _mre.WaitOne();
-                //} catch(Exception ex)
-                //{
-                //    throw new Exception(ex.Message);
-                //}
-            }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-            {
                 client = e.Argument as AppFabricCachePopulateService.PopulateCacheServiceClient;
-                //try
-                //{
-                //    client.Run(fingerList);
-                //    _mre.WaitOne();
-                //}
-                //catch (Exception ex)
-                //{
-                //    throw new Exception(ex.Message);
-                //}
-            }
 
             //if (!ReferenceEquals(null, client))
             if (client != null)

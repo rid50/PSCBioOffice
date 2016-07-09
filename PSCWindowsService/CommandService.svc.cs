@@ -8,11 +8,13 @@ using System.Collections;
 using WindowsService.CacheService;
 using System.Web.Script.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using WindowsService.DataService;
+//using WsqSerializationBinder;
 
 namespace PSCWindowsService
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    public class CommandServices : ICommandServices
+    public class CommandService : ICommandService
     {
         class AjaxReturn { public string result { get; set; } public string message { get; set; }}
 
@@ -80,31 +82,36 @@ namespace PSCWindowsService
                 else
                     checkBoxes = checkBoxesStates.Split(',');
 
-                //Scanner scanner = null;
+                Scanner scanner = null;
                 MemoryStream ms = null;
                 try
                 {
                     var cache = new MemoryCacheServiceClient();
-                    byte[] buffer = cache.GetRawFingerCollection(id);
+                    //ArrayList fingersCollection = cache.GetQualityFingerCollection(id);
 
+                    var client = new DataServiceClient();
+                    byte[] buffer = client.GetWSQImages(id);
                     ms = new MemoryStream(buffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqImage>();
                     ArrayList fingersCollection = formatter.Deserialize(ms) as ArrayList;
 
+                    //List<WsqImage> fingersCollection = null;
                     //var bioProcessor = new BioProcessor.BioProcessor();
-                    //bioProcessor.DeserializeWSQArray(buff, out fingersCollection);
+                    //bioProcessor.DeserializeWSQArray(buffer, out fingersCollection);
 
-                    //scanner = new Scanner();
-                    //scanner.FingersCollection = fingersCollection;
+                    scanner = new Scanner();
+                    scanner.FingersCollection = fingersCollection;
 
-                    //result = scanner.scan(hand, id, checkBoxes);
+                    result = scanner.scan(hand, id, checkBoxes);
 
-                    cache.SetDirty();
-                    //var dataContract = new FingerPrintDataContract();
-                    //dataContract.id = id;
-                    //dataContract.fingersCollection = scanner.FingersCollection;
-                    //cache.Put(dataContract);
+                    //var cache = new MemoryCacheServiceClient();
+                    //cache.SetDirty();
+
+                    var dataContract = new FingerPrintDataContract();
+                    dataContract.id = id;
+                    dataContract.fingersCollection = scanner.FingersCollection;
+                    cache.Put(dataContract);
 
                 }
                 catch (Exception ex)
@@ -133,17 +140,16 @@ namespace PSCWindowsService
             str = callback + "(" + str + ")";
             return new MemoryStream(Encoding.UTF8.GetBytes(str));
 
-
             //IList<Object> UserInfo = new List<Object>();
 
-           /* var jsonEmptyData = new
-            {
-                Total = 0,
-                Page = 1,
-                Records = 0,
-                Rows = new { item_id = 0, part_no = "", part_no_description = "", sum_quantity = 0, unit_price = 0d, total_price = 0d }
-            };
-            return Json(jsonEmptyData, JsonRequestBehavior.AllowGet);*/
+            /* var jsonEmptyData = new
+             {
+                 Total = 0,
+                 Page = 1,
+                 Records = 0,
+                 Rows = new { item_id = 0, part_no = "", part_no_description = "", sum_quantity = 0, unit_price = 0d, total_price = 0d }
+             };
+             return Json(jsonEmptyData, JsonRequestBehavior.AllowGet);*/
             //throw new Exception("scan left");
             /*
             string toReturn = id + " --- "; // +checkBoxesStates.Count.ToString();
@@ -168,7 +174,7 @@ namespace PSCWindowsService
             //Context.Response.ContentType = "application/json";
             //Context.Response.Write(sb.ToString());
             //Context.Response.End();
-            
+
 
 
             //return id + " --- "; // +checkBoxesStates.Count.ToString();

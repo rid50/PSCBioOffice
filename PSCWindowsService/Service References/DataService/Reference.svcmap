@@ -18,13 +18,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://pscservice/CommonService/DataService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost/CommonService/DataService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="DataService.disco" MetadataType="Disco" ID="72d85320-2052-4c34-9909-4442ac7d8804" SourceId="1" SourceUrl="http://pscservice/CommonService/DataService.svc?disco" />
-    <MetadataFile FileName="DataService.wsdl" MetadataType="Wsdl" ID="354a3d4d-066d-412c-820b-cb48e384e0cd" SourceId="1" SourceUrl="http://pscservice/CommonService/DataService.svc?wsdl" />
-    <MetadataFile FileName="DataService.xsd" MetadataType="Schema" ID="7ee21cea-4642-4681-ac50-c701a589c16f" SourceId="1" SourceUrl="http://pscservice/CommonService/DataService.svc?xsd=xsd0" />
-    <MetadataFile FileName="DataService1.xsd" MetadataType="Schema" ID="a8c73158-3065-4f17-bda1-ad93c0a96fd0" SourceId="1" SourceUrl="http://pscservice/CommonService/DataService.svc?xsd=xsd1" />
+    <MetadataFile FileName="DataService1.wsdl" MetadataType="Wsdl" ID="159f0dbd-edd1-4703-b1ce-1383bde0d08e" SourceId="1" SourceUrl="http://localhost/CommonService/DataService.svc?wsdl" />
+    <MetadataFile FileName="DataService1.disco" MetadataType="Disco" ID="5bee3b5c-2c0a-44eb-a205-65c8369483e6" SourceId="1" SourceUrl="http://localhost/CommonService/DataService.svc?disco" />
+    <MetadataFile FileName="DataService2.xsd" MetadataType="Schema" ID="783f6ace-75ef-49eb-b70e-07c741e45283" SourceId="1" SourceUrl="http://localhost/CommonService/DataService.svc?xsd=xsd1" />
+    <MetadataFile FileName="DataService21.xsd" MetadataType="Schema" ID="bfb574f1-04aa-4431-8a00-d46bf6cd71fb" SourceId="1" SourceUrl="http://localhost/CommonService/DataService.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

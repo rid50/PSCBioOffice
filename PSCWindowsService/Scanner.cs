@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using WindowsService.DataService;
+//using WindowsService.CacheService;
 
 namespace PSCWindowsService
 {
@@ -126,7 +127,9 @@ namespace PSCWindowsService
                         buff = ms.ToArray();
 
                         var client = new DataServiceClient();
-                        client.SendWSQImage(Convert.ToInt32(id), ref buff);
+                        client.saveWsqInDatabase(Convert.ToInt32(id), buff);
+                        //client.SetWSQImages(Convert.ToInt32(id), ref buff);
+
                         //SendImage(IMAGE_TYPE.wsq, Convert.ToInt32(id), ref buff);
                         //saveWsqInDatabase(id, buff);
                     }

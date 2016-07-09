@@ -15,8 +15,14 @@ namespace WindowsService.DataService {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="DataService.IDataService")]
     public interface IDataService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDataService/SendWSQImage", ReplyAction="http://tempuri.org/IDataService/SendWSQImageResponse")]
-        void SendWSQImage(int id, ref byte[] buffer);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDataService/GetWSQImages", ReplyAction="http://tempuri.org/IDataService/GetWSQImagesResponse")]
+        byte[] GetWSQImages(string id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDataService/SetWSQImages", ReplyAction="http://tempuri.org/IDataService/SetWSQImagesResponse")]
+        void SetWSQImages(int id, ref byte[] buffer);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDataService/saveWsqInDatabase", ReplyAction="http://tempuri.org/IDataService/saveWsqInDatabaseResponse")]
+        void saveWsqInDatabase(int id, byte[] buffer);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -46,8 +52,16 @@ namespace WindowsService.DataService {
                 base(binding, remoteAddress) {
         }
         
-        public void SendWSQImage(int id, ref byte[] buffer) {
-            base.Channel.SendWSQImage(id, ref buffer);
+        public byte[] GetWSQImages(string id) {
+            return base.Channel.GetWSQImages(id);
+        }
+        
+        public void SetWSQImages(int id, ref byte[] buffer) {
+            base.Channel.SetWSQImages(id, ref buffer);
+        }
+        
+        public void saveWsqInDatabase(int id, byte[] buffer) {
+            base.Channel.saveWsqInDatabase(id, buffer);
         }
     }
 }

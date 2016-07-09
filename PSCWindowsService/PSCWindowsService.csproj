@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowsService</RootNamespace>
     <AssemblyName>PSCWindowsService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -30,7 +30,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -61,7 +61,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -95,6 +95,7 @@
       <HintPath>.\PrFps22.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -108,15 +109,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
+    <Reference Include="WsqSerializationBinder">
+      <HintPath>..\..\PSCBioOfficeWeb\WsqSerializationBinder\bin\WsqSerializationBinder.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ARHScanner.cs" />
-    <Compile Include="CommandServices.svc.cs">
-      <DependentUpon>CommandServices.svc</DependentUpon>
+    <Compile Include="CommandService.svc.cs">
+      <DependentUpon>CommandService.svc</DependentUpon>
     </Compile>
-    <Compile Include="GenericBinder.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="ICommandServices.cs" />
+    <Compile Include="ICommandService.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -137,45 +140,45 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CommandServices.svc" />
+    <Content Include="CommandService.svc" />
     <Content Include="Installation Commands.txt" />
+    <None Include="Service References\DataService\DataService1.disco" />
+    <None Include="Service References\CacheService\MemoryCacheService.disco" />
+    <None Include="Service References\CacheService\MemoryCacheService.wsdl" />
+    <None Include="Service References\CacheService\MemoryCacheService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheService\MemoryCacheService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheService\MemoryCacheService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheService\MemoryCacheService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CacheService\MemoryCacheService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DataService\DataService1.wsdl" />
+    <None Include="Service References\DataService\DataService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DataService\DataService21.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\DataService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\DataService\configuration.svcinfo" />
     <None Include="Service References\DataService\configuration91.svcinfo" />
-    <None Include="Service References\DataService\DataService.disco" />
-    <None Include="Service References\CacheService\MemoryCacheService1.disco" />
-    <None Include="Service References\CacheService\MemoryCacheService1.wsdl" />
-    <None Include="Service References\CacheService\MemoryCacheService5.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CacheService\MemoryCacheService51.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CacheService\MemoryCacheService52.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CacheService\MemoryCacheService53.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CacheService\MemoryCacheService54.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\CacheService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\CacheService\configuration.svcinfo" />
     <None Include="Service References\CacheService\configuration91.svcinfo" />
-    <None Include="Service References\DataService\DataService.wsdl" />
-    <None Include="Service References\DataService\DataService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DataService\DataService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
