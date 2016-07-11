@@ -1,0 +1,8 @@
+﻿run VS2015 x64 Native Tools Command Prompt
+
+installutil PSCWindowsService.exe
+net start PSCWindowsService
+
+
+net stop PSCWindowsService
+installutil /u PSCWindowsService.exe

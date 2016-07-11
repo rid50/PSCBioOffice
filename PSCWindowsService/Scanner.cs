@@ -48,9 +48,10 @@ namespace PSCWindowsService
 
             if ((ErrorCode = _sc.fpsConnect()) != 0)
             {
-                var err = GetError(_sc);
+                //var err = GetError(_sc);
                 Disconnect();
-                throw new Exception(err);
+                throw new Exception("No device found");
+                //throw new Exception(err);
             }
             else
             {
@@ -80,9 +81,9 @@ namespace PSCWindowsService
                 {
                     if ((ErrorCode = scanFingers(i, checks)) != 0)
                     {
-                        var err = GetError(_sc);
+                        //var err = GetError(_sc);
                         Disconnect();
-                        throw new Exception(err);
+                        throw new Exception("No fingers selected");
                     }
 
                     for (int k = 0; k < 4; k++)

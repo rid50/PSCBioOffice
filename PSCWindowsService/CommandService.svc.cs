@@ -86,6 +86,11 @@ namespace PSCWindowsService
                 MemoryStream ms = null;
                 try
                 {
+
+//#if DEBUG
+//                    System.Diagnostics.Debugger.Launch();
+//#endif
+
                     var cache = new MemoryCacheServiceClient();
                     //ArrayList fingersCollection = cache.GetQualityFingerCollection(id);
 
@@ -106,12 +111,12 @@ namespace PSCWindowsService
                     result = scanner.scan(hand, id, checkBoxes);
 
                     //var cache = new MemoryCacheServiceClient();
-                    //cache.SetDirty();
+                    cache.SetDirty();
 
-                    var dataContract = new FingerPrintDataContract();
-                    dataContract.id = id;
-                    dataContract.fingersCollection = scanner.FingersCollection;
-                    cache.Put(dataContract);
+                    //var dataContract = new FingerPrintDataContract();
+                    //dataContract.id = id;
+                    //dataContract.fingersCollection = scanner.FingersCollection;
+                    //cache.Put(dataContract);
 
                 }
                 catch (Exception ex)
