@@ -87,9 +87,9 @@ namespace PSCWindowsService
                 try
                 {
 
-//#if DEBUG
-//                    System.Diagnostics.Debugger.Launch();
-//#endif
+#if DEBUG
+                    System.Diagnostics.Debugger.Launch();
+#endif
 
                     var cache = new MemoryCacheServiceClient();
                     //ArrayList fingersCollection = cache.GetQualityFingerCollection(id);

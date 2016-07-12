@@ -426,8 +426,8 @@ namespace PSCBioIdentification
             //    ShowErrorMessage("Lookup service: Error connecting to database");
 
 
-            var cl = new MemoryCache.MemoryCacheServiceClient();
-            var fingersCollection = cl.GetQualityFingerCollection("210067490");
+            //var cl = new MemoryCache.MemoryCacheServiceClient();
+            //var fingersCollection = cl.GetQualityFingerCollection("210067490");
             //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 

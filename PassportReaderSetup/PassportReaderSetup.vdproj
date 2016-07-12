@@ -292,7 +292,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\PassportReaderSetup.msi"
+        "OutputFilename" = "8:..\\bin\\PassportReaderSetup\\PassportReaderSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -739,7 +739,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PassportReader"
         "ProductCode" = "8:{44457732-EE81-4212-9114-6A692508CB80}"
-        "PackageCode" = "8:{8A0198FD-39F4-4D70-B8BE-23636159E661}"
+        "PackageCode" = "8:{29ED9DEB-8E66-40AD-9F43-0E43B6F493E7}"
         "UpgradeCode" = "8:{032D6C2A-2E0C-43FF-8139-056C9B24F591}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1274,7 +1274,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3E9A7EF1320C4895B32A8725A5B01A9A"
             {
-            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Debug\\PassportReader.exe"
+            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Release\\PassportReader.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"

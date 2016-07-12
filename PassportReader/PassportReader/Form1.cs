@@ -19,6 +19,7 @@ using DBHelper;
 using Neurotec.Images;
 using Neurotec.Biometrics;
 using System.Drawing.Drawing2D;
+using WsqSerializationBinder;
 
 namespace PassportReaderNS
 {
@@ -1247,7 +1248,7 @@ namespace PassportReaderNS
 
                 //    bioProcessor = new BioProcessor.BioProcessor();
                 //}
-                BioProcessor.BioProcessor bioProcessor = bioProcessor = new BioProcessor.BioProcessor();
+                BioProcessor.BioProcessor bioProcessor = new BioProcessor.BioProcessor();
 
                 //MemoryStream ms = null;
                 ms = new MemoryStream(buffer[0]);
@@ -1256,7 +1257,7 @@ namespace PassportReaderNS
 
 //                try
 //                {
-                    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqSerializationBinder.WsqImage>();
+                    formatter.Binder = new WsqSerializationBinder.GenericBinder<WsqImage>();
                     _fingersCollection = formatter.Deserialize(ms) as ArrayList;
 //                }
 //                catch (SerializationException ex)
@@ -1279,7 +1280,12 @@ namespace PassportReaderNS
                     pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
                     if (_fingersCollection[i] != null)
                     {
-                        WsqImage wsq = _fingersCollection[i] as WsqImage;
+                        WsqImage wsq = (WsqImage)_fingersCollection[i];
+                        if (wsq == null)
+                        {
+                            pb.Image = null;
+                            continue;
+                        }
 
                         lock (theLock)
                         {

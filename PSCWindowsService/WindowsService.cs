@@ -45,6 +45,10 @@ namespace PSCWindowsService
 
             //String serviceName = "BasicHttpBinding_IConfigurationService";
 
+//#if DEBUG
+//            System.Diagnostics.Debugger.Launch();
+//#endif
+
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
             ClientSection serviceModelClientSection = serviceModelSection.Client;
