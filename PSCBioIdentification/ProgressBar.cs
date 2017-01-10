@@ -82,6 +82,7 @@ namespace PSCBioIdentification
             //    int i = 0;
 
             //}
+
             toolStripProgressBar.Value = e.ProgressPercentage;
             if (toolStripStatusLabelError.Text == String.Empty)
                 toolStripStatusLabelError.Text = e.UserState as String;

@@ -1280,7 +1280,7 @@ namespace PassportReaderNS
                     pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as PictureBox;
                     if (_fingersCollection[i] != null)
                     {
-                        WsqImage wsq = (WsqImage)_fingersCollection[i];
+                        WsqImage wsq = _fingersCollection[i] as WsqImage;
                         if (wsq == null)
                         {
                             pb.Image = null;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="b657bd51-6e3f-49e4-a1c8-d18d4f49ed01" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c77ce416-94a1-46e8-aff9-438349ea8540" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -23,11 +23,12 @@
     <MetadataSource Address="http://localhost/MemoryCacheService/MatchingService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="218b53c6-557d-4ddd-a51b-09e1b02f7613" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?wsdl" />
-    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="328eafdc-02a2-408d-926c-3a16696220c9" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd2" />
-    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="1727f67d-db7c-4175-a1be-f2a31bc4f0b6" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?disco" />
-    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="544df81a-ad5c-4ae1-bf9e-76aa1a5bf692" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd0" />
-    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="007d1049-d292-4204-9420-68845bd04831" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService.wsdl" MetadataType="Wsdl" ID="aae9b707-5d32-48d7-8597-c922106b829b" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?wsdl" />
+    <MetadataFile FileName="MatchingService.xsd" MetadataType="Schema" ID="0ee07e71-8bf7-40e0-bae0-795634b8e7b7" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd3" />
+    <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="dcaed5ba-1520-4a41-b7f9-2d3311c576aa" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="dd9668cb-eb48-46b9-ba8d-0685e32205b0" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?disco" />
+    <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="d6f03277-07bd-4147-918d-e6c95bb76752" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MatchingService3.xsd" MetadataType="Schema" ID="3bd4584e-3472-4890-bc2a-c6f13351856f" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

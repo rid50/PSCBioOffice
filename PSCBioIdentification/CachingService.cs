@@ -40,7 +40,7 @@ namespace PSCBioIdentification
             public string text;
         }
 
-        CallbackFromCacheFillingService _callBack;
+        CallbackFromDualHttpBindingService _callBack = new CallbackFromDualHttpBindingService { TotalRecords = 0, RunningSum = 0 };
 
         public delegate void CallBackDelegate(ref CallBackStruct callBackParam);
 
@@ -67,7 +67,7 @@ namespace PSCBioIdentification
             get { return backgroundWorkerCachingService.IsBusy; }
         }
 
-        void startCachingServiceProcess(ManualResetEvent mre)
+        void startCachingServiceProcess()
         {
             if (backgroundWorkerCachingService.IsBusy)
                 return;
@@ -76,22 +76,38 @@ namespace PSCBioIdentification
             EnableControls(false);
             manageCacheButton.Text = "Cancel";
 
-            _mre = mre;
+            _mre = new ManualResetEvent(false);
 
-            _callBack = new CallbackFromCacheFillingService { TotalRecords = 0, RunningSum = 0 };
-            _callBack.MyEvent += MyEvent;
-            InstanceContext context = new InstanceContext(_callBack);
+            //_callBack = new CallbackFromCacheFillingService { TotalRecords = 0, RunningSum = 0 };
+            //_callBack.MyEvent += MyEvent;
+            //InstanceContext context = new InstanceContext(_callBack);
 
-            dynamic client;
+            //_callbackFromCacheFillingService = new CallbackFromCacheFillingService { TotalRecords = 0, RunningSum = 0 };
+            //_callbackFromCacheFillingService.MyEvent += MyEvent;
+            //_instanceContext = new InstanceContext(_callbackFromCacheFillingService);
+
+            _callbackFromDualHttpBindingService.TotalRecords = 0;
+            _callbackFromDualHttpBindingService.RunningSum = 0;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                _serviceClient = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                _serviceClient = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
             else
-                client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                _serviceClient = new UnmanagedMatchingService.MatchingServiceClient(_instanceContext);
 
-            backgroundWorkerCachingService.RunWorkerAsync(client);
+            backgroundWorkerCachingService.RunWorkerAsync(_serviceClient);
+
+            //dynamic client;
+
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+            //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+            //else
+            //    client = new UnmanagedMatchingService.MatchingServiceClient(context);
+
+            //backgroundWorkerCachingService.RunWorkerAsync(client);
         }
 
         private void backgroundWorkerCachingService_DoWork(object sender, DoWorkEventArgs e)
@@ -123,8 +139,7 @@ namespace PSCBioIdentification
                 client = e.Argument as AppFabricCachePopulateService.PopulateCacheServiceClient;
 
             //if (!ReferenceEquals(null, client))
-            if (client != null)
-                {
+            if (client != null) {
                 try
                 {
                     client.Run(fingerList);
@@ -158,21 +173,12 @@ namespace PSCBioIdentification
                     {
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
-                            //CallBackDelegate d = new CallBackDelegate(OnCallback);
-                            //SetCallBack(new CallBackDelegate(OnCallback));
-
                             fillCache(record.fingerList, record.fingerListSize, record.appSettings, new CallBackDelegate(OnCallback));
                         }
                         else
                         {
-                            //CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
-                            //callback.MyEvent += MyEvent;
-                            //InstanceContext context = new InstanceContext(callback);
                             client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
 
-                            //client.setCallBack(deleg);
-
-                            //var matchingServiceClient = new PSCBioIdentification.MatchingService.MatchingServiceClient(context);
                             client.fillCache(record.fingerList, record.fingerListSize, record.appSettings);
                             _mre.WaitOne();
                         }
@@ -183,11 +189,16 @@ namespace PSCBioIdentification
             if (!backgroundWorkerCachingService.CancellationPending)
                 e.Result = fingerList;
             else
+            {
                 e.Result = null;
+                client.Terminate();
+            }
         }
 
         private void backgroundWorkerCachingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            _serviceClient = null;
+
             if (e.Error != null)
             {
                 LogLine("Caching service: " + e.Error.Message, true);

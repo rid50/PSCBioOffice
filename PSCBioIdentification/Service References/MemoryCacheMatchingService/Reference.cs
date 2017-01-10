@@ -12,20 +12,23 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService", SessionMode=System.ServiceModel.SessionMode.NotAllowed)]
     public interface IMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/getFingerList", ReplyAction="http://tempuri.org/IMatchingService/getFingerListResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         System.Collections.ArrayList getFingerList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/Terminate", ReplyAction="http://tempuri.org/IMatchingService/TerminateResponse")]
-        void Terminate();
+        int Terminate();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/verify", ReplyAction="http://tempuri.org/IMatchingService/verifyResponse")]
         bool verify(byte[] probeTemplate, byte[] galleryTemplate);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(System.Exception), Action="http://tempuri.org/IMatchingService/matchExceptionFault", Name="Exception", Namespace="http://schemas.datacontract.org/2004/07/System")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
         uint match(System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate);
     }
@@ -61,8 +64,8 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
             return base.Channel.getFingerList();
         }
         
-        public void Terminate() {
-            base.Channel.Terminate();
+        public int Terminate() {
+            return base.Channel.Terminate();
         }
         
         public bool verify(byte[] probeTemplate, byte[] galleryTemplate) {

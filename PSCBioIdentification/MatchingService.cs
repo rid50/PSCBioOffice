@@ -12,6 +12,11 @@ using System.Collections;
 using System.ServiceModel;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.ServiceModel.Description;
+using System.Linq;
+using System.Net;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -45,6 +50,11 @@ namespace PSCBioIdentification
 
         }
 
+
+        TaskLoop tl = new TaskLoop();
+
+        byte[] probeTemplate;
+
         Record record;
 
         Stopwatch _stw = new Stopwatch();
@@ -60,7 +70,24 @@ namespace PSCBioIdentification
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
-            backgroundWorkerMatchingService.RunWorkerAsync(probeTemplate);
+            this.probeTemplate = probeTemplate;
+
+            //_tokenSource = new CancellationTokenSource();
+            //_ct = _tokenSource.Token;
+
+            _mre = new ManualResetEvent(false);
+
+            //CookieContainer cookieContainer = new CookieContainer();
+
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            {
+                _serviceClient = new MemoryCacheMatchingService.MatchingServiceClient();
+                //_serviceClient.CookieContainer = cookieContainer;
+            }
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
+
+            backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
             //backgroundWorkerMatchingService.RunWorkerAsync(probeFingerCollection);
         }
 
@@ -93,57 +120,82 @@ namespace PSCBioIdentification
             _stw.Restart();
 
             record = new Record();
-            record.probeTemplate = e.Argument as byte[];
+            record.probeTemplate = this.probeTemplate;
+            //record.probeTemplate = e.Argument as byte[];
+
+            //dynamic client = null;
+
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //    _serviceClient = new MemoryCacheMatchingService.MatchingServiceClient(_instanceContext);
+            //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //    _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
+
+            //if (!ReferenceEquals(null, client))
+            e.Result = null;
 
             dynamic client = null;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                client = new MemoryCacheMatchingService.MatchingServiceClient();
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                client = new AppFabricCacheMatchingService.MatchingServiceClient();
-
-            //if (!ReferenceEquals(null, client))
-            if (client != null)
             {
+                client = e.Argument as MemoryCacheMatchingService.MatchingServiceClient;
+                e.Result = null; _matchingResult = 0;
                 try
                 {
+                    int i = Thread.CurrentThread.ManagedThreadId;
                     e.Result = client.match(fingerList, gender, record.probeTemplate);
+
+                    //tl.Loop();
+
+                    //RunMatching(client, fingerList, gender, record, e);
+                    //_mre.WaitOne();
                 }
-                catch (Exception ex)
+                catch (FaultException ex)
                 {
-                    throw new Exception(ex.Message);
+
+
                 }
             }
+            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            {
+                client = e.Argument as AppFabricCacheMatchingService.MatchingServiceClient;
+                e.Result = client.match(fingerList, gender, record.probeTemplate);
+            }
+            //    if (client != null)
+            //{
+            //    try
+            //    {
+            //        client.Run(fingerList);
+            //        _mre.WaitOne();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new Exception(ex.Message);
+            //    }
+            //}
+
+            //if (_serviceClient != null)
+            //{
+            //    try
+            //    {
+            //        if (_serviceClient is AppFabricCacheMatchingService.MatchingServiceClient)
+            //        {
+            //            e.Result = _serviceClient.match(fingerList, gender, record.probeTemplate);
+            //        } else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+            //        {
+            //            e.Result = null; _matchingResult = 0;
+            //            _serviceClient.match(fingerList, gender, record.probeTemplate);
+            //            _mre.WaitOne();
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new Exception(ex.Message);
+            //    } finally
+            //    {
+            //        //_serviceClient = null;
+            //    }
+            //}
             else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
-            //{
-            //}
-
-            //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-            //{
-            //    //var fingerList = new ArrayList();
-
-            //    //CheckBox cb;
-            //    //for (int i = 1; i < 11; i++)
-            //    //{
-            //    //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-            //    //    if (cb.Checked)
-            //    //        fingerList.Add(cb.Tag);
-            //    //}
-
-            //    record = new Record();
-            //    record.probeTemplate = e.Argument as byte[];
-            //    //record.probeTemplate = new byte[4][];
-            //    //byte[] probeTemplate = (e.Argument as NFRecord).Save().ToArray();
-            //    //int k = 0;
-            //    //foreach (var template in e.Argument as NSubject.FingerCollection)
-            //    //{
-            //    //    record.probeTemplate[k++] = template.Save().ToArray();
-            //    //}
-
-            //    var matchingServiceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
-            //    e.Result = matchingServiceClient.match(fingerList, gender, record.probeTemplate);
-            //}
-            //else
             {
                 //record = new Record();
                 //record.size = (UInt32)template.GetSize();
@@ -193,21 +245,121 @@ namespace PSCBioIdentification
                         }
                         else
                         {
-                            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                            CallbackFromDualHttpBindingService callback = new CallbackFromDualHttpBindingService();
                             callback.MyEvent += MyEvent;
                             InstanceContext context = new InstanceContext(callback);
 
-                            var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
-                            e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
-                            //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            //var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
+                            //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            _serviceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
+                            e.Result = _serviceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                         }
                     }
                 }
             }
+
+            if (backgroundWorkerMatchingService.CancellationPending)
+            {
+                //try
+                //{
+                //    TerminateMatching(client);
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new Exception(ex.Message);
+                //}
+
+                //await proxy.GetMessagesAsync();
+
+                //var task = System.Threading.Tasks.Task<int>.Factory.FromAsync(client.BeginTerminate, client.EndTerminate, 0, null);
+                //int i = task.Result;
+
+                //client.Terminate(0);
+                //try
+                //{
+
+                //    Action myAction = () =>
+                //    {
+                //        _serviceClient.Terminate();
+                //    };
+
+
+                //    IAsyncResult result = myAction.BeginInvoke(null, null);
+
+                //    myAction.EndInvoke(result);
+
+                //    //if (_tokenSource != null)
+                //    //    _tokenSource.Cancel();
+                //}
+                //catch (Exception) { }
+            }
+        }
+
+        private async Task RunMatching(dynamic client, ArrayList fingerList, int gender, Record record, DoWorkEventArgs e)
+        {
+            Task<uint> t = client.matchAsync(fingerList, gender, record.probeTemplate);
+            e.Result = await t;
+            int i = 0;
+            //await Task.Delay(5000);
+            _mre.Set();
+        }
+
+        private void TerminateMatching(dynamic client)
+        //private async Task TerminateMatching(dynamic client)
+        {
+            //int i = 0;
+            //Task.Run(() =>
+            //{
+            //    i = Thread.CurrentThread.ManagedThreadId;
+            //    i = client.Terminate();
+            //    //tl.Terminate();
+            //    i = 2;
+            //});
+
+            //Task<int> t = client.TerminateAsync();
+            //int result = await t;
+            //int i = 0;
+
+            //var cl = new MemoryCacheMatchingService.MatchingServiceClient();
+            //int k = cl.Terminate();
+            //cl.Close();
+
+            //// Create a channel factory.
+            //BasicHttpBinding binding = new BasicHttpBinding(client.Endpoint.Name);
+            WSHttpBinding binding = new WSHttpBinding(client.Endpoint.Name);
+            //binding.ReliableSession.Enabled = true;
+            //binding.Security.Mode = SecurityMode.None;
+
+            EndpointAddress endpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
+            ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(binding, endpoint);
+
+            ////WSDualHttpBinding binding = new WSDualHttpBinding();
+            ////ContractDescription contract = new ContractDescription("WSDualHttpBinding_IMatchingService");
+            ////EndpointAddress myEndpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
+            ////ServiceEndpoint serviceEndpoint = new ServiceEndpoint(contract, binding, myEndpoint);
+            ////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
+            ////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, serviceEndpoint);
+
+            ////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
+            ////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, client.Endpoint.Name);
+
+            // Create a channel.
+            MemoryCacheMatchingService.IMatchingService cl = factory.CreateChannel();
+            int k = cl.Terminate();
+            ((IClientChannel)cl).Close();
         }
 
         private void backgroundWorkerMatchingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            //if (_tokenSource != null)
+            //    _tokenSource.Dispose();
+            if (_serviceClient != null)
+            {
+                if (_serviceClient.State == CommunicationState.Opened)
+                    _serviceClient.Close();
+
+                _serviceClient = null;
+            }
             //Application.DoEvents();
 
             //MessageBox.Show(toolStripProgressBar.Value.ToString());
@@ -222,7 +374,12 @@ namespace PSCBioIdentification
             }
             else
             {
-                UInt32 score = (UInt32)e.Result;
+                UInt32 score;
+
+                if (e.Result == null)
+                    score = _matchingResult;
+                else
+                    score = (UInt32)e.Result;
 
                 //string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
                 //string str = string.Format("Identification: {0}", score == 0 ? "failed" : "succeess");
@@ -282,6 +439,90 @@ namespace PSCBioIdentification
             }
 
             //buttonRequest.Enabled = true;
+        }
+    }
+
+    class TaskLoop
+    {
+        CancellationTokenSource source = null;
+        CancellationToken ct;
+
+        public void Loop()
+        {
+            source = new CancellationTokenSource();
+            ct = source.Token;
+
+            //Task.Run(() =>
+            //{
+            Console.WriteLine("Main Thread={0}", Thread.CurrentThread.ManagedThreadId);
+
+            //int i = 0;
+            //Task<int>[] tasks = new Task<int>[9];
+            //var tasks = new List<Task>();
+            List<Task<int>> tasks = new List<Task<int>>();
+            //source.Cancel();
+            //ct.ThrowIfCancellationRequested();
+            for (int i = 0; i < 2; i++)
+            {
+                tasks.Add(Task.Factory.StartNew((i2) =>
+                {
+
+                    //source.Cancel();
+
+                    //var delay = Task.Run(async () => {
+                    //    await Task.Delay(5000);
+                    //    int k = 0;
+                    //});
+
+                    Task.Delay(5000).Wait();
+
+                    //if (ct.IsCancellationRequested)
+                    //  throw new Exception("kuku");
+
+                    ct.ThrowIfCancellationRequested();
+
+                    //Console.WriteLine("MainTask {0} Thread={1}", i, Thread.CurrentThread.ManagedThreadId);
+                    Console.WriteLine("Thread={0}, i={1}", Thread.CurrentThread.ManagedThreadId, i2);
+                    //String str = new SyncTasks().HelloAsync(i.ToString());
+
+                    //Console.WriteLine(str);
+                    return 0;
+
+                }, i, ct));
+            }
+
+            //Task t = Task.WhenAll(tasks.ToArray().Where(ta => ta != null));
+            //Task t = Task.WhenAll(tasks.ToArray());
+
+            try
+            {
+                Task.WhenAll(tasks.ToArray()).Wait();
+                //int k = 0;
+                //t.Wait();
+
+                //Task.WhenAll(tasks.ToArray().Where(t => t != null));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+                Console.WriteLine(ex.Message);
+
+                Console.WriteLine("Caught first exception: {0}", ex);
+                Console.WriteLine("***************************");
+                //Console.WriteLine("Aggregate exception is: {0}", task.Exception);
+                
+            }
+
+            //            });
+            //int k = 0;
+        }
+
+        public void Terminate()
+        {
+            Console.WriteLine("Termination Thread={0}", Thread.CurrentThread.ManagedThreadId);
+
+            source.Cancel();
+            Console.WriteLine("===================");
         }
     }
 }

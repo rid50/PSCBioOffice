@@ -79,7 +79,7 @@ namespace PSCBioIdentification
         private BackgroundWorker backgroundWorkerDataService;
         private BackgroundWorker backgroundWorkerMatchingService;
         private BackgroundWorker backgroundWorkerCachingService;
-        
+
         //private bool enrollMode = true;
         //private NGrayscaleImage[] images = new NGrayscaleImage[0];
         //private NGrayscaleImage[] resultImages = new NGrayscaleImage[0];
@@ -94,7 +94,16 @@ namespace PSCBioIdentification
         //private NFRecord enrolledTemplate;
         //private FPScannerMan scannerMan;
 
+        dynamic _serviceClient = null;
+
+        CallbackFromDualHttpBindingService _callbackFromDualHttpBindingService = null;
+        InstanceContext _instanceContext = null;
+
+        //CancellationTokenSource _tokenSource = null;
+        //CancellationToken _ct;
+
         private ManualResetEvent _mre;
+        private UInt32 _matchingResult = 0;
 
         //private NImage _image;
         private NDeviceManager _deviceManager;
@@ -245,9 +254,12 @@ namespace PSCBioIdentification
             {
                 conf = new MyConfigurationSettings();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ShowErrorMessage("Error connecting to endpoint server");
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                ShowErrorMessage("Error connecting to endpoint configuration server: " + ex.Message);
                 ShowRadioHideCheckButtons(true);
                 EnableControls(false);
                 manageCacheButton.Enabled = false;
@@ -258,22 +270,26 @@ namespace PSCBioIdentification
 
             ArrayList fingerList = null;
 
-            CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-            InstanceContext context = new InstanceContext(callback);
+            _callbackFromDualHttpBindingService = new CallbackFromDualHttpBindingService { TotalRecords = 0, RunningSum = 0 };
+            _callbackFromDualHttpBindingService.MyEvent += MyEvent;
+            _instanceContext = new InstanceContext(_callbackFromDualHttpBindingService);
+
+            //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+            //InstanceContext context = new InstanceContext(callback);
 
             dynamic client = null;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
 
             if (client != null)
             {
                 try
                 {
                     fingerList = client.getFingerList();
-                    if (fingerList != null)
+                    if (fingerList != null && fingerList.Count > 0)
                         labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
                 }
                 catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>)
@@ -614,10 +630,12 @@ namespace PSCBioIdentification
 
         private void startCapturing()
         {
+            Boolean fileTemplate = true;
+
             if (_isCapturing)
                 return;
 
-            if (_biometricClient.FingerScanner == null)
+            if (_biometricClient.FingerScanner == null && !fileTemplate)
             {
                 ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
                 string text = rm.GetString("msgNoScannersAttached"); // "No scanners attached"
@@ -628,7 +646,21 @@ namespace PSCBioIdentification
             else
             {
                 short count = 0;
-                if (radioButtonIdentify.Checked)
+                //if (radioButtonIdentify.Checked)
+                //{
+                //    CheckBox bb;
+                //    for (int i = 0; i < 10; i++)
+                //    {
+                //        bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                //        if (bb.Checked)
+                //            count++;
+                //    }
+
+                //    if (count == 0)
+                //        return;
+                //}
+
+                if (radioButtonIdentify.Checked && !fileTemplate)
                 {
                     CheckBox bb;
                     for (int i = 0; i < 10; i++)
@@ -640,10 +672,7 @@ namespace PSCBioIdentification
 
                     if (count == 0)
                         return;
-                }
 
-                if (radioButtonIdentify.Checked)
-                {
                     var fScanner = ((NFingerScanner)GetSelectedDevice());
                     if (fScanner == null)
                     {
@@ -670,15 +699,18 @@ namespace PSCBioIdentification
                         ShowErrorMessage("2 fingers might be selected");
                         return;
                     }
+
+                    clear();
+                    clearFingerBoxes();
                 }
 
                 _isCapturing = true;
 
-                if (radioButtonIdentify.Checked)
-                {
-                    clear();
-                    clearFingerBoxes();
-                }
+                //if (radioButtonIdentify.Checked)
+                //{
+                //    clear();
+                //    clearFingerBoxes();
+                //}
 
                 EnableSemaphorControls(true);
                 EnableControls(false);
@@ -688,6 +720,18 @@ namespace PSCBioIdentification
 //                buttonScan.Text = "Cancel";
 
                 startProgressBar();
+
+#pragma warning disable 0162
+                if (fileTemplate && radioButtonIdentify.Checked)  // if true, proceed without scanning, file template will be used
+                {
+                    ProcessTemplate(false); //only false
+                    _isCapturing = false;
+                    //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+
+                    //Mode = ProgramMode.Identification;
+                    //BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
+                    return;
+                }
 
                 //using (var subject = new NSubject())
                 //using (var finger = new NFinger())
@@ -773,17 +817,19 @@ namespace PSCBioIdentification
             {
                 if (IsMatchingServiceRunning)
                 {
-                    dynamic client = null;
-                    if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                        client = new MemoryCacheMatchingService.MatchingServiceClient();
-                    else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                        client = new AppFabricCacheMatchingService.MatchingServiceClient();
+                    terminateService();
+
+                    //dynamic client = null;
+                    //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                    //    client = new MemoryCacheMatchingService.MatchingServiceClient();
+                    //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                    //    client = new AppFabricCacheMatchingService.MatchingServiceClient();
 
 
-                    if (client != null)
-                        client.Terminate();
-                    else
-                        terminateMatchingService();
+                    //if (client != null)
+                    //    client.Terminate();
+                    //else
+                    //    terminateMatchingService();
 
                     //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                     //{
@@ -846,6 +892,7 @@ namespace PSCBioIdentification
         private void OnImage(IAsyncResult iar)
         {
 
+            EnableSemaphorControls(false);
             stopCapturing();
 
             //NBiometricTask task = _biometricClient.CreateTask(NBiometricOperations.Segment | NBiometricOperations.CreateTemplate, subject);
@@ -895,6 +942,8 @@ namespace PSCBioIdentification
                 }), ex.Message);
                 return;
             }
+
+            //fingers.Save()
 
             var obj = fingers.Objects[0];
             if (obj.Status == NBiometricStatus.Ok)
@@ -993,16 +1042,19 @@ namespace PSCBioIdentification
 
                 if (task.Error == null && task.Status == NBiometricStatus.Ok) {
 
+                    ProcessTemplate(true);
+/*
                     var fingerList = new List<NFPosition>();
                     CheckBox cb;
-                    for (int i = 4; i > 0; i--)
+                    int i;
+                    for (i = 4; i > 0; i--)
                     {
                         cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                         if (cb.Checked)
                             fingerList.Add(getFingerPositionByTag(cb.Tag as string));
                     }
 
-                    for (int i = 5; i < 11; i++)
+                    for (i = 5; i < 11; i++)
                     {
                         cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                         if (cb.Checked)
@@ -1016,41 +1068,56 @@ namespace PSCBioIdentification
                     var sb = new StringBuilder();
 
                     int segmentsCount = _subject2.Fingers.Count - 1;
-                    if (segmentsCount > 0 && _subject2.Fingers[1].Status == NBiometricStatus.Ok)
+                    i = 1;
+
+#pragma warning disable 0162
+                    if (false)
+                    {
+                        _subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+                        segmentsCount = _subject2.Fingers.Count;
+                        i = 0;
+                    }
+#pragma warning restore 0162
+
+                    if (segmentsCount > 0 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
                     {
                         sb.Append(string.Format("Templates extracted: \n"));
-                        if (_subject2.Fingers[1].Objects[0].Template != null)
+                        if (_subject2.Fingers[i].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[1].Position = fingerList[0];
+                            _subject2.Fingers[i].Position = fingerList[0];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[0].ToString(),
-                                                string.Format("Quality: {0}", _subject2.Fingers[1].Objects[0].Quality), _subject2.Fingers[1].Objects[0].Template.GetSize()));
+                                                string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
                         }
                         //finger = _subject2.Fingers[1];
                     }
-                    if (segmentsCount > 1 && _subject2.Fingers[2].Status == NBiometricStatus.Ok)
+                    i++;
+                    if (segmentsCount > 1 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
                     {
-                        if (_subject2.Fingers[2].Objects[0].Template != null) {
-                            _subject2.Fingers[2].Position = fingerList[1];
+                        if (_subject2.Fingers[i].Objects[0].Template != null)
+                        {
+                            _subject2.Fingers[i].Position = fingerList[1];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[1].ToString(),
-                                                string.Format("Quality: {0}", _subject2.Fingers[2].Objects[0].Quality), _subject2.Fingers[2].Objects[0].Template.GetSize()));
+                                                string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
                         }
                     }
-                    if (segmentsCount > 2 && _subject2.Fingers[3].Status == NBiometricStatus.Ok)
+                    i++;
+                    if (segmentsCount > 2 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
                     {
-                        if (_subject2.Fingers[3].Objects[0].Template != null)
+                        if (_subject2.Fingers[i].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[3].Position = fingerList[2];
+                            _subject2.Fingers[i].Position = fingerList[2];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[2].ToString(),
-                                                string.Format("Quality: {0}", _subject2.Fingers[3].Objects[0].Quality), _subject2.Fingers[3].Objects[0].Template.GetSize()));
+                                                string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
                         }
                     }
-                    if (segmentsCount > 3 && _subject2.Fingers[4].Status == NBiometricStatus.Ok)
+                    i++;
+                    if (segmentsCount > 3 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
                     {
-                        if (_subject2.Fingers[4].Objects[0].Template != null)
+                        if (_subject2.Fingers[i].Objects[0].Template != null)
                         {
-                            _subject2.Fingers[4].Position = fingerList[3];
+                            _subject2.Fingers[i].Position = fingerList[3];
                             sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[3].ToString(),
-                                                string.Format("Quality: {0}", _subject2.Fingers[4].Objects[0].Quality), _subject2.Fingers[4].Objects[0].Template.GetSize()));
+                                                string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
                         }
                     }
 
@@ -1058,6 +1125,8 @@ namespace PSCBioIdentification
                     {
                         LogLine(txt, true);
                     }), sb.ToString());
+
+                    //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
 
 
                     //_biometricClient.MatchingWithDetails = true;
@@ -1130,6 +1199,7 @@ namespace PSCBioIdentification
                     BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
                     //BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers); }));
                     //BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+*/
                 }
                 else
                 {
@@ -1169,6 +1239,172 @@ namespace PSCBioIdentification
                 //}
 
             }
+        }
+
+        private void ProcessTemplate(bool scannedTemplate = true)      // it can be a template from a file 
+        {
+            var fingerList = new List<NFPosition>();
+            CheckBox cb;
+            int i;
+            for (i = 4; i > 0; i--)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    fingerList.Add(getFingerPositionByTag(cb.Tag as string));
+            }
+
+            for (i = 5; i < 11; i++)
+            {
+                cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    fingerList.Add(getFingerPositionByTag(cb.Tag as string));
+            }
+
+            //NSubject _probeSubject = NSubject.FromMemory(_subject2.GetTemplateBuffer().ToArray());
+            //_probeSubject.Fingers[0].Objects[0].Template.Position = fingerList[1];
+            //_probeSubject.Fingers[1].Objects[0].Template.Position = fingerList[0];
+
+            var sb = new StringBuilder();
+
+            int segmentsCount;
+
+#pragma warning disable 0162
+            if (scannedTemplate)
+            {
+                segmentsCount = _subject2.Fingers.Count - 1;
+                i = 1;
+            }
+            else
+            {
+                //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexRing.template");
+                _subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+                segmentsCount = _subject2.Fingers.Count;
+                i = 0;
+            }
+#pragma warning restore 0162
+
+            if (segmentsCount > 0 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
+            {
+                sb.Append(string.Format("Templates extracted: \n"));
+                if (_subject2.Fingers[i].Objects[0].Template != null)
+                {
+                    _subject2.Fingers[i].Position = fingerList[0];
+                    sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[0].ToString(),
+                                        string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
+                }
+                //finger = _subject2.Fingers[1];
+            }
+            i++;
+            if (segmentsCount > 1 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
+            {
+                if (_subject2.Fingers[i].Objects[0].Template != null)
+                {
+                    _subject2.Fingers[i].Position = fingerList[1];
+                    sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[1].ToString(),
+                                        string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
+                }
+            }
+            i++;
+            if (segmentsCount > 2 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
+            {
+                if (_subject2.Fingers[i].Objects[0].Template != null)
+                {
+                    _subject2.Fingers[i].Position = fingerList[2];
+                    sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[2].ToString(),
+                                        string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
+                }
+            }
+            i++;
+            if (segmentsCount > 3 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
+            {
+                if (_subject2.Fingers[i].Objects[0].Template != null)
+                {
+                    _subject2.Fingers[i].Position = fingerList[3];
+                    sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[3].ToString(),
+                                        string.Format("Quality: {0}", _subject2.Fingers[i].Objects[0].Quality), _subject2.Fingers[i].Objects[0].Template.GetSize()));
+                }
+            }
+
+            this.Invoke((Action<string>)((txt) =>
+            {
+                LogLine(txt, true);
+            }), sb.ToString());
+
+            //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+
+
+            //_biometricClient.MatchingWithDetails = true;
+            //if (probeSubject == null)
+            //{
+            //    //File.WriteAllBytes(@"C:\roman\psc\wsq\LeftIndexMiddle.template", _subject2.GetTemplateBuffer().ToArray());
+            //    probeSubject = NSubject.FromMemory(_subject2.GetTemplateBuffer().ToArray());
+            //}
+            //else {
+            //    _subject2 = NSubject.FromMemory(_subject2.GetTemplateBuffer().ToArray());
+            //    //File.WriteAllBytes(@"C:\roman\psc\wsq\LeftIndexRing.template", _subject2.GetTemplateBuffer().ToArray());
+            //}
+
+            //var stw = new System.Diagnostics.Stopwatch();
+            //stw.Start();
+
+            //bool matched = true;
+            //if (false)
+            //{
+            //    int threshold = _biometricClient.FingersQualityThreshold;
+            //    var status = _biometricClient.Verify(probeSubject, _subject2);
+            //    if (status == NBiometricStatus.Ok) {
+            //        foreach (var matchingResult in probeSubject.MatchingResults)
+            //        {
+            //            //int fsc = matchingResult.MatchingDetails.FingersScore;
+            //            foreach (var finger in matchingResult.MatchingDetails.Fingers)
+            //            {
+            //                if (threshold > finger.Score)
+            //                {
+            //                    matched = false;
+            //                    break;
+            //                }
+            //            }
+
+            //            if (!matched)
+            //                break;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (var finger in _subject2.Fingers)
+            //    {
+            //        if (finger.Objects[0].Template == null)
+            //            continue;
+
+            //        var template = new NFTemplate();
+            //        template.Records.Add(finger.Objects[0].Template);
+            //        var subject = NSubject.FromMemory(template.Save().ToArray());
+            //        var status = _biometricClient.Verify(probeSubject, subject);
+            //        if (status != NBiometricStatus.Ok)
+            //        {
+            //            matched = false;
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //stw.Stop();
+            //string str = string.Format("{0}, Time elapsed: {1:ss\\.fffff}", !matched ? "Failure" : "Succeess", stw.Elapsed);
+            //LogLine(str, true);
+            ////}
+
+            //EnableControls(true);
+            //return;
+            //var sp = _biometricClient.FingersMatchingSpeed;
+
+
+            Mode = ProgramMode.Identification;
+            BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.GetTemplateBuffer().ToArray()); }));
+            //BeginInvoke(new MethodInvoker(delegate() { doIdentify(_subject2.Fingers); }));
+            //BeginInvoke(new MethodInvoker(delegate () { doIdentify(_subject2.Fingers[0].Objects[0].Template); }));
+
+
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -1642,6 +1878,7 @@ namespace PSCBioIdentification
                 {
                     bool retcode = false;
 
+                    //var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient(_instanceContext);
                     var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient();
                     //var b = _subject.GetTemplateBuffer().ToArray();
                     //var b2 = _subject2.GetTemplateBuffer().ToArray();
@@ -3197,6 +3434,80 @@ namespace PSCBioIdentification
             }
         }
 
+
+        private void terminateService()
+        {
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
+            {
+                if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                {
+                    terminateMatchingService();
+                }
+                else
+                {
+                    if (_serviceClient != null)
+                        _serviceClient.terminateMatchingService();
+                }
+            } else
+            {
+
+                //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                //InstanceContext context = new InstanceContext(callback);
+                //dynamic client = null;
+                ////if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                //    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                ////else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                ////    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+                //if (_tokenSource != null && !_tokenSource.IsCancellationRequested)
+                //    _tokenSource.Cancel();
+
+                //if (client != null)
+                //    client.Terminate();
+
+                if (_serviceClient != null)
+                {
+                    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
+                    {
+                        if (backgroundWorkerCachingService.IsBusy)
+                        {
+                            backgroundWorkerCachingService.CancelAsync();
+                            _mre.Set();                      //Terminate CashingService
+                        }
+
+                        //_serviceClient.Terminate();
+                    } else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+                    {
+                        if (backgroundWorkerMatchingService.IsBusy)
+                        {
+                            backgroundWorkerMatchingService.CancelAsync();
+                            //_mre.Set();                      //Terminate MatchingServiceService
+
+                            try
+                            {
+                                TerminateMatching(_serviceClient);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
+
+                        }
+                    }
+
+                }
+
+                if (backgroundWorkerDataService.IsBusy)
+                {
+                    backgroundWorkerDataService.CancelAsync();
+                }
+
+                //_mre.Set();
+            }
+
+            //_serviceClient = null;
+        }
+
         //delegate void d();
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -3204,6 +3515,9 @@ namespace PSCBioIdentification
             new Action(delegate ()
             {
                 EnableControls(false);
+                stopCapturing();
+                manageCacheButton.Enabled = false;
+                ShowStatusMessage("The application is terminating, wait ...");
             }).Invoke();
 
             //this.Invoke((Action)(() =>
@@ -3220,63 +3534,103 @@ namespace PSCBioIdentification
             //};
             //d();
 
-            stopCapturing();
+            //if (backgroundWorkerCachingService.IsBusy)
+            //{
+            //    backgroundWorkerCachingService.CancelAsync();
+
+            //    terminateService();
+
+            //    //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+            //    //InstanceContext context = new InstanceContext(callback);
+
+            //    //if (_serviceClient != null)
+            //    //{
+            //    //    _serviceClient.Terminate();
+            //    //}
+            //    //else if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
+            //    //{
+
+            //    //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //    //    {
+            //    //        terminateMatchingService();
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        //context = new InstanceContext(callback);
+            //    //        dynamic client = new UnmanagedMatchingService.MatchingServiceClient(context);
+            //    //        client.terminateMatchingService();
+            //    //    }
+
+            //    //}
+
+            //    //dynamic client = null;
+            //    //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //    //    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+            //    //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //    //    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+
+
+            //    //if (client != null)
+            //    //    client.Terminate();
+            //    //else
+            //    //{
+            //    //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //    //    {
+            //    //        terminateMatchingService();
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        //context = new InstanceContext(callback);
+            //    //        client = new UnmanagedMatchingService.MatchingServiceClient(context);
+            //    //        client.terminateMatchingService();
+            //    //    }
+            //    //}
+
+            //    //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+            //    //{
+            //    //    //context = new InstanceContext(callback);
+            //    //    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+            //    //    client.Terminate();
+            //    //}
+            //    //else
+            //    //{
+            //    //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //    //    {
+            //    //        terminateMatchingService();
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        //context = new InstanceContext(callback);
+            //    //        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
+            //    //        client.terminateMatchingService();
+            //    //    }
+            //    //}
+
+            //    manageCacheButton.Enabled = false;
+
+            //    ShowStatusMessage("The application is terminating, wait ...");
+
+            //    while (backgroundWorkerCachingService.IsBusy)
+            //    {
+            //        Thread.Sleep(0);
+            //        Application.DoEvents();
+            //    }
+            //}
 
             if (backgroundWorkerCachingService.IsBusy)
             {
                 backgroundWorkerCachingService.CancelAsync();
-                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-                InstanceContext context = new InstanceContext(callback);
-
-
-                dynamic client = null;
-                if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
-                else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
-
-
-                if (client != null)
-                    client.Terminate();
-                else
-                {
-                    if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                    {
-                        terminateMatchingService();
-                    }
-                    else
-                    {
-                        //context = new InstanceContext(callback);
-                        client = new UnmanagedMatchingService.MatchingServiceClient(context);
-                        client.terminateMatchingService();
-                    }
-                }
-
-                //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-                //{
-                //    //context = new InstanceContext(callback);
-                //    var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
-                //    client.Terminate();
-                //}
-                //else
-                //{
-                //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                //    {
-                //        terminateMatchingService();
-                //    }
-                //    else
-                //    {
-                //        //context = new InstanceContext(callback);
-                //        var client = new UnmanagedMatchingService.MatchingServiceClient(context);
-                //        client.terminateMatchingService();
-                //    }
-                //}
-
-                manageCacheButton.Enabled = false;
-
-                ShowStatusMessage("The application is terminating, wait ...");
-
                 while (backgroundWorkerCachingService.IsBusy)
+                {
+                    Thread.Sleep(0);
+                    Application.DoEvents();
+                }
+            }
+
+            if (backgroundWorkerMatchingService.IsBusy)
+            {
+                backgroundWorkerMatchingService.CancelAsync();
+                while (backgroundWorkerMatchingService.IsBusy)
                 {
                     Thread.Sleep(0);
                     Application.DoEvents();
@@ -3286,7 +3640,6 @@ namespace PSCBioIdentification
             if (backgroundWorkerDataService.IsBusy)
             {
                 backgroundWorkerDataService.CancelAsync();
-
                 while (backgroundWorkerDataService.IsBusy)
                 {
                     Thread.Sleep(0);
@@ -3338,20 +3691,46 @@ namespace PSCBioIdentification
         {
             if (e == null)
             {
-                _mre.Set();                     //cache service finished cache populating
+                _mre.Set();                 //cache service finished cache populating or matching service completed a search 
             }
-            else if (e.Error.Length == 0)
+            else if (e.Error.Length == 0)   // Show message
             {
-                this.BeginInvoke((Action<string>)((Message) =>
+                if (_serviceClient != null && _serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
                 {
-                    ShowStatusMessage(Message);
-                }), e.Message);
-            }
-            else
-            {
-                backgroundWorkerCachingService.CancelAsync();
 
-                _mre.Set();                     //cache service finished cache populating
+                    _matchingResult = Convert.ToUInt32(e.Message, 10);
+                }
+                else
+                {
+                    this.BeginInvoke((Action<string>)((Message) =>
+                    {
+                        ShowStatusMessage(Message);
+                    }), e.Message);
+                }
+            }
+            else                           // Error
+            {
+                if (_serviceClient != null)
+                {
+                    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
+                    {
+                        if (backgroundWorkerCachingService.IsBusy)
+                        {
+                            backgroundWorkerCachingService.CancelAsync();
+                        }
+
+                        //_serviceClient.Terminate();
+                    }
+                    else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+                    {
+                        if (backgroundWorkerMatchingService.IsBusy)
+                        {
+                            backgroundWorkerMatchingService.CancelAsync();
+                        }
+                    }
+                }
+
+                _mre.Set();                     //terminate cache service or matching service 
 
                 //var act = new Action(delegate()
                 this.BeginInvoke(new Action(delegate()
@@ -3403,38 +3782,60 @@ namespace PSCBioIdentification
 
                 labelCacheValidationTime.Text = "";
 
-                _mre = new ManualResetEvent(false);
-                startCachingServiceProcess(_mre);
+                startCachingServiceProcess();
             }
             else
             {
-                backgroundWorkerCachingService.CancelAsync();
-                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-                InstanceContext context = new InstanceContext(callback);
-                //InstanceContext context = null;
+                //backgroundWorkerCachingService.CancelAsync();
 
-                dynamic client = null;
-                if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
-                else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
+                terminateService();
+
+                //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
+                //InstanceContext context = new InstanceContext(callback);
+                ////InstanceContext context = null;
+
+                //if (_serviceClient != null)
+                //{
+                //    _serviceClient.Terminate();
+                //}
+                //else if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
+                //{
+
+                //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                //    {
+                //        terminateMatchingService();
+                //    }
+                //    else
+                //    {
+                //        //context = new InstanceContext(callback);
+                //        dynamic client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                //        client.terminateMatchingService();
+                //    }
+
+                //}
+
+                //dynamic client = null;
+                //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                //    client = new MemoryCachePopulateService.PopulateCacheServiceClient(context);
+                //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+                //    client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
 
 
-                if (client != null)
-                    client.Terminate();
-                else
-                {
-                    if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                    {
-                        terminateMatchingService();
-                    }
-                    else
-                    {
-                        //context = new InstanceContext(callback);
-                        client = new UnmanagedMatchingService.MatchingServiceClient(context);
-                        client.terminateMatchingService();
-                    }
-                }
+                //if (client != null)
+                //    client.Terminate();
+                //else
+                //{
+                //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+                //    {
+                //        terminateMatchingService();
+                //    }
+                //    else
+                //    {
+                //        //context = new InstanceContext(callback);
+                //        client = new UnmanagedMatchingService.MatchingServiceClient(context);
+                //        client.terminateMatchingService();
+                //    }
+                //}
 
                 //if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                 //{
