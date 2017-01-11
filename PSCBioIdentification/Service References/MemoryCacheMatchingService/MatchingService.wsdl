@@ -3,6 +3,10 @@
   <wsp:Policy wsu:Id="WSHttpBinding_IMatchingService_policy">
     <wsp:ExactlyOne>
       <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
         <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" />
         <wsaw:UsingAddressing />
       </wsp:All>
@@ -43,20 +47,20 @@
   <wsdl:message name="IMatchingService_match_ExceptionFault_FaultMessage">
     <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/System" name="detail" element="q1:Exception" />
   </wsdl:message>
-  <wsdl:portType msc:usingSession="false" name="IMatchingService">
-    <wsdl:operation name="getFingerList">
+  <wsdl:portType msc:usingSession="true" name="IMatchingService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getFingerList">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/getFingerList" message="tns:IMatchingService_getFingerList_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/getFingerListResponse" message="tns:IMatchingService_getFingerList_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="Terminate">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Terminate">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/Terminate" message="tns:IMatchingService_Terminate_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/TerminateResponse" message="tns:IMatchingService_Terminate_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="verify">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="verify">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/verify" message="tns:IMatchingService_verify_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/verifyResponse" message="tns:IMatchingService_verify_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="match">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="match">
       <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/match" message="tns:IMatchingService_match_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/matchResponse" message="tns:IMatchingService_match_OutputMessage" />
       <wsdl:fault wsaw:Action="http://tempuri.org/IMatchingService/matchExceptionFault" name="ExceptionFault" message="tns:IMatchingService_match_ExceptionFault_FaultMessage" />

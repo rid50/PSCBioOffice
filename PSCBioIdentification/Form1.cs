@@ -1277,7 +1277,8 @@ namespace PSCBioIdentification
             else
             {
                 //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexRing.template");
-                _subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+                //_subject2 = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
+                _subject2 = NSubject.FromFile(@"LeftIndexMiddle.template");
                 segmentsCount = _subject2.Fingers.Count;
                 i = 0;
             }

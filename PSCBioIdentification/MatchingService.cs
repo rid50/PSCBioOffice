@@ -67,6 +67,15 @@ namespace PSCBioIdentification
         //void startMatchingServiceProcess(NSubject.FingerCollection probeFingerCollection)
         void startMatchingServiceProcess(byte[] probeTemplate)
         {
+            //int processorCount = Environment.ProcessorCount;
+
+            //int workerThreads; int completionPortThreads;
+            //ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
+            //ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
+            //ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+            //ThreadPool.SetMinThreads(Environment.ProcessorCount, 10);
+
+
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
@@ -82,6 +91,7 @@ namespace PSCBioIdentification
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
             {
                 _serviceClient = new MemoryCacheMatchingService.MatchingServiceClient();
+
                 //_serviceClient.CookieContainer = cookieContainer;
             }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
@@ -139,8 +149,8 @@ namespace PSCBioIdentification
             {
                 client = e.Argument as MemoryCacheMatchingService.MatchingServiceClient;
                 e.Result = null; _matchingResult = 0;
-                try
-                {
+                //try
+                //{
                     int i = Thread.CurrentThread.ManagedThreadId;
                     e.Result = client.match(fingerList, gender, record.probeTemplate);
 
@@ -148,12 +158,12 @@ namespace PSCBioIdentification
 
                     //RunMatching(client, fingerList, gender, record, e);
                     //_mre.WaitOne();
-                }
-                catch (FaultException ex)
-                {
+                //}
+                //catch (FaultException ex)
+                //{
 
 
-                }
+                //}
             }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
             {
@@ -310,10 +320,14 @@ namespace PSCBioIdentification
             //int i = 0;
             //Task.Run(() =>
             //{
-            //    i = Thread.CurrentThread.ManagedThreadId;
-            //    i = client.Terminate();
-            //    //tl.Terminate();
-            //    i = 2;
+            //    //try
+            //    //{
+            //        i = Thread.CurrentThread.ManagedThreadId;
+            //        i = _serviceClient.Terminate();
+            //        //tl.Terminate();
+            //        i = 2;
+            //    //}
+            //    //catch (Exception) { }
             //});
 
             //Task<int> t = client.TerminateAsync();
@@ -327,6 +341,8 @@ namespace PSCBioIdentification
             //// Create a channel factory.
             //BasicHttpBinding binding = new BasicHttpBinding(client.Endpoint.Name);
             WSHttpBinding binding = new WSHttpBinding(client.Endpoint.Name);
+            //NetTcpBinding binding = new NetTcpBinding(client.Endpoint.Name);
+
             //binding.ReliableSession.Enabled = true;
             //binding.Security.Mode = SecurityMode.None;
 
@@ -353,13 +369,16 @@ namespace PSCBioIdentification
         {
             //if (_tokenSource != null)
             //    _tokenSource.Dispose();
-            if (_serviceClient != null)
+            try
             {
-                if (_serviceClient.State == CommunicationState.Opened)
-                    _serviceClient.Close();
+                if (_serviceClient != null)
+                {
+                    if (_serviceClient.State == CommunicationState.Opened)
+                        _serviceClient.Close();
 
-                _serviceClient = null;
-            }
+                    _serviceClient = null;
+                }
+            } catch (Exception) { }
             //Application.DoEvents();
 
             //MessageBox.Show(toolStripProgressBar.Value.ToString());

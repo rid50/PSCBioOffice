@@ -12,7 +12,7 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService", SessionMode=System.ServiceModel.SessionMode.NotAllowed)]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService", SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/getFingerList", ReplyAction="http://tempuri.org/IMatchingService/getFingerListResponse")]
