@@ -97,8 +97,15 @@ namespace PSCBioIdentification
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
                 _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
 
+            string errorMessage;
+            if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            {
+                ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+                _serviceClient.Close();
+                return;
+            }
+
             backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
-            //backgroundWorkerMatchingService.RunWorkerAsync(probeFingerCollection);
         }
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)

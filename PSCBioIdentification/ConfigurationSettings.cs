@@ -67,7 +67,14 @@ namespace PSCBioIdentification
             }
 
             configurationServiceClient = new ConfigurationServiceClient();
-                
+            string absoluteUri = configurationServiceClient.Endpoint.Address.Uri.AbsoluteUri;
+            string errorMessage;
+            if (!Form1.IsServiceAvailable(absoluteUri, out errorMessage))
+            {
+                configurationServiceClient.Close();
+                configurationServiceClient = null;
+                throw new Exception(errorMessage + " : " + absoluteUri);
+            }
             //configurationServiceClient = new ConfigurationServiceClient(serviceName, endPointAddress);
             //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));
 
@@ -88,6 +95,8 @@ namespace PSCBioIdentification
             {
                 connectionStringCollection.Add(new ConnectionStringSettings(key, settings[key]));
             }
+
+            configurationServiceClient.Close();
         }
 
         static public NameValueCollection AppSettings

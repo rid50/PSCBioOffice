@@ -72,10 +72,6 @@ namespace PSCBioIdentification
             if (backgroundWorkerCachingService.IsBusy)
                 return;
 
-            startProgressBar();
-            EnableControls(false);
-            manageCacheButton.Text = "Cancel";
-
             _mre = new ManualResetEvent(false);
 
             //_callBack = new CallbackFromCacheFillingService { TotalRecords = 0, RunningSum = 0 };
@@ -95,6 +91,18 @@ namespace PSCBioIdentification
                 _serviceClient = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
             else
                 _serviceClient = new UnmanagedMatchingService.MatchingServiceClient(_instanceContext);
+
+            string errorMessage;
+            if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            {
+                ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+                _serviceClient.Close();
+                return;
+            }
+
+            startProgressBar();
+            EnableControls(false);
+            manageCacheButton.Text = "Cancel";
 
             backgroundWorkerCachingService.RunWorkerAsync(_serviceClient);
 

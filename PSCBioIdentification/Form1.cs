@@ -28,6 +28,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Configuration;
 using System.Collections.Specialized;
+using System.ServiceModel.Description;
 
 namespace PSCBioIdentification
 {
@@ -268,8 +269,6 @@ namespace PSCBioIdentification
                 //Application.Exit();
             }
 
-            ArrayList fingerList = null;
-
             _callbackFromDualHttpBindingService = new CallbackFromDualHttpBindingService { TotalRecords = 0, RunningSum = 0 };
             _callbackFromDualHttpBindingService.MyEvent += MyEvent;
             _instanceContext = new InstanceContext(_callbackFromDualHttpBindingService);
@@ -278,11 +277,23 @@ namespace PSCBioIdentification
             //InstanceContext context = new InstanceContext(callback);
 
             dynamic client = null;
+            string errorMessage;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            {
                 client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+
+                if (!IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+                {
+                    ShowErrorMessage(errorMessage + " : " + client.Endpoint.Address.Uri.AbsoluteUri);
+                    client.Close();
+                    return;
+                }
+            }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
                 client = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+
+            ArrayList fingerList = null;
 
             if (client != null)
             {
@@ -305,6 +316,9 @@ namespace PSCBioIdentification
                     radioButtonIdentify.Tag = "off";
                     radioButtonIdentify.Enabled = false;
                     buttonScan.Enabled = false;
+                } finally
+                {
+                    client.Close();
                 }
             }
 
@@ -447,6 +461,23 @@ namespace PSCBioIdentification
             //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 
+        public static bool IsServiceAvailable(string endPointAddress, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            try
+            {
+                string address = endPointAddress + "?wsdl";
+                MetadataExchangeClient mexClient = new MetadataExchangeClient(new Uri(address), MetadataExchangeClientMode.HttpGet);
+                MetadataSet metadata = mexClient.GetMetadata();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.InnerException.Message;
+            }
+
+            return false;
+        }
         private void EnableSemaphorControls(bool capturing)
         {
             buttonScan.Enabled = !capturing;
