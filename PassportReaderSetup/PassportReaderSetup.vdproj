@@ -51,18 +51,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3196EA43C1FE073BA76E7F7DE6CC5317"
-        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3196EA43C1FE073BA76E7F7DE6CC5317"
-        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
@@ -183,6 +171,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F43E81028A1B5D05748668F5ED635538"
+        "OwnerKey" = "8:_3B9B26D0E056282485F3CB3B0A5C50AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F43E81028A1B5D05748668F5ED635538"
+        "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F43E81028A1B5D05748668F5ED635538"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
@@ -239,12 +245,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3196EA43C1FE073BA76E7F7DE6CC5317"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -397,37 +397,6 @@
                     }
                 }
             "SourcePath" = "8:Neurotec.Biometrics.Client.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3196EA43C1FE073BA76E7F7DE6CC5317"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WsqSerializationBinder, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3196EA43C1FE073BA76E7F7DE6CC5317"
-                    {
-                    "Name" = "8:WsqSerializationBinder.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:WsqSerializationBinder.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"
@@ -682,6 +651,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F43E81028A1B5D05748668F5ED635538"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:WsqSerializationBinder, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F43E81028A1B5D05748668F5ED635538"
+                    {
+                    "Name" = "8:WsqSerializationBinder.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:WsqSerializationBinder.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -739,11 +739,11 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PassportReader"
         "ProductCode" = "8:{44457732-EE81-4212-9114-6A692508CB80}"
-        "PackageCode" = "8:{29ED9DEB-8E66-40AD-9F43-0E43B6F493E7}"
+        "PackageCode" = "8:{BA1E6DE1-BD59-4F8B-9BDB-1FC501C62812}"
         "UpgradeCode" = "8:{032D6C2A-2E0C-43FF-8139-056C9B24F591}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
@@ -1274,7 +1274,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3E9A7EF1320C4895B32A8725A5B01A9A"
             {
-            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Release\\PassportReader.exe"
+            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\Release\\PassportReader.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"

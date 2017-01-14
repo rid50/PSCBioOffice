@@ -51,7 +51,9 @@ namespace PSCBioIdentification
         }
 
 
-        TaskLoop tl = new TaskLoop();
+        //TaskLoop tl = new TaskLoop();
+
+        string guid = string.Empty;
 
         byte[] probeTemplate;
 
@@ -104,6 +106,9 @@ namespace PSCBioIdentification
                 _serviceClient.Close();
                 return;
             }
+
+
+            guid = Guid.NewGuid().ToString();
 
             backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
         }
@@ -159,7 +164,7 @@ namespace PSCBioIdentification
                 //try
                 //{
                     int i = Thread.CurrentThread.ManagedThreadId;
-                    e.Result = client.match(fingerList, gender, record.probeTemplate);
+                    e.Result = client.match(guid, fingerList, gender, record.probeTemplate);
 
                     //tl.Loop();
 
@@ -175,7 +180,7 @@ namespace PSCBioIdentification
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
             {
                 client = e.Argument as AppFabricCacheMatchingService.MatchingServiceClient;
-                e.Result = client.match(fingerList, gender, record.probeTemplate);
+                e.Result = client.match(guid, fingerList, gender, record.probeTemplate);
             }
             //    if (client != null)
             //{
@@ -316,7 +321,7 @@ namespace PSCBioIdentification
         {
             Task<uint> t = client.matchAsync(fingerList, gender, record.probeTemplate);
             e.Result = await t;
-            int i = 0;
+            //int i = 0;
             //await Task.Delay(5000);
             _mre.Set();
         }
@@ -325,50 +330,57 @@ namespace PSCBioIdentification
         //private async Task TerminateMatching(dynamic client)
         {
             //int i = 0;
-            //Task.Run(() =>
+            //Task<int> t = Task.Run(() =>
             //{
             //    //try
             //    //{
-            //        i = Thread.CurrentThread.ManagedThreadId;
-            //        i = _serviceClient.Terminate();
-            //        //tl.Terminate();
-            //        i = 2;
+            //    i = Thread.CurrentThread.ManagedThreadId;
+            //    i = client.Terminate(guid);
+            //    return i;
+            //    //tl.Terminate();
+            //    //i = 2;
+
             //    //}
             //    //catch (Exception) { }
             //});
+
+            //i = await t;
+            //i = 2;
 
             //Task<int> t = client.TerminateAsync();
             //int result = await t;
             //int i = 0;
 
-            //var cl = new MemoryCacheMatchingService.MatchingServiceClient();
+            //var cli = new MemoryCacheMatchingService.MatchingServiceClient();
             //int k = cl.Terminate();
             //cl.Close();
 
-            //// Create a channel factory.
-            //BasicHttpBinding binding = new BasicHttpBinding(client.Endpoint.Name);
-            WSHttpBinding binding = new WSHttpBinding(client.Endpoint.Name);
-            //NetTcpBinding binding = new NetTcpBinding(client.Endpoint.Name);
+            ////// Create a channel factory.
+            ////BasicHttpBinding binding = new BasicHttpBinding(client.Endpoint.Name);
+            //WSHttpBinding binding = new WSHttpBinding(client.Endpoint.Name);
+            ////NetTcpBinding binding = new NetTcpBinding(client.Endpoint.Name);
 
-            //binding.ReliableSession.Enabled = true;
-            //binding.Security.Mode = SecurityMode.None;
+            ////binding.ReliableSession.Enabled = true;
+            ////binding.Security.Mode = SecurityMode.None;
+            //cli.Endpoint.Address.Uri.AbsoluteUri
+            //EndpointAddress endpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
+            //ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(binding, endpoint);
 
-            EndpointAddress endpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
-            ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(binding, endpoint);
+            //////WSDualHttpBinding binding = new WSDualHttpBinding();
+            //////ContractDescription contract = new ContractDescription("WSDualHttpBinding_IMatchingService");
+            //////EndpointAddress myEndpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
+            //////ServiceEndpoint serviceEndpoint = new ServiceEndpoint(contract, binding, myEndpoint);
+            //////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
+            //////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, serviceEndpoint);
 
-            ////WSDualHttpBinding binding = new WSDualHttpBinding();
-            ////ContractDescription contract = new ContractDescription("WSDualHttpBinding_IMatchingService");
-            ////EndpointAddress myEndpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
-            ////ServiceEndpoint serviceEndpoint = new ServiceEndpoint(contract, binding, myEndpoint);
-            ////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
-            ////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, serviceEndpoint);
-
-            ////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
-            ////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, client.Endpoint.Name);
+            //DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> factory =
+            //    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, client.Endpoint.Name);
 
             // Create a channel.
+            ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(client.Endpoint.Binding, client.Endpoint.Address);
             MemoryCacheMatchingService.IMatchingService cl = factory.CreateChannel();
-            int k = cl.Terminate();
+            int k = cl.Terminate(guid);
+            LogLine(k.ToString(), true);
             ((IClientChannel)cl).Close();
         }
 
@@ -468,87 +480,87 @@ namespace PSCBioIdentification
         }
     }
 
-    class TaskLoop
-    {
-        CancellationTokenSource source = null;
-        CancellationToken ct;
+    //class TaskLoop
+    //{
+    //    CancellationTokenSource source = null;
+    //    CancellationToken ct;
 
-        public void Loop()
-        {
-            source = new CancellationTokenSource();
-            ct = source.Token;
+    //    public void Loop()
+    //    {
+    //        source = new CancellationTokenSource();
+    //        ct = source.Token;
 
-            //Task.Run(() =>
-            //{
-            Console.WriteLine("Main Thread={0}", Thread.CurrentThread.ManagedThreadId);
+    //        //Task.Run(() =>
+    //        //{
+    //        Console.WriteLine("Main Thread={0}", Thread.CurrentThread.ManagedThreadId);
 
-            //int i = 0;
-            //Task<int>[] tasks = new Task<int>[9];
-            //var tasks = new List<Task>();
-            List<Task<int>> tasks = new List<Task<int>>();
-            //source.Cancel();
-            //ct.ThrowIfCancellationRequested();
-            for (int i = 0; i < 2; i++)
-            {
-                tasks.Add(Task.Factory.StartNew((i2) =>
-                {
+    //        //int i = 0;
+    //        //Task<int>[] tasks = new Task<int>[9];
+    //        //var tasks = new List<Task>();
+    //        List<Task<int>> tasks = new List<Task<int>>();
+    //        //source.Cancel();
+    //        //ct.ThrowIfCancellationRequested();
+    //        for (int i = 0; i < 2; i++)
+    //        {
+    //            tasks.Add(Task.Factory.StartNew((i2) =>
+    //            {
 
-                    //source.Cancel();
+    //                //source.Cancel();
 
-                    //var delay = Task.Run(async () => {
-                    //    await Task.Delay(5000);
-                    //    int k = 0;
-                    //});
+    //                //var delay = Task.Run(async () => {
+    //                //    await Task.Delay(5000);
+    //                //    int k = 0;
+    //                //});
 
-                    Task.Delay(5000).Wait();
+    //                Task.Delay(5000).Wait();
 
-                    //if (ct.IsCancellationRequested)
-                    //  throw new Exception("kuku");
+    //                //if (ct.IsCancellationRequested)
+    //                //  throw new Exception("kuku");
 
-                    ct.ThrowIfCancellationRequested();
+    //                ct.ThrowIfCancellationRequested();
 
-                    //Console.WriteLine("MainTask {0} Thread={1}", i, Thread.CurrentThread.ManagedThreadId);
-                    Console.WriteLine("Thread={0}, i={1}", Thread.CurrentThread.ManagedThreadId, i2);
-                    //String str = new SyncTasks().HelloAsync(i.ToString());
+    //                //Console.WriteLine("MainTask {0} Thread={1}", i, Thread.CurrentThread.ManagedThreadId);
+    //                Console.WriteLine("Thread={0}, i={1}", Thread.CurrentThread.ManagedThreadId, i2);
+    //                //String str = new SyncTasks().HelloAsync(i.ToString());
 
-                    //Console.WriteLine(str);
-                    return 0;
+    //                //Console.WriteLine(str);
+    //                return 0;
 
-                }, i, ct));
-            }
+    //            }, i, ct));
+    //        }
 
-            //Task t = Task.WhenAll(tasks.ToArray().Where(ta => ta != null));
-            //Task t = Task.WhenAll(tasks.ToArray());
+    //        //Task t = Task.WhenAll(tasks.ToArray().Where(ta => ta != null));
+    //        //Task t = Task.WhenAll(tasks.ToArray());
 
-            try
-            {
-                Task.WhenAll(tasks.ToArray()).Wait();
-                //int k = 0;
-                //t.Wait();
+    //        try
+    //        {
+    //            Task.WhenAll(tasks.ToArray()).Wait();
+    //            //int k = 0;
+    //            //t.Wait();
 
-                //Task.WhenAll(tasks.ToArray().Where(t => t != null));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-                Console.WriteLine(ex.Message);
+    //            //Task.WhenAll(tasks.ToArray().Where(t => t != null));
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            throw new Exception(ex.Message);
+    //            Console.WriteLine(ex.Message);
 
-                Console.WriteLine("Caught first exception: {0}", ex);
-                Console.WriteLine("***************************");
-                //Console.WriteLine("Aggregate exception is: {0}", task.Exception);
+    //            Console.WriteLine("Caught first exception: {0}", ex);
+    //            Console.WriteLine("***************************");
+    //            //Console.WriteLine("Aggregate exception is: {0}", task.Exception);
                 
-            }
+    //        }
 
-            //            });
-            //int k = 0;
-        }
+    //        //            });
+    //        //int k = 0;
+    //    }
 
-        public void Terminate()
-        {
-            Console.WriteLine("Termination Thread={0}", Thread.CurrentThread.ManagedThreadId);
+    //    public void Terminate()
+    //    {
+    //        Console.WriteLine("Termination Thread={0}", Thread.CurrentThread.ManagedThreadId);
 
-            source.Cancel();
-            Console.WriteLine("===================");
-        }
-    }
+    //        source.Cancel();
+    //        Console.WriteLine("===================");
+    //    }
+    //}
 }
