@@ -661,7 +661,10 @@ namespace PSCBioIdentification
 
         private void startCapturing()
         {
-            Boolean fileTemplate = true;
+            Boolean fileTemplate = false;
+
+            if (ConfigurationManager.AppSettings["fingerFrom"] == "file")
+                fileTemplate = true;
 
             if (_isCapturing)
                 return;
