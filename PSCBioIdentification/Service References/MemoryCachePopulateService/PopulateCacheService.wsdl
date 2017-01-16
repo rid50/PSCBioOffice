@@ -23,14 +23,14 @@
       <xsd:import schemaLocation="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IPopulateCacheService_Run2_InputMessage">
-    <wsdl:part name="parameters" element="tns:Run2" />
-  </wsdl:message>
   <wsdl:message name="IPopulateCacheService_Run_InputMessage">
     <wsdl:part name="parameters" element="tns:Run" />
   </wsdl:message>
-  <wsdl:message name="IPopulateCacheService_Run_OutputMessage">
-    <wsdl:part name="parameters" element="tns:RunResponse" />
+  <wsdl:message name="IPopulateCacheService_Run2_InputMessage">
+    <wsdl:part name="parameters" element="tns:Run2" />
+  </wsdl:message>
+  <wsdl:message name="IPopulateCacheService_Run2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:Run2Response" />
   </wsdl:message>
   <wsdl:message name="IPopulateCacheService_getFingerList_InputMessage">
     <wsdl:part name="parameters" element="tns:getFingerList" />
@@ -65,51 +65,51 @@
   <wsdl:message name="IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:CacheOperationComplete" />
   </wsdl:message>
-  <wsdl:portType msc:usingSession="true" name="IPopulateCacheService">
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run2">
-      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2" message="tns:IPopulateCacheService_Run2_InputMessage" />
-    </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run">
+  <wsdl:portType name="IPopulateCacheService">
+    <wsdl:operation name="Run">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run" message="tns:IPopulateCacheService_Run_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RunResponse" message="tns:IPopulateCacheService_Run_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getFingerList">
+    <wsdl:operation name="Run2">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2" message="tns:IPopulateCacheService_Run2_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2Response" message="tns:IPopulateCacheService_Run2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getFingerList">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerList" message="tns:IPopulateCacheService_getFingerList_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListResponse" message="tns:IPopulateCacheService_getFingerList_OutputMessage" />
       <wsdl:fault wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault" name="ValidationExceptionFault" message="tns:IPopulateCacheService_getFingerList_ValidationExceptionFault_FaultMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getExpirationTime">
+    <wsdl:operation name="getExpirationTime">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTime" message="tns:IPopulateCacheService_getExpirationTime_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse" message="tns:IPopulateCacheService_getExpirationTime_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Terminate">
+    <wsdl:operation name="Terminate">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Terminate" message="tns:IPopulateCacheService_Terminate_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/TerminateResponse" message="tns:IPopulateCacheService_Terminate_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithRecordNumbers">
+    <wsdl:operation name="RespondWithRecordNumbers">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithRecordNumbers" message="tns:IPopulateCacheService_RespondWithRecordNumbers_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithText">
+    <wsdl:operation name="RespondWithText">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithText" message="tns:IPopulateCacheService_RespondWithText_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithError">
+    <wsdl:operation name="RespondWithError">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithError" message="tns:IPopulateCacheService_RespondWithError_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CacheOperationComplete">
+    <wsdl:operation name="CacheOperationComplete">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/CacheOperationComplete" message="tns:IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_IPopulateCacheService" type="tns:IPopulateCacheService">
     <wsp:PolicyReference URI="#WSDualHttpBinding_IPopulateCacheService_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="Run2">
-      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run2" style="document" />
+    <wsdl:operation name="Run">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
-    <wsdl:operation name="Run">
-      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
+    <wsdl:operation name="Run2">
+      <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run2" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

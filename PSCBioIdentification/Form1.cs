@@ -3508,6 +3508,16 @@ namespace PSCBioIdentification
                         {
                             backgroundWorkerCachingService.CancelAsync();
                             _mre.Set();                      //Terminate CashingService
+                            TerminateCaching(_serviceClient);
+
+                            //try
+                            //{
+                            //    TerminatePopulation(_serviceClient);
+                            //}
+                            //catch (Exception ex)
+                            //{
+                            //    throw new Exception(ex.Message);
+                            //}
                         }
 
                         //_serviceClient.Terminate();
@@ -3515,7 +3525,7 @@ namespace PSCBioIdentification
                     {
                         if (backgroundWorkerMatchingService.IsBusy)
                         {
-                            backgroundWorkerMatchingService.CancelAsync();
+                            //backgroundWorkerMatchingService.CancelAsync();
                             //_mre.Set();                      //Terminate MatchingServiceService
 
                             try
@@ -3526,7 +3536,6 @@ namespace PSCBioIdentification
                             {
                                 throw new Exception(ex.Message);
                             }
-
                         }
                     }
 

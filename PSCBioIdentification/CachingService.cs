@@ -14,6 +14,7 @@ using System.Threading;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.ServiceModel.Configuration;
+using System.ServiceModel.Description;
 //using System.Windows.Forms;
 
 //using DataSourceServices;
@@ -199,8 +200,29 @@ namespace PSCBioIdentification
             else
             {
                 e.Result = null;
-                client.Terminate();
+                //client.Terminate();
+
+                // Create a channel.
+                //DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
+                //    new DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(_instanceContext, client.Endpoint.Name);
+
+                //MemoryCachePopulateService.IPopulateCacheService cl = factory.CreateChannel();
+                //int k = cl.Terminate();
+                ////LogLine(k.ToString(), true);
+                //((IClientChannel)cl).Close();
+
             }
+        }
+
+        private void TerminateCaching(dynamic client)
+        {
+            DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
+                new DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(_instanceContext, client.Endpoint.Name);
+
+            MemoryCachePopulateService.IPopulateCacheService cl = factory.CreateChannel();
+            cl.Terminate();
+            //LogLine(k.ToString(), true);
+            ((IClientChannel)cl).Close();
         }
 
         private void backgroundWorkerCachingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -280,8 +280,8 @@ namespace PSCBioIdentification
                 }
             }
 
-            if (backgroundWorkerMatchingService.CancellationPending)
-            {
+            //if (backgroundWorkerMatchingService.CancellationPending)
+            //{
                 //try
                 //{
                 //    TerminateMatching(client);
@@ -314,7 +314,7 @@ namespace PSCBioIdentification
                 //    //    _tokenSource.Cancel();
                 //}
                 //catch (Exception) { }
-            }
+            //}
         }
 
         private async Task RunMatching(dynamic client, ArrayList fingerList, int gender, Record record, DoWorkEventArgs e)
