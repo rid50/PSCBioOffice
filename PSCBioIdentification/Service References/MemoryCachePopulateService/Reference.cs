@@ -12,7 +12,7 @@ namespace PSCBioIdentification.MemoryCachePopulateService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCachePopulateService.IPopulateCacheService", CallbackContract=typeof(PSCBioIdentification.MemoryCachePopulateService.IPopulateCacheServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCachePopulateService.IPopulateCacheService", CallbackContract=typeof(PSCBioIdentification.MemoryCachePopulateService.IPopulateCacheServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IPopulateCacheService {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run")]

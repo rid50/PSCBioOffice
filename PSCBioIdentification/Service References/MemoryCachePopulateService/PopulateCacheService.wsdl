@@ -65,37 +65,37 @@
   <wsdl:message name="IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:CacheOperationComplete" />
   </wsdl:message>
-  <wsdl:portType name="IPopulateCacheService">
-    <wsdl:operation name="Run">
+  <wsdl:portType msc:usingSession="true" name="IPopulateCacheService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run" message="tns:IPopulateCacheService_Run_InputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="Run2">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Run2">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2" message="tns:IPopulateCacheService_Run2_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/Run2Response" message="tns:IPopulateCacheService_Run2_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="getFingerList">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getFingerList">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerList" message="tns:IPopulateCacheService_getFingerList_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListResponse" message="tns:IPopulateCacheService_getFingerList_OutputMessage" />
       <wsdl:fault wsaw:Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault" name="ValidationExceptionFault" message="tns:IPopulateCacheService_getFingerList_ValidationExceptionFault_FaultMessage" />
     </wsdl:operation>
-    <wsdl:operation name="getExpirationTime">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="getExpirationTime">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTime" message="tns:IPopulateCacheService_getExpirationTime_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse" message="tns:IPopulateCacheService_getExpirationTime_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="Terminate">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Terminate">
       <wsdl:input wsaw:Action="http://tempuri.org/IPopulateCacheService/Terminate" message="tns:IPopulateCacheService_Terminate_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/TerminateResponse" message="tns:IPopulateCacheService_Terminate_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="RespondWithRecordNumbers">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithRecordNumbers">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithRecordNumbers" message="tns:IPopulateCacheService_RespondWithRecordNumbers_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="RespondWithText">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithText">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithText" message="tns:IPopulateCacheService_RespondWithText_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="RespondWithError">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithError">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/RespondWithError" message="tns:IPopulateCacheService_RespondWithError_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="CacheOperationComplete">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CacheOperationComplete">
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/CacheOperationComplete" message="tns:IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
