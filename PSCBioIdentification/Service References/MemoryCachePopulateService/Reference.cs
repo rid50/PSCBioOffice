@@ -38,7 +38,7 @@ namespace PSCBioIdentification.MemoryCachePopulateService {
         System.DateTime getExpirationTime();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Terminate", ReplyAction="http://tempuri.org/IPopulateCacheService/TerminateResponse")]
-        void Terminate();
+        int Terminate();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -101,8 +101,8 @@ namespace PSCBioIdentification.MemoryCachePopulateService {
             return base.Channel.getExpirationTime();
         }
         
-        public void Terminate() {
-            base.Channel.Terminate();
+        public int Terminate() {
+            return base.Channel.Terminate();
         }
     }
 }
