@@ -93,10 +93,22 @@ namespace PSCBioIdentification
             else
                 _serviceClient = new UnmanagedMatchingService.MatchingServiceClient(_instanceContext);
 
-            string errorMessage;
-            if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            String clientPort = ConfigurationManager.AppSettings["clientPort"];
+
+            if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
             {
-                ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+                ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
+                Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/PopulateCacheServiceClient/");
+                _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
+                //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://kw0itcl066:80/PopulateCacheServiceClient/");
+            }
+
+            string errorMessage;
+            //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            if (!IsServiceAvailable(_serviceClient, out errorMessage))
+            {
+                ShowErrorMessage(errorMessage);
+                //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
                 _serviceClient.Close();
                 return;
             }
@@ -166,7 +178,6 @@ namespace PSCBioIdentification
 
                 record.fingerListSize = fingerList.Count;
                 record.fingerList = fingerList.ToArray(typeof(string)) as string[];
-
 
                 var list = new System.Collections.ArrayList();
 

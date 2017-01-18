@@ -100,9 +100,11 @@ namespace PSCBioIdentification
                 _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
 
             string errorMessage;
-            if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            if (!IsServiceAvailable(_serviceClient, out errorMessage))            
             {
-                ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+                //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+                ShowErrorMessage(errorMessage);
                 _serviceClient.Close();
                 return;
             }

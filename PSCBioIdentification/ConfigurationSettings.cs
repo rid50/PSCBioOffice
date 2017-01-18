@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using System.Reflection;
+using System.ServiceModel.Description;
 
 namespace PSCBioIdentification
 {
@@ -21,59 +22,47 @@ namespace PSCBioIdentification
         static MyConfigurationSettings()
         {
             ConfigurationServiceClient configurationServiceClient = null;
-            //ServiceHost configurationServiceClient = null;
             Dictionary<string, string> settings = null;
 
-            String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
-
-            //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
-            //configurationServiceClient.Endpoint.Address
-
-            //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            //var serviceModel = configFile.SectionGroups["system.serviceModel"];
-            //var clientSection = serviceModel.Sections["client"];
-
-            //var serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client");
-
-            //ClientSection serviceModelClient = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
-            //foreach (ChannelEndpointElement cs in serviceModelClient.Endpoints)
+            //String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
+            //Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
+            //ClientSection serviceModelClientSection = serviceModelSection.Client;
+            //if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
             //{
-            //    var address = cs.Address;
+            //    foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
+            //    {
+            //        var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+            //        endPoint.Address = uri;
+            //        //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+            //    }
+            //    //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
+            //        //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
+
+            //    //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
+            //    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+
+            //    //serviceModelClientSection.Endpoints[0].Address = uri;
+            //    config.Save();
+
+            //    ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
             //}
 
-            //String serviceName = "BasicHttpBinding_IConfigurationService";
-
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
-            ClientSection serviceModelClientSection = serviceModelSection.Client;
-            if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
-            {
-                foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
-                {
-                    var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                    endPoint.Address = uri;
-                    //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                }
-                //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
-                    //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
-
-                //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
-                //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-
-                //serviceModelClientSection.Endpoints[0].Address = uri;
-                config.Save();
-
-                ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
-            }
-
             configurationServiceClient = new ConfigurationServiceClient();
-            string absoluteUri = configurationServiceClient.Endpoint.Address.Uri.AbsoluteUri;
+            //ServiceEndpoint serviceEndpoint = configurationServiceClient.Endpoint;
+
+            //Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + endPointHost + ":" + serviceEndpoint.Address.Uri.Port + serviceEndpoint.Address.Uri.PathAndQuery);
+            //configurationServiceClient.Endpoint.Address = new EndpointAddress(uri.ToString());
+
+            //string absoluteUri = configurationServiceClient.Endpoint.Address.Uri.AbsoluteUri;
             string errorMessage;
-            if (!Form1.IsServiceAvailable(absoluteUri, out errorMessage))
+            //if (!Form1.IsServiceAvailable(absoluteUri, out errorMessage))
+            if (!Form1.IsServiceAvailable(configurationServiceClient, out errorMessage))
             {
                 configurationServiceClient.Close();
                 configurationServiceClient = null;
-                throw new Exception(errorMessage + " : " + absoluteUri);
+                throw new Exception(errorMessage);
+                //throw new Exception(errorMessage + " : " + absoluteUri);
             }
             //configurationServiceClient = new ConfigurationServiceClient(serviceName, endPointAddress);
             //configurationServiceClient = new ServiceHost(typeof(ConfigurationServiceClient), new Uri(baseAddress));

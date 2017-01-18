@@ -283,9 +283,11 @@ namespace PSCBioIdentification
             {
                 client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
 
-                if (!IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+                //if (!IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+                if (!IsServiceAvailable(client, out errorMessage))
                 {
-                    ShowErrorMessage(errorMessage + " : " + client.Endpoint.Address.Uri.AbsoluteUri);
+                    //ShowErrorMessage(errorMessage + " : " + client.Endpoint.Address.Uri.AbsoluteUri);
+                    ShowErrorMessage(errorMessage);
                     client.Close();
                     return;
                 }
@@ -461,19 +463,31 @@ namespace PSCBioIdentification
             //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 
-        public static bool IsServiceAvailable(string endPointAddress, out string errorMessage)
+
+        public static bool IsServiceAvailable(dynamic client, out string errorMessage)
+        {
+            String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
+            ServiceEndpoint serviceEndpoint = client.Endpoint;
+            Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + endPointHost + ":" + serviceEndpoint.Address.Uri.Port + serviceEndpoint.Address.Uri.PathAndQuery);
+            client.Endpoint.Address = new EndpointAddress(uri.ToString());
+
+            //string absoluteUri = client.Endpoint.Address.Uri.AbsoluteUri;
+
+            return IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage);
+        }
+        public static bool IsServiceAvailable(string absoluteUri, out string errorMessage)
         {
             errorMessage = string.Empty;
             try
             {
-                string address = endPointAddress + "?wsdl";
+                string address = absoluteUri + "?wsdl";
                 MetadataExchangeClient mexClient = new MetadataExchangeClient(new Uri(address), MetadataExchangeClientMode.HttpGet);
                 MetadataSet metadata = mexClient.GetMetadata();
                 return true;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.InnerException.Message;
+                errorMessage = ex.InnerException.Message + " : " + absoluteUri;
             }
 
             return false;

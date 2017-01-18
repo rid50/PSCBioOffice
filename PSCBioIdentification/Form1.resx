@@ -2365,7 +2365,7 @@
     <value>770, 666</value>
   </data>
   <data name="scannersListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 43</value>
+    <value>279, 43</value>
   </data>
   <data name="scannersListBox.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -3037,13 +3037,16 @@
     <value>NoControl</value>
   </data>
   <data name="buttonRefreshScannerListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1018, 669</value>
+    <value>1062, 666</value>
   </data>
   <data name="buttonRefreshScannerListBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>36, 36</value>
   </data>
   <data name="buttonRefreshScannerListBox.TabIndex" type="System.Int32, mscorlib">
     <value>62</value>
+  </data>
+  <data name="buttonRefreshScannerListBox.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;buttonRefreshScannerListBox.Name" xml:space="preserve">
     <value>buttonRefreshScannerListBox</value>
