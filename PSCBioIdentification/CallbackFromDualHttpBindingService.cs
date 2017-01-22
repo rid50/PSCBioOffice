@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PSCBioIdentification
@@ -13,6 +15,7 @@ namespace PSCBioIdentification
 
     //class CallbackFromCacheFillingService : CallbackFromUnmanagedCacheService, CallbackFromManagedCacheService
     //class CallbackFromDualHttpBindingService : UnmanagedMatchingService.IMatchingServiceCallback, MemoryCachePopulateService.IPopulateCacheServiceCallback, AppFabricCachePopulateService.IPopulateCacheServiceCallback, MemoryCacheMatchingService.IMatchingServiceCallback
+    [CallbackBehavior(ConcurrencyMode=ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
     class CallbackFromDualHttpBindingService : UnmanagedMatchingService.IMatchingServiceCallback, MemoryCachePopulateService.IPopulateCacheServiceCallback, AppFabricCachePopulateService.IPopulateCacheServiceCallback
     {
         private static int totalRecords;
@@ -52,7 +55,13 @@ namespace PSCBioIdentification
             EventHandler<MyEventArgs> handler = MyEvent;
             if (handler != null)
             {
-                handler(this, args);
+                //Task.Factory.StartNew(async delegate (Object arg)
+                Task.Run(async () =>
+                {
+                    await Task.Delay(10);
+                    handler(this, args);
+                    //await Task.Factory.StartNew(delegate() { handler(this, args); });
+                });
             }
         }
 
@@ -85,6 +94,12 @@ namespace PSCBioIdentification
             EventHandler<MyEventArgs> handler = MyEvent;
             if (handler != null)
             {
+                //Task.Run(async () =>
+                //{
+                //    //await Task.Delay(10);
+                //    //handler(this, null);
+                //    await Task.Factory.StartNew(delegate() { handler(this, null); });
+                //});
                 handler(this, null);
             }            
         }

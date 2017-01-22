@@ -229,9 +229,11 @@ namespace PSCBioIdentification
         {
             DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
                 new DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(_instanceContext, client.Endpoint.Name);
+            //ChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
+            //    new ChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(client.Endpoint.Binding, client.Endpoint.Address);
 
             MemoryCachePopulateService.IPopulateCacheService cl = factory.CreateChannel();
-            cl.Terminate();
+            int i = cl.Terminate();
             //LogLine(k.ToString(), true);
             ((IClientChannel)cl).Close();
         }
@@ -253,7 +255,10 @@ namespace PSCBioIdentification
                 else
                 {
                     if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
+                    {
                         labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
+                        ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
+                    }
                 }
 
                 Label lb;

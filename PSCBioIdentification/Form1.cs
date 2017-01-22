@@ -473,21 +473,35 @@ namespace PSCBioIdentification
 
             //string absoluteUri = client.Endpoint.Address.Uri.AbsoluteUri;
 
-            return IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage);
+            return IsServiceAvailable(client.Endpoint.Address, out errorMessage);
         }
-        public static bool IsServiceAvailable(string absoluteUri, out string errorMessage)
+        public static bool IsServiceAvailable(EndpointAddress endpointAddress, out string errorMessage)
         {
             errorMessage = string.Empty;
+            Uri uri = endpointAddress.Uri;
+
             try
             {
-                string address = absoluteUri + "?wsdl";
-                MetadataExchangeClient mexClient = new MetadataExchangeClient(new Uri(address), MetadataExchangeClientMode.HttpGet);
+                string address = uri.AbsoluteUri + "?wsdl";
+                MetadataExchangeClient mexClient = null;
+                if (uri.Scheme == "http")
+                    mexClient = new MetadataExchangeClient(new Uri(address), MetadataExchangeClientMode.HttpGet);
+                else if (uri.Scheme == "net.tcp")
+                {
+                    return true;
+                    //mexClient = new MetadataExchangeClient(new EndpointAddress("net.tcp://localhost/MemoryCacheService/PopulateCacheService/mex"));
+                    //mexClient.ResolveMetadataReferences = true;
+                    //mexClient.OperationTimeout = new TimeSpan(0, 10, 0);
+                }
                 MetadataSet metadata = mexClient.GetMetadata();
                 return true;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.InnerException.Message + " : " + absoluteUri;
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                errorMessage = ex.Message + " : " + uri.AbsoluteUri;
             }
 
             return false;
@@ -3521,17 +3535,17 @@ namespace PSCBioIdentification
                         if (backgroundWorkerCachingService.IsBusy)
                         {
                             backgroundWorkerCachingService.CancelAsync();
-                            _mre.Set();                      //Terminate CashingService
-                            TerminateCaching(_serviceClient);
+                            //_mre.Set();                      //Terminate CashingService
+                            //TerminateCaching(_serviceClient);
 
-                            //try
-                            //{
-                            //    TerminatePopulation(_serviceClient);
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    throw new Exception(ex.Message);
-                            //}
+                            try
+                            {
+                                TerminateCaching(_serviceClient);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
                         }
 
                         //_serviceClient.Terminate();
@@ -3596,7 +3610,7 @@ namespace PSCBioIdentification
             //{
             //    backgroundWorkerCachingService.CancelAsync();
 
-            //    terminateService();
+                terminateService();
 
             //    //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
             //    //InstanceContext context = new InstanceContext(callback);
@@ -3749,6 +3763,11 @@ namespace PSCBioIdentification
         {
             if (e == null)
             {
+                //this.BeginInvoke((Action)(() =>
+                //{
+                //    ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
+                //}));
+
                 _mre.Set();                 //cache service finished cache populating or matching service completed a search 
             }
             else if (e.Error.Length == 0)   // Show message
@@ -3917,7 +3936,7 @@ namespace PSCBioIdentification
 
                 manageCacheButton.Enabled = false;
                 Application.DoEvents();
-                ShowStatusMessage("Terminating the request...");
+                //ShowStatusMessage("Terminating the request...");
             }
 
             //            CallbackFromAppFabricCacheService callback = new CallbackFromAppFabricCacheService();
