@@ -95,13 +95,13 @@ namespace PSCBioIdentification
 
             String clientPort = ConfigurationManager.AppSettings["clientPort"];
 
-            if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
-            {
-                ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
-                Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/PopulateCacheServiceClient/");
-                _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
-                //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://kw0itcl066:80/PopulateCacheServiceClient/");
-            }
+            //if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
+            //{
+            //    ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
+            //    Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/PopulateCacheServiceClient/");
+            //    _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
+            //    //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://kw0itcl066:80/PopulateCacheServiceClient/");
+            //}
 
             string errorMessage;
             //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
@@ -257,7 +257,7 @@ namespace PSCBioIdentification
                     if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
                     {
                         labelCacheValidationTime.Text = string.Format("Valid until: {0:MMM dd} {0:t}", DateTime.Now + new TimeSpan(24, 0, 0));
-                        ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
+                        //ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
                     }
                 }
 

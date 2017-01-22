@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PopulateCacheService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsp:Policy wsu:Id="NetTcpBinding_IPopulateCacheService_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IPopulateCacheService_policy">
     <wsp:ExactlyOne>
       <wsp:All>
-        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex" />
+        <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy" />
+        <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" />
         <wsaw:UsingAddressing />
       </wsp:All>
     </wsp:ExactlyOne>
@@ -93,9 +99,9 @@
       <wsdl:output wsaw:Action="http://tempuri.org/IPopulateCacheService/CacheOperationComplete" message="tns:IPopulateCacheService_CacheOperationComplete_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="NetTcpBinding_IPopulateCacheService" type="tns:IPopulateCacheService">
-    <wsp:PolicyReference URI="#NetTcpBinding_IPopulateCacheService_policy" />
-    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+  <wsdl:binding name="WSDualHttpBinding_IPopulateCacheService" type="tns:IPopulateCacheService">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_IPopulateCacheService_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="Run">
       <soap12:operation soapAction="http://tempuri.org/IPopulateCacheService/Run" style="document" />
       <wsdl:input>
@@ -167,10 +173,10 @@
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="PopulateCacheService">
-    <wsdl:port name="NetTcpBinding_IPopulateCacheService" binding="tns:NetTcpBinding_IPopulateCacheService">
-      <soap12:address location="net.tcp://kw0itcl066/MemoryCacheService/PopulateCacheService.svc" />
+    <wsdl:port name="WSDualHttpBinding_IPopulateCacheService" binding="tns:WSDualHttpBinding_IPopulateCacheService">
+      <soap12:address location="http://localhost/MemoryCacheService/PopulateCacheService.svc" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://kw0itcl066/MemoryCacheService/PopulateCacheService.svc</wsa10:Address>
+        <wsa10:Address>http://localhost/MemoryCacheService/PopulateCacheService.svc</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
           <Dns>localhost</Dns>
         </Identity>

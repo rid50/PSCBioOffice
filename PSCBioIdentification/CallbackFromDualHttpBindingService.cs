@@ -55,13 +55,16 @@ namespace PSCBioIdentification
             EventHandler<MyEventArgs> handler = MyEvent;
             if (handler != null)
             {
-                //Task.Factory.StartNew(async delegate (Object arg)
-                Task.Run(async () =>
-                {
-                    await Task.Delay(10);
-                    handler(this, args);
-                    //await Task.Factory.StartNew(delegate() { handler(this, args); });
-                });
+
+                handler(this, args);
+
+                ////Task.Factory.StartNew(async delegate (Object arg)
+                //Task.Run(async () =>
+                //{
+                //    await Task.Delay(10);
+                //    handler(this, args);
+                //    //await Task.Factory.StartNew(delegate() { handler(this, args); });
+                //});
             }
         }
 
