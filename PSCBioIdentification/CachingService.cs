@@ -95,13 +95,15 @@ namespace PSCBioIdentification
 
             String clientPort = ConfigurationManager.AppSettings["clientPort"];
 
-            //if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
-            //{
-            //    ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
-            //    Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/PopulateCacheServiceClient/");
-            //    _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
-            //    //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://kw0itcl066:80/PopulateCacheServiceClient/");
-            //}
+            if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
+            {
+                ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
+                Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
+                _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
+                //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/PopulateCacheServiceClient/");
+                //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:8733/Design_Time_Addresses/");
+                //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/Temporary_Listen_Addresses/");
+            }
 
             string errorMessage;
             //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
