@@ -527,7 +527,7 @@ namespace PSCBioIdentification
         private void EnableControls(bool enable)
         {
             //fillAppFabricCache.Enabled = enable;
-            if (enable && (string)manageCacheButton.Tag != "off")
+//            if (enable && (string)manageCacheButton.Tag != "off")
                 manageCacheButton.Enabled = enable;
             
             buttonRequest.Enabled = enable;
@@ -641,8 +641,8 @@ namespace PSCBioIdentification
             }
         }
 
-        private delegate NFinger CaptureFingersDelegate(NFinger finger, short numberOfFingers);
-        private NFinger CaptureFingers(NFinger finger, short numberOfFingers)
+        private delegate NFinger CaptureFingersDelegate(NFinger finger, short numberOfFingers, bool right);
+        private NFinger CaptureFingers(NFinger finger, short numberOfFingers, bool right)
         {
             finger.ImpressionType = NFImpressionType.LiveScanPlain;
 
@@ -659,7 +659,10 @@ namespace PSCBioIdentification
                     //finger.Position = NFPosition.UnknownThreeFingers;
                     //break;
                 case 4:
-                    finger.Position = NFPosition.PlainLeftFourFingers;
+                    if (right)
+                        finger.Position = NFPosition.PlainRightFourFingers;
+                    else
+                        finger.Position = NFPosition.PlainLeftFourFingers;
                     break;
             }
 
@@ -835,7 +838,7 @@ namespace PSCBioIdentification
                 //subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
                 //fingerView2.Finger = subjectFinger;
 
-                _biometricClient.FingersTemplateSize = NTemplateSize.Small;
+                _biometricClient.FingersTemplateSize = NTemplateSize.Large;
                 //_biometricClient.FingersReturnProcessedImage = true;
 
                 AsyncCallback callback = new AsyncCallback(OnImage);
@@ -843,8 +846,20 @@ namespace PSCBioIdentification
                 // Begin capturing
                 if (radioButtonIdentify.Checked)
                 {
+                    bool right = true;
+                    CheckBox cb;
+                    for (int i = 5; i < 9; i++)
+                    {
+                        cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                        if (!cb.Checked)
+                        {
+                            right = false;
+                            break;
+                        }
+                    }
+
                     var del = new CaptureFingersDelegate(CaptureFingers);
-                    IAsyncResult result = del.BeginInvoke(finger, count, OnImage, null);
+                    IAsyncResult result = del.BeginInvoke(finger, count, right, OnImage, null);
 
                     //IAsyncResult result = BeginInvoke(new Action(delegate() {
                     ////BeginInvoke((Action)(() =>
@@ -2520,7 +2535,7 @@ namespace PSCBioIdentification
             //bool rbChecked = false;
             //, pbChecked = false;
 
-            _biometricClient.FingersTemplateSize = NTemplateSize.Small;
+            _biometricClient.FingersTemplateSize = NTemplateSize.Large;
             _biometricClient.FingersFastExtraction = false;
             _biometricClient.FingersQualityThreshold = 48;
             //TimeSpan ts;

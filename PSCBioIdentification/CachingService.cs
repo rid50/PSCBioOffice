@@ -95,7 +95,7 @@ namespace PSCBioIdentification
 
             String clientPort = ConfigurationManager.AppSettings["clientPort"];
 
-            if (clientPort != null && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
+            if (clientPort != "80" && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
             {
                 ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
                 Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");

@@ -60,7 +60,8 @@ namespace PassportReaderNS
         public Form1()
         {
             InitializeComponent();
-            TextBoxID.Text = "210067490";
+            //TextBoxID.Text = "210067490";
+            TextBoxID.Text = "20005140";
             tabControl1.SelectedTab = tabPage3;
         }
 
@@ -1198,6 +1199,7 @@ namespace PassportReaderNS
             //byte[][] buffer = null;
             MemoryStream ms = null;
             //ArrayList _fingersCollection = null;
+            BioProcessor.BioProcessor bioProcessor = null;
 
             try
             {
@@ -1248,7 +1250,7 @@ namespace PassportReaderNS
 
                 //    bioProcessor = new BioProcessor.BioProcessor();
                 //}
-                BioProcessor.BioProcessor bioProcessor = new BioProcessor.BioProcessor();
+                bioProcessor = new BioProcessor.BioProcessor();
 
                 //MemoryStream ms = null;
                 ms = new MemoryStream(buffer[0]);
@@ -1321,7 +1323,7 @@ namespace PassportReaderNS
                                     }
                                     else
                                     {
-                                        label = string.Format("q: {0:P0}", 0);
+                                        label = string.Format("Q: {0:P0}", 0);
                                         brush = Brushes.Red;
                                     }
 
@@ -1371,6 +1373,9 @@ namespace PassportReaderNS
             {
                 if (ms != null)
                     ms.Close();
+
+                if (bioProcessor != null)
+                    bioProcessor.CleanBiometrics();
 
                 buttonLeftHand.Enabled = true;
                 buttonRightHand.Enabled = true;

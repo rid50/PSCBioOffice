@@ -74,6 +74,23 @@ namespace PassportReaderNS
                 if ((e.Result as byte[][])[0] != null)
                 {
                     processReadFingers(e.Result as byte[][]);
+                } else
+                {
+                    toolStripStatusLabelError.ForeColor = System.Drawing.Color.Red;
+                    toolStripStatusLabelError.Text = "No records found";
+
+                    System.Windows.Forms.PictureBox pb;
+                    for (int i = 0; i <= 9; i++)
+                    {
+                        pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as System.Windows.Forms.PictureBox;
+                        pb.Image = null;
+                    }
+
+                    buttonLeftHand.Enabled = true;
+                    buttonRightHand.Enabled = true;
+                    buttonThumbs.Enabled = true;
+
+                    TextBoxID.Focus();
                 }
             }
                 

@@ -427,6 +427,7 @@ namespace PSCBioIdentification
 
                 string str = string.Format("{0}, Time elapsed: {1:hh\\:mm\\:ss}", score == 0 ? "Failure" : "Succeess", _stw.Elapsed);
                 LogLine(str, true);
+                LogLine("", true);
 
                 //ShowStatusMessage(str);
 
