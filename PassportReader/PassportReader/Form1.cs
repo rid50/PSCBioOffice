@@ -55,14 +55,19 @@ namespace PassportReaderNS
         string _gtin = "";
         string _barcodeType = "";
 
+        byte _howManyTimemesToScan = 0;
+
+//        byte _fingersQualityThreshold = 50;
         public int ErrorCode { get; set; }
 
         public Form1()
         {
             InitializeComponent();
             //TextBoxID.Text = "210067490";
-            TextBoxID.Text = "20005140";
+            //TextBoxID.Text = "20005140";
+            TextBoxID.Text = "20000004";
             tabControl1.SelectedTab = tabPage3;
+            trackBar1.Value = 50;
         }
 
         void ShowError(ARHScanner sc)
@@ -751,9 +756,11 @@ namespace PassportReaderNS
             } else
                 toolStripStatusLabelError.Text = "";
 
-            buttonLeftHand.Enabled = true;
-            buttonRightHand.Enabled = true;
-            buttonThumbs.Enabled = true;
+            buttonLeftHand.Enabled = false;
+            buttonRightHand.Enabled = false;
+            buttonThumbs.Enabled = false;
+            buttonReadFingers.Enabled = false;
+            button4.Enabled = false;
 
             if (e is MyEventArgs)
             {
@@ -851,7 +858,8 @@ namespace PassportReaderNS
                     {
                         //if (_sc.ArrayOfBMP[k] != null && ((byte[])_sc.ArrayOfBMP[k]).Length > 1)
                         //    _fingersCollection[k + offset] = _sc.ArrayOfWSQ[k];
-                        if (_sc.ArrayOfWSQ[k] != null && ((WsqImage)_sc.ArrayOfWSQ[k]).Content != null)
+                        //if (_sc.ArrayOfWSQ[k] != null && ((WsqImage)_sc.ArrayOfWSQ[k]).Content != null)
+                        if (_sc.ArrayOfWSQ[k] != null)
                             _fingersCollection[k + offset] = _sc.ArrayOfWSQ[k];
                     }
 
@@ -896,6 +904,10 @@ namespace PassportReaderNS
 
             stopProgressBar();
 
+            buttonLeftHand.Enabled = true;
+            buttonRightHand.Enabled = true;
+            buttonThumbs.Enabled = true;
+            buttonReadFingers.Enabled = true;
             button4.Enabled = true;
 
             button4.Focus();
@@ -918,6 +930,7 @@ namespace PassportReaderNS
             {
                 case 0:
                     sb.Append("10");        //0x10333300    left hand
+                    //pictureBoxOffset = 1;
                     break;
                 case 1:
                     sb.Append("20");        //0x20333300    right hand
@@ -927,6 +940,8 @@ namespace PassportReaderNS
                     sb.Append("300000");    //0x30000033    thumbs
                     pictureBoxOffset = 9;
                     count = 3;
+                    //pictureBoxOffset = 10;
+                    //count = 2;
                     break;
             }
 
@@ -983,7 +998,8 @@ namespace PassportReaderNS
                 }
                 else
                 {
-                    var bioProcessor = new BioProcessor.BioProcessor();
+                    var bioProcessor = new BioProcessor.BioProcessor(FingersQualityThreshold : (byte)trackBar1.Value);
+
                     Dictionary<string, byte[]> templates = bioProcessor.GetTemplatesFromWSQImage(id, buffer);
                     Dictionary<string, string> settings = new Dictionary<string, string>();
                     foreach (var key in ConfigurationManager.AppSettings.AllKeys)
@@ -1022,7 +1038,12 @@ namespace PassportReaderNS
             CheckBox cb;
             byte[] buff;
 
-            for (int i = 0; i < 4; i++)
+            int i = 0; int k = 4;
+            if (pictureBoxOffset == 9)
+            {
+                i = 1; k = 3;
+            }
+            for (; i < k; i++)
             {
                 buff = (byte[])_sc.ArrayOfBMP[i];
                 if (buff != null && buff.Length == 1)
@@ -1053,17 +1074,56 @@ namespace PassportReaderNS
 
         private void buttonLeftHand_Click(object sender, EventArgs e)
         {
-            this.InvokeOnClick(button4, new MyEventArgs(0));
+            bool ch = false;
+
+            for (int i = 1; i < 5; i++)
+            {
+                CheckBox cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                {
+                    ch = true;
+                    break;
+                }
+            }
+
+            if (ch)
+                this.InvokeOnClick(button4, new MyEventArgs(0));
         }
 
         private void buttonRightHand_Click(object sender, EventArgs e)
         {
-            this.InvokeOnClick(button4, new MyEventArgs(1));
+            bool ch = false;
+
+            for (int i = 5; i < 9; i++)
+            {
+                CheckBox cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                {
+                    ch = true;
+                    break;
+                }
+            }
+
+            if (ch)
+                this.InvokeOnClick(button4, new MyEventArgs(1));
         }
 
         private void buttonThumbs_Click(object sender, EventArgs e)
         {
-            this.InvokeOnClick(button4, new MyEventArgs(2));
+            bool ch = false;
+
+            for (int i = 10; i < 12; i++)
+            {
+                CheckBox cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                {
+                    ch = true;
+                    break;
+                }
+            }
+
+            if (ch)
+                this.InvokeOnClick(button4, new MyEventArgs(2));
         }
 
         Helper _helper = null;
@@ -1158,6 +1218,8 @@ namespace PassportReaderNS
 
             toolStripStatusLabelError.Text = string.Empty;
 
+            button4.Enabled = false;
+            buttonReadFingers.Enabled = false;
             buttonLeftHand.Enabled = false;
             buttonRightHand.Enabled = false;
             buttonThumbs.Enabled = false;
@@ -1167,7 +1229,7 @@ namespace PassportReaderNS
             startDataServiceProcess(id);
         }
 
-        private void processReadFingers(byte[][] buffer)
+        private void processAbtainedFingers(byte[][] buffer)
         {
             //int id;
 
@@ -1250,7 +1312,7 @@ namespace PassportReaderNS
 
                 //    bioProcessor = new BioProcessor.BioProcessor();
                 //}
-                bioProcessor = new BioProcessor.BioProcessor();
+                bioProcessor = new BioProcessor.BioProcessor(FingersQualityThreshold: (byte)trackBar1.Value);
 
                 //MemoryStream ms = null;
                 ms = new MemoryStream(buffer[0]);
@@ -1283,7 +1345,7 @@ namespace PassportReaderNS
                     if (_fingersCollection[i] != null)
                     {
                         WsqImage wsq = _fingersCollection[i] as WsqImage;
-                        if (wsq == null)
+                        if (wsq == null || wsq.Content == null)
                         {
                             pb.Image = null;
                             continue;
@@ -1380,6 +1442,8 @@ namespace PassportReaderNS
                 buttonLeftHand.Enabled = true;
                 buttonRightHand.Enabled = true;
                 buttonThumbs.Enabled = true;
+                buttonReadFingers.Enabled = true;
+                button4.Enabled = true;
 
                 stopProgressBar();
                 TextBoxID.Focus();

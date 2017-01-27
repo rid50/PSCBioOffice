@@ -54,13 +54,14 @@ class ARHScanner
     Pr22.DocumentReaderDevice _pr = null;
     Pr22.FingerprintScannerDevice _fps = null;
 
-    PresenceState Detect = PresenceState.NoMove;
+    //PresenceState Detect = PresenceState.NoMove;
 
-    int Resolution = 0;
-    int ScanState = 0;
-    int Progress = 0;
+    //int Resolution = 0;
+    //int ScanState = 0;
+    //int Progress = 0;
+    //string Message = "";
+
     int[] Quality = new int[4];
-    string Message = "";
 
     //Lib _lib;
     Helper _helper = null;
@@ -427,9 +428,11 @@ class ARHScanner
                         }
                         break;
                     default:
-                        _arrayOfBMP.Add(new Byte[] { new Byte() });
-                        _arrayOfWSQ.Add(new WsqImage());
-                        //_arrayOfWSQ.Add(new Byte[] { new Byte() });
+                        _arrayOfBMP.Add(null);
+                        _arrayOfWSQ.Add(null);
+
+                        //_arrayOfBMP.Add(new Byte[] { new Byte() });
+                        //_arrayOfWSQ.Add(new WsqImage());
                         continue;
                 }
 
@@ -453,9 +456,11 @@ class ARHScanner
                 }
                 else
                 {
-                    //list.Add(new Byte[] { new Byte() });
-                    _arrayOfBMP.Add(null);
-                    _arrayOfWSQ.Add(null);
+                    //_arrayOfBMP.Add(null);
+                    //_arrayOfWSQ.Add(null);
+                    _arrayOfBMP.Add(new Byte[] { new Byte() });
+                    _arrayOfWSQ.Add(new WsqImage());
+
                 }
 
                 if (fingerImage != null)

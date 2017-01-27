@@ -73,11 +73,11 @@ namespace PassportReaderNS
             {
                 if ((e.Result as byte[][])[0] != null)
                 {
-                    processReadFingers(e.Result as byte[][]);
+                    processAbtainedFingers(e.Result as byte[][]);
                 } else
                 {
-                    toolStripStatusLabelError.ForeColor = System.Drawing.Color.Red;
-                    toolStripStatusLabelError.Text = "No records found";
+                    //toolStripStatusLabelError.ForeColor = System.Drawing.Color.Red;
+                    //toolStripStatusLabelError.Text = "No fingers found";
 
                     System.Windows.Forms.PictureBox pb;
                     for (int i = 0; i <= 9; i++)

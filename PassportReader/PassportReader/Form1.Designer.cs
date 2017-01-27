@@ -34,6 +34,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelError = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -98,8 +100,7 @@
             this.TextBoxID = new System.Windows.Forms.TextBox();
             this.buttonReadFingers = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.toolStripStatusLabelError = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -123,6 +124,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -135,6 +137,20 @@
             this.statusStrip1.Size = new System.Drawing.Size(843, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelError
+            // 
+            this.toolStripStatusLabelError.Name = "toolStripStatusLabelError";
+            this.toolStripStatusLabelError.Size = new System.Drawing.Size(726, 17);
+            this.toolStripStatusLabelError.Spring = true;
+            this.toolStripStatusLabelError.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // toolStripProgressBar
+            // 
+            this.toolStripProgressBar.Name = "toolStripProgressBar";
+            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar.Step = 1;
+            this.toolStripProgressBar.Value = 1;
             // 
             // pictureBox1
             // 
@@ -286,6 +302,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.trackBar1);
             this.tabPage3.Controls.Add(this.Panel1);
             this.tabPage3.Controls.Add(this.checkBox10);
             this.tabPage3.Controls.Add(this.checkBox11);
@@ -796,19 +813,16 @@
             this.label17.TabIndex = 19;
             this.label17.Text = "Id:";
             // 
-            // toolStripStatusLabelError
+            // trackBar1
             // 
-            this.toolStripStatusLabelError.Name = "toolStripStatusLabelError";
-            this.toolStripStatusLabelError.Size = new System.Drawing.Size(695, 17);
-            this.toolStripStatusLabelError.Spring = true;
-            this.toolStripStatusLabelError.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toolStripProgressBar
-            // 
-            this.toolStripProgressBar.Name = "toolStripProgressBar";
-            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
-            this.toolStripProgressBar.Step = 1;
-            this.toolStripProgressBar.Value = 1;
+            this.trackBar1.LargeChange = 10;
+            this.trackBar1.Location = new System.Drawing.Point(660, 429);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(134, 45);
+            this.trackBar1.TabIndex = 78;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Value = 40;
             // 
             // Form1
             // 
@@ -856,6 +870,7 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -930,6 +945,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelError;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
+        private System.Windows.Forms.TrackBar trackBar1;
     }
 }
 
