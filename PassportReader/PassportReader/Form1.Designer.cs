@@ -50,6 +50,8 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label18 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.PictureBox4 = new System.Windows.Forms.PictureBox();
             this.checkBox10 = new System.Windows.Forms.CheckBox();
@@ -100,7 +102,6 @@
             this.TextBoxID = new System.Windows.Forms.TextBox();
             this.buttonReadFingers = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -110,6 +111,7 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox11)).BeginInit();
@@ -124,7 +126,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox4)).BeginInit();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -302,6 +303,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label18);
             this.tabPage3.Controls.Add(this.trackBar1);
             this.tabPage3.Controls.Add(this.Panel1);
             this.tabPage3.Controls.Add(this.checkBox10);
@@ -347,6 +349,27 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fingerprints";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(663, 413);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(126, 13);
+            this.label18.TabIndex = 79;
+            this.label18.Text = "Fingers Quality Threshold";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.LargeChange = 10;
+            this.trackBar1.Location = new System.Drawing.Point(660, 429);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(134, 45);
+            this.trackBar1.SmallChange = 5;
+            this.trackBar1.TabIndex = 78;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Value = 40;
             // 
             // Panel1
             // 
@@ -813,17 +836,6 @@
             this.label17.TabIndex = 19;
             this.label17.Text = "Id:";
             // 
-            // trackBar1
-            // 
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(660, 429);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(134, 45);
-            this.trackBar1.TabIndex = 78;
-            this.trackBar1.TickFrequency = 10;
-            this.trackBar1.Value = 40;
-            // 
             // Form1
             // 
             this.AcceptButton = this.buttonReadFingers;
@@ -855,6 +867,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox11)).EndInit();
@@ -870,7 +883,6 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -946,6 +958,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelError;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label label18;
     }
 }
 

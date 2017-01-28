@@ -223,7 +223,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;nfViewSplitContainer.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>31</value>
   </data>
   <data name="gbMainLog.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom</value>
@@ -1714,7 +1714,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;gbResults.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>28</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>35, 279</value>
@@ -1750,7 +1750,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>30</value>
   </data>
   <data name="panel1.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2359,7 +2359,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>29</value>
   </data>
   <data name="scannersListBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>770, 666</value>
@@ -2380,7 +2380,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;scannersListBox.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>26</value>
   </data>
   <data name="manageCacheButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2407,7 +2407,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;manageCacheButton.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>25</value>
   </data>
   <data name="checkBoxCache4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2434,7 +2434,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache4.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>24</value>
   </data>
   <data name="labCache4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2464,7 +2464,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache4.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>23</value>
   </data>
   <data name="labCache3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2494,7 +2494,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache3.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>21</value>
   </data>
   <data name="checkBoxCache3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2521,7 +2521,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache3.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>22</value>
   </data>
   <data name="labCache2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2551,7 +2551,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache2.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>19</value>
   </data>
   <data name="checkBoxCache2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2578,7 +2578,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache2.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>20</value>
   </data>
   <data name="labCache1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2608,7 +2608,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache1.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>17</value>
   </data>
   <data name="checkBoxCache1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2635,7 +2635,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache1.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>18</value>
   </data>
   <data name="labCache8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2665,7 +2665,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache8.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="checkBoxCache8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2692,7 +2692,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache8.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="labCache7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2722,7 +2722,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache7.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <data name="checkBoxCache7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2749,7 +2749,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache7.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="labCache6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2779,7 +2779,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache6.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>13</value>
   </data>
   <data name="checkBoxCache6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2806,7 +2806,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache6.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>14</value>
   </data>
   <data name="labCache5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2836,7 +2836,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache5.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>15</value>
   </data>
   <data name="checkBoxCache5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2863,7 +2863,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache5.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>16</value>
   </data>
   <data name="labCache10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2893,7 +2893,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache10.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="checkBoxCache10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2920,7 +2920,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache10.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="labCache9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2950,7 +2950,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labCache9.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="checkBoxCache9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2977,7 +2977,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;checkBoxCache9.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="labelCacheUnavailable.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -3004,7 +3004,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labelCacheUnavailable.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="labelCacheValidationTime.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3031,7 +3031,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labelCacheValidationTime.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="buttonRefreshScannerListBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -3058,7 +3058,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonRefreshScannerListBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="pictureBoxCompanyLogo.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3421,7 +3421,61 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pictureBoxCompanyLogo.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>27</value>
+  </data>
+  <data name="trackBar1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="trackBar1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>656, 666</value>
+  </data>
+  <data name="trackBar1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 45</value>
+  </data>
+  <data name="trackBar1.TabIndex" type="System.Int32, mscorlib">
+    <value>63</value>
+  </data>
+  <data name="&gt;&gt;trackBar1.Name" xml:space="preserve">
+    <value>trackBar1</value>
+  </data>
+  <data name="&gt;&gt;trackBar1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;trackBar1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;trackBar1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label11.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>549, 670</value>
+  </data>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 13</value>
+  </data>
+  <data name="label11.TabIndex" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Matching Threshold</value>
+  </data>
+  <data name="&gt;&gt;label11.Name" xml:space="preserve">
+    <value>label11</value>
+  </data>
+  <data name="&gt;&gt;label11.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label11.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3507,6 +3561,9 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>912, 556</value>

@@ -166,7 +166,7 @@ namespace PSCBioIdentification
                 //try
                 //{
                     int i = Thread.CurrentThread.ManagedThreadId;
-                    e.Result = client.match(guid, fingerList, gender, record.probeTemplate);
+                    e.Result = client.match(guid, fingerList, gender, record.probeTemplate, trackBar1.Value);
 
                     //tl.Loop();
 

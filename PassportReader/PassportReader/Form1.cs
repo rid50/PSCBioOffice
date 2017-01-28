@@ -69,7 +69,7 @@ namespace PassportReaderNS
             //TextBoxID.Text = "20005140";
             TextBoxID.Text = "20000004";
             tabControl1.SelectedTab = tabPage3;
-            trackBar1.Value = 50;
+            //trackBar1.Value = 50;
         }
 
         void ShowError(ARHScanner sc)

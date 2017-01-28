@@ -231,7 +231,7 @@ namespace PSCBioIdentification
 
             _biometricClient = new NBiometricClient { UseDeviceManager = true, BiometricTypes = NBiometricType.Finger };
             _biometricClient.Initialize();
-            _biometricClient.FingersQualityThreshold = 48;
+            //_biometricClient.FingersQualityThreshold = 48;
             //_biometricClient.FingerScanner.CapturePreview += OnFingerPropertyChanged;
 
             //_biometricClient.FingersReturnProcessedImage = true;
@@ -364,11 +364,18 @@ namespace PSCBioIdentification
             for (int i = 1; i < 11; i++)
             {
                 lab = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (fingerList.IndexOf(lab.Text) != -1)
                 {
-                    cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                     cb.Checked = true;
                     lab.BackColor = Color.Cyan;
+                }
+                else
+                {
+                    if (fingerList.Count == 0)
+                        cb.Checked = true;
+                    else
+                        cb.Checked = false;
                 }
 
                 cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
@@ -448,6 +455,7 @@ namespace PSCBioIdentification
             //personId.Text = "123"; 20010235
             personId.Text = "210067490";
             //personId.Text = "20005140";
+            personId.Text = "20000004";
 
             //personId.Text = "20005232";
             //personId.Text = "20002346";            
@@ -527,9 +535,10 @@ namespace PSCBioIdentification
         private void EnableControls(bool enable)
         {
             //fillAppFabricCache.Enabled = enable;
-//            if (enable && (string)manageCacheButton.Tag != "off")
+            //if (enable && (string)manageCacheButton.Tag != "off")
+            if ((string)manageCacheButton.Tag != "off")
                 manageCacheButton.Enabled = enable;
-            
+
             buttonRequest.Enabled = enable;
             buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
             groupBoxMode.Enabled = enable;
@@ -1934,8 +1943,8 @@ namespace PSCBioIdentification
                 //fingerView1.MatedMinutiae = null;
                 //fingerView2.MatedMinutiae = null;
 
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                sw.Start();
+                //var sw = System.Diagnostics.Stopwatch.StartNew();
+                //sw.Start();
 
                 NBiometricStatus status;
                 if (ConfigurationManager.AppSettings["verificationService"] == "local")
@@ -1961,7 +1970,7 @@ namespace PSCBioIdentification
                     //var b = _subject.GetTemplateBuffer().ToArray();
                     //var b2 = _subject2.GetTemplateBuffer().ToArray();
                     try {
-                        retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray());
+                        retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray(), trackBar1.Value);
                         //retcode = matchingServiceClient.verify(b, b2);
                     }
                     catch (Exception ex)
@@ -1978,10 +1987,10 @@ namespace PSCBioIdentification
                         status = NBiometricStatus.MatchNotFound;
                 }
 
-                sw.Stop();
-                TimeSpan ts = sw.Elapsed;
-                string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
-                LogLine("Matched in " + elapsedTime, true);
+                //sw.Stop();
+                //TimeSpan ts = sw.Elapsed;
+                //string elapsedTime = String.Format("{0:00}.{1:00}", ts.Seconds, ts.Milliseconds / 10);
+                //LogLine("Matched in " + elapsedTime, true);
 
                 //LogLine(string.Format("Verification status: {0}", status ? "Success" : "Failue"), true);
                 LogLine(string.Format("Verification status: {0}", status == NBiometricStatus.Ok ? "Success" : "Failue"), true);
@@ -2471,7 +2480,7 @@ namespace PSCBioIdentification
         //private void buttonRequest_Click(object sender, EventArgs e)
         private bool processEnrolledData(byte[][] serializedWSQArray)
         {
-            bool createTemplate = true;
+            bool createTemplate = false;
 
             PictureBox pb;
             //NSubject[] subjects = new NSubject[10];
@@ -2535,9 +2544,9 @@ namespace PSCBioIdentification
             //bool rbChecked = false;
             //, pbChecked = false;
 
-            _biometricClient.FingersTemplateSize = NTemplateSize.Large;
-            _biometricClient.FingersFastExtraction = false;
-            _biometricClient.FingersQualityThreshold = 48;
+            //_biometricClient.FingersTemplateSize = NTemplateSize.Large;
+            //_biometricClient.FingersFastExtraction = false;
+            //_biometricClient.FingersQualityThreshold = 48;
             //TimeSpan ts;
             //string elapsedTime;
             //var sw = System.Diagnostics.Stopwatch.StartNew();

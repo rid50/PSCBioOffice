@@ -116,6 +116,7 @@ namespace PSCBioIdentification
             }
 
             startProgressBar();
+            manageCacheButton.Tag = "off";
             EnableControls(false);
             manageCacheButton.Text = "Cancel";
 
@@ -285,6 +286,7 @@ namespace PSCBioIdentification
             }
 
             stopProgressBar();
+            manageCacheButton.Tag = "on";
             EnableControls(true);
             manageCacheButton.Text = "Refresh Cache";
         }

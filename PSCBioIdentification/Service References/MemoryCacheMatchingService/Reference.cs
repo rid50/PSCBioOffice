@@ -24,13 +24,13 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
         int Terminate(string guid);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/verify", ReplyAction="http://tempuri.org/IMatchingService/verifyResponse")]
-        bool verify(byte[] probeTemplate, byte[] galleryTemplate);
+        bool verify(byte[] probeTemplate, byte[] galleryTemplate, int matchingThreshold);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(System.Exception), Action="http://tempuri.org/IMatchingService/matchExceptionFault", Name="Exception", Namespace="http://schemas.datacontract.org/2004/07/System")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate);
+        uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate, int matchingThreshold);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -68,12 +68,12 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
             return base.Channel.Terminate(guid);
         }
         
-        public bool verify(byte[] probeTemplate, byte[] galleryTemplate) {
-            return base.Channel.verify(probeTemplate, galleryTemplate);
+        public bool verify(byte[] probeTemplate, byte[] galleryTemplate, int matchingThreshold) {
+            return base.Channel.verify(probeTemplate, galleryTemplate, matchingThreshold);
         }
         
-        public uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate) {
-            return base.Channel.match(guid, fingerList, gender, probeTemplate);
+        public uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate, int matchingThreshold) {
+            return base.Channel.match(guid, fingerList, gender, probeTemplate, matchingThreshold);
         }
     }
 }

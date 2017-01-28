@@ -127,6 +127,8 @@
             this.labelCacheValidationTime = new System.Windows.Forms.Label();
             this.buttonRefreshScannerListBox = new System.Windows.Forms.Button();
             this.pictureBoxCompanyLogo = new System.Windows.Forms.PictureBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.label11 = new System.Windows.Forms.Label();
             this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
             this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
@@ -157,6 +159,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).BeginInit();
@@ -928,6 +931,21 @@
             this.pictureBoxCompanyLogo.Name = "pictureBoxCompanyLogo";
             this.pictureBoxCompanyLogo.TabStop = false;
             // 
+            // trackBar1
+            // 
+            resources.ApplyResources(this.trackBar1, "trackBar1");
+            this.trackBar1.LargeChange = 10;
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.SmallChange = 5;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Value = 50;
+            // 
+            // label11
+            // 
+            resources.ApplyResources(this.label11, "label11");
+            this.label11.Name = "label11";
+            // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Active = false;
@@ -1043,6 +1061,8 @@
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkKhaki;
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.buttonRefreshScannerListBox);
             this.Controls.Add(this.labelCacheValidationTime);
             this.Controls.Add(this.labelCacheUnavailable);
@@ -1102,6 +1122,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompanyLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpPictureBox9)).EndInit();
@@ -1231,6 +1252,8 @@
         private System.Windows.Forms.RadioButton radioButtonManAndWoman;
         private System.Windows.Forms.RadioButton radioButtonWoman;
         private System.Windows.Forms.Button buttonRefreshScannerListBox;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label label11;
     }
 }
 
