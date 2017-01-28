@@ -55,7 +55,9 @@ namespace PassportReaderNS
         string _gtin = "";
         string _barcodeType = "";
 
-        byte _howManyTimemesToScan = 0;
+        ArrayList _fingersCollection = null;
+
+//        byte _howManyTimemesToScan = 0;
 
 //        byte _fingersQualityThreshold = 50;
         public int ErrorCode { get; set; }
@@ -735,8 +737,6 @@ namespace PassportReaderNS
             HideCaret(textBox.Handle);
         }
 
-        ArrayList _fingersCollection = null;
-
         private void button4_Click(object sender, EventArgs e)
         {
             //saveWsqInDatabase();
@@ -819,6 +819,7 @@ namespace PassportReaderNS
                     //                    fingersCollection.Add(new Byte[] { new Byte() });
                 }
 
+                bool[] processAsTemplate = new bool[_fingersCollection.Count];
                 //SoundPlayer simpleSound = null;
                 for (int i = hand; i < count; i++)
                 {
@@ -854,13 +855,20 @@ namespace PassportReaderNS
                         break;
                     }
 
+                    //byte[] fingersCollection = new byte[_fingersCollection.Count];
+
+                    //fingersCollection = _fingersCollection.Clone() as ArrayList;
+
                     for (int k = 0; k < 4; k++)
                     {
                         //if (_sc.ArrayOfBMP[k] != null && ((byte[])_sc.ArrayOfBMP[k]).Length > 1)
                         //    _fingersCollection[k + offset] = _sc.ArrayOfWSQ[k];
                         //if (_sc.ArrayOfWSQ[k] != null && ((WsqImage)_sc.ArrayOfWSQ[k]).Content != null)
                         if (_sc.ArrayOfWSQ[k] != null)
+                        {
                             _fingersCollection[k + offset] = _sc.ArrayOfWSQ[k];
+                            processAsTemplate[k + offset] = true;
+                        }
                     }
 
                     offset += 4;
@@ -881,7 +889,7 @@ namespace PassportReaderNS
                     {
                         formatter.Serialize(ms, _fingersCollection as ArrayList);
                         buff = ms.ToArray();
-                        saveWsqInDatabase(id, buff);
+                        saveWsqInDatabase(id, buff, processAsTemplate);
                     }
                     catch (SerializationException ex)
                     {
@@ -981,7 +989,7 @@ namespace PassportReaderNS
             UPDATE = 1
         }
 
-        private void saveWsqInDatabase(int id, byte[] buffer)
+        private void saveWsqInDatabase(int id, byte[] buffer, bool[] processAsTemplate)
         {
             //FileStream fs = null;
 
@@ -1000,7 +1008,7 @@ namespace PassportReaderNS
                 {
                     var bioProcessor = new BioProcessor.BioProcessor(FingersQualityThreshold : (byte)trackBar1.Value);
 
-                    Dictionary<string, byte[]> templates = bioProcessor.GetTemplatesFromWSQImage(id, buffer);
+                    Dictionary<string, byte[]> templates = bioProcessor.GetTemplatesFromWSQImage(id, buffer, processAsTemplate);
                     Dictionary<string, string> settings = new Dictionary<string, string>();
                     foreach (var key in ConfigurationManager.AppSettings.AllKeys)
                     {
