@@ -115,6 +115,19 @@ namespace PSCBioIdentification
                 return;
             }
 
+            _fingerList = new System.Collections.ArrayList();
+
+            CheckBox cb; Label lb;
+            for (int i = 1; i < 11; i++)
+            {
+                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
+                lb.BackColor = Color.Transparent;
+
+                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
+                if (cb.Checked)
+                    _fingerList.Add(cb.Tag);
+            }
+
             startProgressBar();
             manageCacheButton.Tag = "off";
             EnableControls(false);
@@ -136,22 +149,9 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerCachingService_DoWork(object sender, DoWorkEventArgs e)
         {
-            var fingerList = new System.Collections.ArrayList();
-
-            CheckBox cb; Label lb;
-            for (int i = 1; i < 11; i++)
+            if (_fingerList.Count == 0)
             {
-                lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
-                lb.BackColor = Color.Transparent;
-
-                cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
-                if (cb.Checked)
-                    fingerList.Add(cb.Tag);
-            }
-
-            if (fingerList.Count == 0)
-            {
-                e.Result = fingerList;
+                e.Result = _fingerList;
                 return;
             }
 
@@ -166,7 +166,7 @@ namespace PSCBioIdentification
             if (client != null) {
                 try
                 {
-                    client.Run(fingerList);
+                    client.Run(_fingerList);
                     _mre.WaitOne();
                 }
                 catch (Exception ex)
@@ -176,11 +176,11 @@ namespace PSCBioIdentification
             }
             else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
             {
-                record = new Record();
-                record.errorMessage = new System.Text.StringBuilder(512);
+                _record = new Record();
+                _record.errorMessage = new System.Text.StringBuilder(512);
 
-                record.fingerListSize = fingerList.Count;
-                record.fingerList = fingerList.ToArray(typeof(string)) as string[];
+                _record.fingerListSize = _fingerList.Count;
+                _record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
                 var list = new System.Collections.ArrayList();
 
@@ -188,21 +188,21 @@ namespace PSCBioIdentification
                 list.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
                 list.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
                 list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                record.appSettings = list.ToArray(typeof(string)) as string[];
+                _record.appSettings = list.ToArray(typeof(string)) as string[];
 
                 unsafe
                 {
-                    fixed (UInt32* ptr = &record.probeTemplateSize)
+                    fixed (UInt32* ptr = &_record.probeTemplateSize)
                     {
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
-                            fillCache(record.fingerList, record.fingerListSize, record.appSettings, new CallBackDelegate(OnCallback));
+                            fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings, new CallBackDelegate(OnCallback));
                         }
                         else
                         {
                             client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
 
-                            client.fillCache(record.fingerList, record.fingerListSize, record.appSettings);
+                            client.fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings);
                             _mre.WaitOne();
                         }
                     }
@@ -210,7 +210,7 @@ namespace PSCBioIdentification
             }
 
             if (!backgroundWorkerCachingService.CancellationPending)
-                e.Result = fingerList;
+                e.Result = _fingerList;
             else
             {
                 e.Result = null;

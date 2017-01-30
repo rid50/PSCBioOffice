@@ -82,20 +82,25 @@ namespace PSCBioIdentification
             //    int i = 0;
 
             //}
+            this.BeginInvoke(new Action(delegate ()
+            {
+                toolStripProgressBar.Value = e.ProgressPercentage;
+                if (toolStripStatusLabelError.Text == String.Empty)
+                    toolStripStatusLabelError.Text = e.UserState as String;
 
-            toolStripProgressBar.Value = e.ProgressPercentage;
-            if (toolStripStatusLabelError.Text == String.Empty)
-                toolStripStatusLabelError.Text = e.UserState as String;
-
-            //toolStripStatusLabelError.Text = toolStripProgressBar.Value.ToString();
+                //toolStripStatusLabelError.Text = toolStripProgressBar.Value.ToString();
+            }));
         }
 
         private void backgroundWorkerProgressBar_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            toolStripProgressBar.Value = 0;
-            //toolStripStatusLabelError.Text = "";
+            this.BeginInvoke(new Action(delegate ()
+            {
+                toolStripProgressBar.Value = 0;
+                //toolStripStatusLabelError.Text = "";
 
-            //toolStripProgressBar.Enabled = false;
+                //toolStripProgressBar.Enabled = false;
+            }));
         }
     }
 }

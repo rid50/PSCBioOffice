@@ -53,11 +53,12 @@ namespace PSCBioIdentification
 
         //TaskLoop tl = new TaskLoop();
 
-        string guid = string.Empty;
-
-        byte[] probeTemplate;
-
-        Record record;
+        string  _guid = string.Empty;
+        int     _trackBarValue = 0;
+        int     _gender = 1;
+        byte[]  _probeTemplate;
+        ArrayList _fingerList = null;
+        Record  _record;
 
         Stopwatch _stw = new Stopwatch();
 
@@ -81,7 +82,9 @@ namespace PSCBioIdentification
             if (backgroundWorkerMatchingService.IsBusy)
                 return;
 
-            this.probeTemplate = probeTemplate;
+            toolStripStatusLabelError.Text = "";
+
+            this._probeTemplate = probeTemplate;
 
             //_tokenSource = new CancellationTokenSource();
             //_ct = _tokenSource.Token;
@@ -109,42 +112,41 @@ namespace PSCBioIdentification
                 return;
             }
 
+            _trackBarValue = trackBar1.Value;
+            _guid = Guid.NewGuid().ToString();
 
-            guid = Guid.NewGuid().ToString();
-
-            backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
-        }
-
-        private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var fingerList = new ArrayList();
+            _fingerList = new ArrayList();
             CheckBox cb;
             for (int i = 4; i > 0; i--)
             {
                 cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    fingerList.Add(cb.Tag as string);
+                    _fingerList.Add(cb.Tag as string);
             }
 
             for (int i = 5; i < 11; i++)
             {
                 cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    fingerList.Add(cb.Tag as string);
+                    _fingerList.Add(cb.Tag as string);
             }
 
-            int gender = 1;
             if (radioButtonMan.Checked)
-                gender = 1;
+                _gender = 1;
             else if (radioButtonWoman.Checked)
-                gender = 2;
+                _gender = 2;
             else if (radioButtonManAndWoman.Checked)
-                gender = 0;
+                _gender = 0;
 
+            backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
+        }
+
+        private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
+        {
             _stw.Restart();
 
-            record = new Record();
-            record.probeTemplate = this.probeTemplate;
+            _record = new Record();
+            _record.probeTemplate = this._probeTemplate;
             //record.probeTemplate = e.Argument as byte[];
 
             //dynamic client = null;
@@ -165,8 +167,8 @@ namespace PSCBioIdentification
                 e.Result = null; _matchingResult = 0;
                 //try
                 //{
-                    int i = Thread.CurrentThread.ManagedThreadId;
-                    e.Result = client.match(guid, fingerList, gender, record.probeTemplate, trackBar1.Value);
+                    //int i = Thread.CurrentThread.ManagedThreadId;
+                    e.Result = client.match(_guid, _fingerList, _gender, _record.probeTemplate, _trackBarValue);
 
                     //tl.Loop();
 
@@ -175,14 +177,13 @@ namespace PSCBioIdentification
                 //}
                 //catch (FaultException ex)
                 //{
-
-
+                //    throw new Exception(ex.Message);
                 //}
             }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
             {
                 client = e.Argument as AppFabricCacheMatchingService.MatchingServiceClient;
-                e.Result = client.match(guid, fingerList, gender, record.probeTemplate);
+                e.Result = client.match(_guid, _fingerList, _gender, _record.probeTemplate);
             }
             //    if (client != null)
             //{
@@ -225,10 +226,10 @@ namespace PSCBioIdentification
                 //record.size = (UInt32)template.GetSize();
                 //record.template = template.Save();
                 //record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
-                record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
+                _record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
                 //record.probeTemplate = e.Argument as byte[];
                 //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
-                record.errorMessage = new System.Text.StringBuilder(512);
+                _record.errorMessage = new System.Text.StringBuilder(512);
 
                 //var ar = new ArrayList();
 
@@ -241,30 +242,30 @@ namespace PSCBioIdentification
                 //    if (cb.Checked)
                 //        ar.Add(cb.Tag);
                 //}
-                record.fingerListSize = fingerList.Count;
+                _record.fingerListSize = _fingerList.Count;
                 //record.fingerList = new string[ar.Count];
-                record.fingerList = fingerList.ToArray(typeof(string)) as string[];
+                _record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
-                fingerList.Clear();
+                _fingerList.Clear();
 
                 //record.appSettings = new System.Text.StringBuilder(4);
                 //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
                 //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
 
-                fingerList.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
-                fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
-                fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
-                fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                record.appSettings = fingerList.ToArray(typeof(string)) as string[];
+                _fingerList.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+                _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+                _fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+                _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+                _record.appSettings = _fingerList.ToArray(typeof(string)) as string[];
 
                 //UInt32 score = 0;
                 unsafe
                 {
-                    fixed (UInt32* ptr = &record.probeTemplateSize)
+                    fixed (UInt32* ptr = &_record.probeTemplateSize)
                     {
                         if (ConfigurationManager.AppSettings["cachingService"] == "local")
                         {
-                            e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, _record.errorMessage, _record.errorMessage.Capacity);
                             //e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
                         }
                         else
@@ -276,7 +277,7 @@ namespace PSCBioIdentification
                             //var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
                             //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
                             _serviceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
-                            e.Result = _serviceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+                            e.Result = _serviceClient.match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, ref _record.errorMessage, _record.errorMessage.Capacity);
                         }
                     }
                 }
@@ -381,8 +382,8 @@ namespace PSCBioIdentification
             // Create a channel.
             ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(client.Endpoint.Binding, client.Endpoint.Address);
             MemoryCacheMatchingService.IMatchingService cl = factory.CreateChannel();
-            int k = cl.Terminate(guid);
-            LogLine(k.ToString(), true);
+            cl.Terminate(_guid);
+            //LogLine(k.ToString(), true);
             ((IClientChannel)cl).Close();
         }
 
@@ -444,12 +445,12 @@ namespace PSCBioIdentification
                 {
                     pictureBoxCheckMark.Image = Properties.Resources.redcross;
 
-                    if (record != null && record.errorMessage != null && record.errorMessage.Length != 0)
+                    if (_record != null && _record.errorMessage != null && _record.errorMessage.Length != 0)
                     {
                         //retcode = false;
                         //ShowErrorMessage("ERROR!!!");
                         //System.Windows.Forms.MessageBox.Show(record.errorMessage.ToString());
-                        ShowErrorMessage(record.errorMessage.ToString());
+                        ShowErrorMessage(_record.errorMessage.ToString());
                     }
                     stopProgressBar();
                     EnableControls(true);

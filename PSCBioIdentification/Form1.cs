@@ -219,6 +219,9 @@ namespace PSCBioIdentification
             backgroundWorkerCachingService.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerCachingService_RunWorkerCompleted);
             backgroundWorkerCachingService.WorkerSupportsCancellation = true;
 
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            trackBarLabel.Text = "" + trackBar1.Value;
+
             //Data.NFExtractor = new NFExtractor();
             //Data.UpdateNfe();
             //Data.UpdateNfeSettings();
@@ -471,6 +474,11 @@ namespace PSCBioIdentification
             //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 
+        private void trackBar1_Scroll(object sender, System.EventArgs e)
+        {
+            // Display the trackbar value in the label box.
+            trackBarLabel.Text = "" + trackBar1.Value;
+        }
 
         public static bool IsServiceAvailable(dynamic client, out string errorMessage)
         {
@@ -516,49 +524,55 @@ namespace PSCBioIdentification
         }
         private void EnableSemaphorControls(bool capturing)
         {
-            buttonScan.Enabled = !capturing;
-            pictureBoxGreen.Active = capturing;
-            pictureBoxGreen.Invalidate();
-            pictureBoxRed.Active = !capturing;
-            pictureBoxRed.Invalidate();
-            //groupBoxMode.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
-            //radioButtonVerify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
-            //radioButtonIdentify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
-            
-            //if (fingerView1.Finger == null)
-            //    buttonScan.Enabled = !capturing;
+            this.BeginInvoke(new Action(delegate ()
+            {
+                buttonScan.Enabled = !capturing;
+                pictureBoxGreen.Active = capturing;
+                pictureBoxGreen.Invalidate();
+                pictureBoxRed.Active = !capturing;
+                pictureBoxRed.Invalidate();
+                //groupBoxMode.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
+                //radioButtonVerify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
+                //radioButtonIdentify.Enabled = capturing || Mode == ProgramMode.PreEnrolled;
 
-            if (capturing)
-                WaitingForImageToScan();
+                //if (fingerView1.Finger == null)
+                //    buttonScan.Enabled = !capturing;
+
+                if (capturing)
+                    WaitingForImageToScan();
+            }));
         }
 
         private void EnableControls(bool enable)
         {
-            //fillAppFabricCache.Enabled = enable;
-            //if (enable && (string)manageCacheButton.Tag != "off")
-            if ((string)manageCacheButton.Tag != "off")
-                manageCacheButton.Enabled = enable;
-
-            buttonRequest.Enabled = enable;
-            buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
-            groupBoxMode.Enabled = enable;
-            if ((string)radioButtonIdentify.Tag == "off")
+            this.BeginInvoke(new Action(delegate ()
             {
-                radioButtonIdentify.Enabled = false;
-                buttonScan.Enabled = false;
-            }
+                //fillAppFabricCache.Enabled = enable;
+                //if (enable && (string)manageCacheButton.Tag != "off")
+                if ((string)manageCacheButton.Tag != "off")
+                    manageCacheButton.Enabled = enable;
 
-            panel2.Enabled = enable;
-            //manageCacheButton.Text = IsCachingServiceRunning ? "Stop Cache Refreshing" : "Refresh Cache";
-            buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
-            //radioButtonVerify.Enabled = enable;
-            //radioButtonIdentify.Enabled = enable;
+                buttonRequest.Enabled = enable;
+                buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
+                groupBoxMode.Enabled = enable;
+                if ((string)radioButtonIdentify.Tag == "off")
+                {
+                    radioButtonIdentify.Enabled = false;
+                    buttonScan.Enabled = false;
+                }
 
-            //Thread.Sleep(0);
-            //Application.DoEvents();
-            
-            //pictureBoxCheckMark.Image = null;
-            //pictureBoxPhoto.Image = null;
+                panel2.Enabled = enable;
+                //manageCacheButton.Text = IsCachingServiceRunning ? "Stop Cache Refreshing" : "Refresh Cache";
+                buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
+                //radioButtonVerify.Enabled = enable;
+                //radioButtonIdentify.Enabled = enable;
+
+                //Thread.Sleep(0);
+                //Application.DoEvents();
+
+                //pictureBoxCheckMark.Image = null;
+                //pictureBoxPhoto.Image = null;
+            }));
         }
 
         private void deviceManager_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -650,30 +664,30 @@ namespace PSCBioIdentification
             }
         }
 
-        private delegate NFinger CaptureFingersDelegate(NFinger finger, short numberOfFingers, bool right);
-        private NFinger CaptureFingers(NFinger finger, short numberOfFingers, bool right)
+        private delegate NFinger CaptureFingersDelegate(NFinger finger);
+        private NFinger CaptureFingers(NFinger finger)
         {
             finger.ImpressionType = NFImpressionType.LiveScanPlain;
 
-            switch (numberOfFingers)
-            {
-                //case 1:
-                //    finger.Position = NFPosition.Unknown;
-                //    break;
-                case 2:
-                    finger.Position = NFPosition.UnknownTwoFingers;
-                    break;
-                //case 3:
-                    //finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.LeftRing;
-                    //finger.Position = NFPosition.UnknownThreeFingers;
-                    //break;
-                case 4:
-                    if (right)
-                        finger.Position = NFPosition.PlainRightFourFingers;
-                    else
-                        finger.Position = NFPosition.PlainLeftFourFingers;
-                    break;
-            }
+            //switch (numberOfFingers)
+            //{
+            //    //case 1:
+            //    //    finger.Position = NFPosition.Unknown;
+            //    //    break;
+            //    case 2:
+            //        finger.Position = NFPosition.UnknownTwoFingers;
+            //        break;
+            //    //case 3:
+            //        //finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.LeftRing;
+            //        //finger.Position = NFPosition.UnknownThreeFingers;
+            //        //break;
+            //    case 4:
+            //        if (right)
+            //            finger.Position = NFPosition.PlainRightFourFingers;
+            //        else
+            //            finger.Position = NFPosition.PlainLeftFourFingers;
+            //        break;
+            //}
 
             var fScanner = (NFScanner)GetSelectedDevice();
             fScanner.CapturePreview += DeviceCapturePreview;
@@ -733,19 +747,103 @@ namespace PSCBioIdentification
                 //    if (count == 0)
                 //        return;
                 //}
+                NFPosition nFPosition = 0;
 
                 if (radioButtonIdentify.Checked && !fileTemplate)
                 {
-                    CheckBox bb;
-                    for (int i = 0; i < 10; i++)
-                    {
-                        bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
-                        if (bb.Checked)
-                            count++;
-                    }
+                    //CheckBox bb;
+                    //for (int i = 0; i < 10; i++)
+                    //{
+                    //    bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                    //    if (bb.Checked)
+                    //        count++;
+                    //}
 
-                    if (count == 0)
-                        return;
+                    //if (count == 0)
+                    //    return;
+
+
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    dict.Add("li", "Index");
+                    dict.Add("lm", "Middle");
+                    dict.Add("lr", "Ring");
+                    dict.Add("ll", "Little");
+                    dict.Add("ri", "Index");
+                    dict.Add("rm", "Middle");
+                    dict.Add("rr", "Ring");
+                    dict.Add("rl", "Little");
+                    dict.Add("lt", "LeftThumb");
+                    dict.Add("rt", "RightThumb");
+
+                    //var fingerList = new ArrayList();
+                    var sb = new StringBuilder();
+                    CheckBox cb; int k = 5;
+                    for (int i = 0; i < 11;)
+                    {
+                        count = 0;
+                        for (; i < k; i++)
+                        {
+                            Control[] c = this.Controls.Find("checkBox" + i.ToString(), true);
+                            if (c.Length != 0)
+                            {
+                                cb = c[0] as CheckBox;
+                                if (cb.Checked)
+                                {
+                                    count++;
+                                    sb.Append(dict[(string)cb.Tag]);
+                                }
+                            }
+                        }
+
+                        if (sb.Length != 0 && count != 0)
+                        {
+                            if (i < 10)
+                                if (count > 1)
+                                    sb.Append("Fingers");
+                                else
+                                    sb.Append("Finger");
+
+                            if (i == 5)
+                                if (count == 4)
+                                    sb.Clear().Append("PlainLeftFourFingers");
+                                else
+                                {
+                                    sb.Insert(0, "Left");
+                                }
+
+                            else if (i == 9)
+                                if (count == 4)
+                                    sb.Clear().Append("PlainRightFourFingers");
+                                else
+                                    sb.Insert(0, "Right");
+                            else if (i == 13)
+                                if (count == 2)
+                                    sb.Clear().Append("PlainThumbs");
+                                else
+                                    sb.Insert(0, "Right");
+
+                            //if (Enum.IsDefined(typeof(NFPosition), sb.ToString()))
+                              //  break;
+                        }
+
+                        k += 4;
+
+                    }
+                    //NFPosition.
+                    //return;
+
+                    //        finger.Position = NFPosition.UnknownTwoFingers;
+                    //        break;
+                    //    //case 3:
+                    //        //finger.Position = NFPosition.LeftIndex & NFPosition.LeftMiddle & NFPosition.LeftRing;
+                    //        //finger.Position = NFPosition.UnknownThreeFingers;
+                    //        //break;
+                    //    case 4:
+                    //        if (right)
+                    //            finger.Position = NFPosition.PlainRightFourFingers;
+                    //        else
+                    //            finger.Position = NFPosition.PlainLeftFourFingers;
+
 
                     var fScanner = ((NFingerScanner)GetSelectedDevice());
                     if (fScanner == null)
@@ -754,25 +852,53 @@ namespace PSCBioIdentification
                         return;
                     }
 
-                    var supportedPositions = fScanner.GetSupportedPositions();
-                    if (supportedPositions.Contains<NFPosition>(NFPosition.PlainLeftFourFingers))
+                    bool positionValid = false;
+                    if (Enum.IsDefined(typeof(NFPosition), sb.ToString()))
                     {
-                        //if (count < 2)
-                        //{
-                        //    ShowErrorMessage("At least 2 fingers should be selected");
-                        //    return;
-                        //}
-                        if (count != 2 && count != 4)
+                        nFPosition = (NFPosition)Enum.Parse(typeof(NFPosition), sb.ToString());
+                        var supportedPositions = fScanner.GetSupportedPositions();
+                        if (supportedPositions.Contains<NFPosition>(nFPosition))
+                            positionValid = true;
+                        else
                         {
-                            ShowErrorMessage("2 or 4 fingers might be selected");
-                            return;
+                            positionValid = true;
+                            if (!sb.ToString().Equals("PlainThumbs"))
+                                nFPosition = NFPosition.UnknownTwoFingers;
                         }
                     }
-                    else if (count != 2)
+
+                    if (!positionValid)
                     {
-                        ShowErrorMessage("2 fingers might be selected");
+                        ShowErrorMessage("Not allowed combination of fingers");
                         return;
                     }
+
+                    //        enum FingerListEnum { li, lm, lr, ll, ri, rm, rr, rl, lt, rt }
+                    //    foreach (string finger in fingerList)
+
+                    //FingerListEnum f = (FingerListEnum)Enum.Parse(typeof(FingerListEnum), finger);
+                    //if (galleryTemplate[(int)f] != null && (galleryTemplate[(int)f]).Length != 0)
+
+
+                    //var supportedPositions = fScanner.GetSupportedPositions();
+                    //if (supportedPositions.Contains<NFPosition>(NFPosition.PlainLeftFourFingers))
+                    //{
+                    //    //if (count < 2)
+                    //    //{
+                    //    //    ShowErrorMessage("At least 2 fingers should be selected");
+                    //    //    return;
+                    //    //}
+                    //    if (count != 2 && count != 4)
+                    //    {
+                    //        ShowErrorMessage("2 or 4 fingers might be selected");
+                    //        return;
+                    //    }
+                    //}
+                    //else if (count != 2)
+                    //{
+                    //    ShowErrorMessage("2 fingers might be selected");
+                    //    return;
+                    //}
 
                     clear();
                     clearFingerBoxes();
@@ -853,22 +979,23 @@ namespace PSCBioIdentification
                 AsyncCallback callback = new AsyncCallback(OnImage);
 
                 // Begin capturing
+
                 if (radioButtonIdentify.Checked)
                 {
-                    bool right = true;
-                    CheckBox cb;
-                    for (int i = 5; i < 9; i++)
-                    {
-                        cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                        if (!cb.Checked)
-                        {
-                            right = false;
-                            break;
-                        }
-                    }
-
+                    //bool right = true;
+                    ////CheckBox cb;
+                    //for (int i = 5; i < 9; i++)
+                    //{
+                    //    CheckBox cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    //    if (!cb.Checked)
+                    //    {
+                    //        right = false;
+                    //        break;
+                    //    }
+                    //}
+                    finger.Position = nFPosition;
                     var del = new CaptureFingersDelegate(CaptureFingers);
-                    IAsyncResult result = del.BeginInvoke(finger, count, right, OnImage, null);
+                    IAsyncResult result = del.BeginInvoke(finger, OnImage, null);
 
                     //IAsyncResult result = BeginInvoke(new Action(delegate() {
                     ////BeginInvoke((Action)(() =>
@@ -1306,11 +1433,14 @@ namespace PSCBioIdentification
                         EnableControls(true);
                     }), string.Format("Segmentation failed: {0}", error));
 
-                    System.Timers.Timer timer = new System.Timers.Timer(1000);
-                    //timer.Elapsed += async (sender, e) => await HandleTimer();
-                    timer.Elapsed += OnTimedEvent;
-                    timer.AutoReset = false;
-                    timer.Start();
+                    //System.Timers.Timer timer = new System.Timers.Timer(1000);
+                    ////timer.Elapsed += async (sender, e) => await HandleTimer();
+                    //timer.Elapsed += OnTimedEvent;
+                    //timer.AutoReset = false;
+                    //timer.Start();
+                    Application.DoEvents();
+                    Thread.Sleep(1000);
+                    this.InvokeOnClick(buttonScan, new EventArgs());
 
                     //startCapturing();
 
@@ -1969,6 +2099,14 @@ namespace PSCBioIdentification
                     var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient();
                     //var b = _subject.GetTemplateBuffer().ToArray();
                     //var b2 = _subject2.GetTemplateBuffer().ToArray();
+                    string errorMessage;
+                    if (!IsServiceAvailable(matchingServiceClient, out errorMessage))
+                    {
+                        ShowErrorMessage(errorMessage);
+                        matchingServiceClient.Close();
+                        return;
+                    }
+
                     try {
                         retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray(), trackBar1.Value);
                         //retcode = matchingServiceClient.verify(b, b2);
@@ -2292,7 +2430,10 @@ namespace PSCBioIdentification
 
         private void clearLog()
         {
-            rtbMain.Clear();
+            this.BeginInvoke(new Action(delegate ()
+            {
+                rtbMain.Clear();
+            }));
         }
 
         private void LogLine(bool mainLog)
@@ -3416,8 +3557,12 @@ namespace PSCBioIdentification
 
         public void ShowStatusMessage(string message)
         {
-            toolStripStatusLabelError.ForeColor = Color.Black;
-            toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+            this.BeginInvoke(new Action(delegate ()
+            {
+                toolStripStatusLabelError.ForeColor = Color.Black;
+                toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+            }));
+
             //toolStripProgressBar.Visible = false;
             //this.Controls.SetChildIndex(statusStrip1, 0);
 
@@ -3429,8 +3574,11 @@ namespace PSCBioIdentification
             stopProgressBar();
             Application.DoEvents();
 
-            toolStripStatusLabelError.ForeColor = Color.Red;
-            toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+            this.BeginInvoke(new Action(delegate ()
+            {
+                toolStripStatusLabelError.ForeColor = Color.Red;
+                toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+            }));
         }
 
         void ShowRadioHideCheckButtons(bool show)

@@ -62,12 +62,21 @@ namespace PassportReaderNS
 //        byte _fingersQualityThreshold = 50;
         public int ErrorCode { get; set; }
 
+        //private void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
+        //{
+        //    tabControl1.SelectedTab = tabPage3;
+        //}
+
         public Form1()
         {
             InitializeComponent();
             //TextBoxID.Text = "210067490";
             //TextBoxID.Text = "20005140";
             TextBoxID.Text = "20000004";
+
+            tabControl1.Controls.Remove(tabPage1);
+            tabControl1.Controls.Remove(tabPage2);
+            tabControl1.Controls.Remove(tabPage4);
             tabControl1.SelectedTab = tabPage3;
             //trackBar1.Value = 50;
         }
@@ -457,6 +466,8 @@ namespace PassportReaderNS
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //tabControl1.SelectedTab = tabPage3;
+
             if (!String.IsNullOrEmpty(tabControl1.SelectedTab.Tag as string))
             {
                 ShowStatusMessage(tabControl1.SelectedTab.Tag as string);

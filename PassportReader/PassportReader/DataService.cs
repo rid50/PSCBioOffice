@@ -85,16 +85,17 @@ namespace PassportReaderNS
                         pb = this.Controls.Find("fpPictureBox" + (i + 1 < 9 ? (i + 1).ToString() : (i + 2).ToString()), true)[0] as System.Windows.Forms.PictureBox;
                         pb.Image = null;
                     }
-
-                    buttonLeftHand.Enabled = true;
-                    buttonRightHand.Enabled = true;
-                    buttonThumbs.Enabled = true;
-
-                    TextBoxID.Focus();
                 }
             }
-                
+
+            buttonLeftHand.Enabled = true;
+            buttonRightHand.Enabled = true;
+            buttonThumbs.Enabled = true;
+            buttonReadFingers.Enabled = true;
+            button4.Enabled = true;
+
             stopProgressBar();
+            TextBoxID.Focus();
         }
     }
 }
