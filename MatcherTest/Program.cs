@@ -1,134 +1,294 @@
-﻿using System;
+using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+using System.IO;
 using Neurotec.Biometrics;
+using Neurotec.Biometrics.Client;
 using Neurotec.Licensing;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace MatcherTest
+namespace Neurotec.Tutorials
 {
+	class Program
+	{
+		static int Main(string[] args)
+		{
+			const string Components = "Biometrics.FingerMatchingFast";
+            NLicense.ObtainComponents("/local", 5000, "Biometrics.FingerMatching");
 
-    class Program
-    {
-        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern UInt32 match(
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] fingerList, int fingerListSize,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            byte[] probeTemplate,
-            UInt32 probeTemplateSize,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 1)]
-            string[] appSettings,
-            System.Text.StringBuilder errorMessage, int messageSize);
+            //TutorialUtils.PrintTutorialHeader(args);
+            //List<Tuple<string, int>> list = new List<Tuple<string, int>>();
+            List<Task<int>> tasks = new List<Task<int>>();
 
-        [DllImport("Lookup.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void terminateMatchingService();
+            //try
+            //{
+                for (int k = 1; k < 11; k++)
+                {
+                    //tasks.Add(Task.Factory.StartNew((Object obj) =>
+                    tasks.Add(Task.Factory.StartNew((Object o) =>
+                    {
+                        using (var biometricClient = new NBiometricClient())
+                        using (NSubject probeSubject = CreateSubject("C:\\roman\\fingerprints\\LeftIndexMiddle.dat", "ProbeSubject"))
+                        {
+                            NBiometricTask enrollTask = biometricClient.CreateTask(NBiometricOperations.Enroll, null);
 
-        //class Record
-        //{
-        //    public UInt32 size;
-        //    public byte[] template;
-        //    public string[] fingerList;
-        //    public int fingerListSize;
-        //    public System.Text.StringBuilder errorMessage;
-        //}
+                            DirectoryInfo di = new DirectoryInfo(string.Format(@"C:\roman\fingerprints\records{0}", (int)o));
+                            Console.WriteLine(di.FullName);
 
-        class Record
-        {
-            public UInt32 probeTemplateSize;
-            public byte[] probeTemplate;
-            public string[] fingerList;
-            public int fingerListSize;
-            public string[] appSettings;
-            public System.Text.StringBuilder errorMessage;
-            //public CallBackDelegate callback;
-            //public String errorMessage;
-            //public String[] errorMessage = new String[1];
+                            var fi = di.GetFiles("*.bin", SearchOption.TopDirectoryOnly);
+                            //var fi = di.GetFiles("*.bin", SearchOption.TopDirectoryOnly).Take(1000);
 
-        }
-        //[STAThread]
-        static void Main(string[] args)
-        {
-            const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ";
+                            int i = 0;
+                            foreach (FileInfo info in fi)
+                            {
+                                //NSubject s = CreateSubject(info.FullName, string.Format("GallerySubject_{0}", i++));
 
+                                biometricClient.Enroll(CreateSubject(info.FullName, string.Format("GallerySubject_{0}", i++)));
+                                //if ((i % 1000) == 0)
+                                //    Console.WriteLine(i.ToString());
+                            }
+
+                            //enrollTask.Subjects.Add(probeSubject);
+
+                            biometricClient.PerformTask(enrollTask);
+                            NBiometricStatus status = enrollTask.Status;
+                            Console.WriteLine(status);
+                            if (status != NBiometricStatus.Ok)
+                            {
+                                Console.WriteLine("Enrollment was unsuccessful. Status: {0}.", status);
+                                if (enrollTask.Error != null) throw enrollTask.Error;
+                                return -1;
+                            }
+
+                            // Set matching threshold
+                            biometricClient.MatchingThreshold = 48;
+
+                            // Set matching speed
+                            biometricClient.FingersMatchingSpeed = NMatchingSpeed.High;
+
+                            //NLicense.ObtainComponents("/local", 5000, "Biometrics.FingerMatching");
+
+                            Stopwatch stw = new Stopwatch();
+                            stw.Start();
+
+                            //throw new Exception("kuku");
+                            status = biometricClient.Identify(probeSubject);
+
+                            stw.Stop();
+
+                            Console.WriteLine("Finger matcher, elapsed ms: {0}", stw.ElapsedMilliseconds);
+                            //NLicense.ReleaseComponents("Biometrics.FingerMatching");
+
+                            //NLicense.ObtainComponents("/local", 5000, "Biometrics.FingerMatchingFast");
+
+                            //stw = new Stopwatch();
+                            //stw.Start();
+
+                            //status = biometricClient.Identify(probeSubject);
+
+                            //stw.Stop();
+
+                            //Console.WriteLine("Finger Fast matcher, elapsed ms: {0}", stw.ElapsedMilliseconds);
+                            //NLicense.ReleaseComponents("Biometrics.FingerMatchingFast");
+                        }
+                        return 0;
+                    //}
+                    }, k));
+                }
+            //}
+            //catch (Exception ex)
+            //{
+            //    TutorialUtils.PrintException(ex);
+            //}
+            //finally
+            //{
+            //    NLicense.ReleaseComponents(Components);
+            //}
+
+            Task task = Task.WhenAll(tasks.ToArray());
+            //Task task = Task.WhenAll(tasks.ToArray().Where(t => t != null));
             try
             {
-                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                task.Wait();
+
+                foreach (var t in tasks)
                 {
-                    NLicense.ObtainComponents("/local", "5000", component);
+                    if (t.Status == TaskStatus.RanToCompletion && (int)(t.Result) != 0)
+                    {
+                        //list = t.Result;
+                        break;
+                    }
                 }
-                Run();
+
+                //return retcode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+
+                //while ((ex is System.AggregateException) && (ex.InnerException != null))
+                //    ex = ex.InnerException;
+
+                ////while ((ex.InnerException != null))
+                ////    ex = ex.InnerException;
+
+                //Console.WriteLine(ex);
+                TutorialUtils.PrintException(ex);
+
+                //foreach (var t in tasks)
+                //{
+                //    if (t == null)
+                //        continue;
+
+                //    if (t.Status == TaskStatus.RanToCompletion && t.Result != 0)
+                //    {
+                //        //list = (List<Tuple<string, int>>)(t.Result);
+                //        break;
+                //    }
+                //    else if (t.Status == TaskStatus.Faulted || t.Status == TaskStatus.Running)
+                //    {
+                //        bool fault = true;
+                //        if (ex.Message.Equals("The operation was canceled."))
+                //        {
+                //            fault = true;
+                //            //continue;
+                //        }
+
+                //        //while ((ex is AggregateException) && (ex.InnerException != null))
+                //        while (ex.InnerException != null)
+                //        {
+                //            if (ex.Message.EndsWith("Operation cancelled by user."))
+                //            {
+                //                fault = false;
+                //                break;
+                //            }
+                //            else if (ex.InnerException.GetType().Name.Equals("TaskCanceledException"))
+                //            {
+                //                if (ex.InnerException.Message.StartsWith("A task was canceled"))
+                //                {
+                //                    fault = false;
+                //                    break;
+                //                }
+                //            }
+
+                //            //ex = ex.InnerException;
+
+                //            if (ex.Message.Equals("The operation was canceled."))
+                //            {
+                //                fault = true;
+                //                //break;
+                //            }
+                //        }
+
+                //        if (fault)
+                //        {
+                //            throw new Exception(ex.Message);
+                //        }
+                //    }
+                //}
             }
             finally
             {
                 NLicense.ReleaseComponents(Components);
             }
+            return 0;
+
+
+            //         try
+            //         {
+            //	// Obtain license
+
+
+            //	using (var biometricClient = new NBiometricClient())
+            //	using (NSubject probeSubject = CreateSubject("C:\\roman\\fingerprints\\LeftIndexMiddle.dat", "ProbeSubject"))
+            //	{
+            //		NBiometricTask enrollTask = biometricClient.CreateTask(NBiometricOperations.Enroll, null);
+
+            //                 DirectoryInfo di = new DirectoryInfo(@"C:\roman\fingerprints\records1");
+
+            //                 //var fi = di.GetFiles("*.bin", SearchOption.AllDirectories).Take(10000);
+            //                 var fi = di.GetFiles("*.bin", SearchOption.TopDirectoryOnly);
+
+            //                 int i = 0;
+            //                 foreach (FileInfo info in fi)
+            //                 {
+            //                     //NSubject s = CreateSubject(info.FullName, string.Format("GallerySubject_{0}", i++));
+
+            //                     biometricClient.Enroll(CreateSubject(info.FullName, string.Format("GallerySubject_{0}", i++)));
+            //                     if ((i % 1000) == 0)
+            //                         Console.WriteLine(i.ToString());
+
+            //                 }
+
+            //                 enrollTask.Subjects.Add(probeSubject);
+
+            //		biometricClient.PerformTask(enrollTask);
+            //                 NBiometricStatus status = enrollTask.Status;
+            //                 Console.WriteLine(status);
+            //		if (status != NBiometricStatus.Ok)
+            //		{
+            //			Console.WriteLine("Enrollment was unsuccessful. Status: {0}.", status);
+            //			if (enrollTask.Error != null) throw enrollTask.Error;
+            //			return -1;
+            //		}
+
+            //		// Set matching threshold
+            //		biometricClient.MatchingThreshold = 48;
+
+            //		// Set matching speed
+            //		biometricClient.FingersMatchingSpeed = NMatchingSpeed.High;
+
+            //		// Identify probe subject
+
+
+            //                 for (int j = 0; j < 20; j++)
+            //                 {
+            //                     NLicense.ObtainComponents("/local", 5000, "Biometrics.FingerMatching");
+            //                     Stopwatch stw = new Stopwatch();
+            //                     stw.Start();
+
+            //                     status = biometricClient.Identify(probeSubject);
+
+            //                     stw.Stop();
+
+            //                     Console.WriteLine("Finger matcher, elapsed ms: {0}", stw.ElapsedMilliseconds);
+
+            //                     NLicense.ReleaseComponents("Biometrics.FingerMatching");
+
+            //                     NLicense.ObtainComponents("/local", 5000, "Biometrics.FingerMatchingFast");
+
+            //                     stw = new Stopwatch();
+            //                     stw.Start();
+
+            //                     status = biometricClient.Identify(probeSubject);
+
+            //                     stw.Stop();
+
+            //                     Console.WriteLine("Finger Fast matcher, elapsed ms: {0}", stw.ElapsedMilliseconds);
+
+            //                     NLicense.ReleaseComponents("Biometrics.FingerMatchingFast");
+            //                 }
+
+            //	}
+            //	return 0;
+            //}
+            //catch (Exception ex)
+            //{
+            //	return TutorialUtils.PrintException(ex);
+            //}
+            //finally
+            //{
+            //	NLicense.ReleaseComponents(Components);
+            //}
+            //return 0;
         }
 
-        static void Run()
-        {
-            //Console.WriteLine(" ----- Press key to start  -------");
-            //Console.ReadKey(); 
-
-            NSubject subject = null;
-            Record record = new Record();
-            record.errorMessage = new System.Text.StringBuilder(512);
-            subject = NSubject.FromFile(@"C:\roman\psc\wsq\LeftIndexMiddle.template");
-            //record.probeTemplateSize = (UInt32)subject.Fingers[0].Objects[0].Template.GetSize();
-            //record.probeTemplate = subject.Fingers[0].Objects[0].Template.Save().ToArray();
-            record.probeTemplate = subject.GetTemplateBuffer().ToArray();
-            record.probeTemplateSize = (UInt32)record.probeTemplate.Length;
-
-            record.fingerList = new string[2] { "lm", "li" };
-            record.fingerListSize = record.fingerList.Length;
-
-//            for (int i = 1; i < 2; i++)
-            {
-                //switch (i) {
-                //    case 0:
-                //        record.fingerList = new string[2] { "ri", "rm" };
-                //        break;
-                //    case 1:
-                //        record.fingerList = new string[2] { "li", "lm" };
-                //        break;
-                //    case 2:
-                //        record.fingerList = new string[2] { "ri", "rm" };
-                //        break;
-                //    case 3:
-                //        record.fingerList = new string[2] { "rl", "rr" };
-                //        break;
-                //}
-
-                var fingerList = new System.Collections.ArrayList();
-                fingerList.Add("DRIVER=ODBC Driver 11 for SQL Server;SERVER=(local);DATABASE=MCCS_FP;Trusted_Connection=no;UID=sa;PWD=psc;Mars_Connection=yes;");
-                fingerList.Add("Egy_T_FingerPrint");
-                fingerList.Add("AppID");
-                fingerList.Add("AppWsq");
-                record.appSettings = fingerList.ToArray(typeof(string)) as string[];
-
-                Stopwatch stw = new Stopwatch();
-                stw.Start();
-
-                UInt32 appId = 0;
-                unsafe
-                {
-                    fixed (UInt32* ptr = &record.probeTemplateSize)
-                    {
-                        appId = match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
-                    }
-                }
-
-                stw.Stop();
-                Console.WriteLine(" ----- Score: {0}", appId);
-                Console.WriteLine(" ----- Time elapsed: {0}", stw.Elapsed);
-            }
-
-            Console.WriteLine(" ----- Press key to end  -------");
-            Console.ReadKey();
-        }
-    }
+        private static NSubject CreateSubject(string fileName, string subjectId)
+		{
+			var subject = new NSubject();
+            subject.SetTemplateBuffer(new IO.NBuffer(File.ReadAllBytes(fileName)));
+			subject.Id = subjectId;
+			return subject;
+		}
+	}
 }

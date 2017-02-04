@@ -115,7 +115,8 @@ namespace PSCBioIdentification
                 return;
             }
 
-            _fingerList = new System.Collections.ArrayList();
+            _fingerList = new List<string>();
+            //_fingerList = new System.Collections.ArrayList();
 
             CheckBox cb; Label lb;
             for (int i = 1; i < 11; i++)
@@ -125,7 +126,7 @@ namespace PSCBioIdentification
 
                 cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (cb.Checked)
-                    _fingerList.Add(cb.Tag);
+                    _fingerList.Add(cb.Tag as string);
             }
 
             startProgressBar();
@@ -151,7 +152,7 @@ namespace PSCBioIdentification
         {
             if (_fingerList.Count == 0)
             {
-                e.Result = _fingerList;
+                e.Result = new ArrayList(_fingerList);
                 return;
             }
 
@@ -166,7 +167,7 @@ namespace PSCBioIdentification
             if (client != null) {
                 try
                 {
-                    client.Run(_fingerList);
+                    client.Run(new ArrayList(_fingerList));
                     _mre.WaitOne();
                 }
                 catch (Exception ex)
@@ -180,7 +181,8 @@ namespace PSCBioIdentification
                 _record.errorMessage = new System.Text.StringBuilder(512);
 
                 _record.fingerListSize = _fingerList.Count;
-                _record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
+                _record.fingerList = _fingerList.ToArray() as string[];
+                //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
                 var list = new System.Collections.ArrayList();
 
@@ -210,7 +212,7 @@ namespace PSCBioIdentification
             }
 
             if (!backgroundWorkerCachingService.CancellationPending)
-                e.Result = _fingerList;
+                e.Result = new ArrayList(_fingerList);
             else
             {
                 e.Result = null;

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/System" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:complexType name="Exception">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/MemoryCacheService" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/MemoryCacheService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System" />
+  <xs:complexType name="MatchingResult">
     <xs:sequence>
-      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System" minOccurs="0" name="Result" nillable="true" type="q1:ArrayOfTupleOfstringint" />
     </xs:sequence>
-    <xs:attribute ref="ser:FactoryType" />
   </xs:complexType>
-  <xs:element name="Exception" nillable="true" type="tns:Exception" />
+  <xs:element name="MatchingResult" nillable="true" type="tns:MatchingResult" />
 </xs:schema>

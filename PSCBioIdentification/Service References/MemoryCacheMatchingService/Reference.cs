@@ -9,28 +9,77 @@
 //------------------------------------------------------------------------------
 
 namespace PSCBioIdentification.MemoryCacheMatchingService {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="MatchingResult", Namespace="http://schemas.datacontract.org/2004/07/MemoryCacheService")]
+    [System.SerializableAttribute()]
+    public partial class MatchingResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<System.Tuple<string, int>> ResultField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<System.Tuple<string, int>> Result {
+            get {
+                return this.ResultField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ResultField, value) != true)) {
+                    this.ResultField = value;
+                    this.RaisePropertyChanged("Result");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService", SessionMode=System.ServiceModel.SessionMode.Required)]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MemoryCacheMatchingService.IMatchingService")]
     public interface IMatchingService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/getFingerList", ReplyAction="http://tempuri.org/IMatchingService/getFingerListResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PSCBioIdentification.MemoryCacheMatchingService.MatchingResult))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.Generic.List<object>))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.Generic.List<string>))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.Generic.List<System.Tuple<string, int>>))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Tuple<string, int>))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        System.Collections.ArrayList getFingerList();
+        System.Collections.Generic.List<object> getFingerList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/Terminate", ReplyAction="http://tempuri.org/IMatchingService/TerminateResponse")]
-        int Terminate(string guid);
+        void Terminate(string guid);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/verify", ReplyAction="http://tempuri.org/IMatchingService/verifyResponse")]
         bool verify(byte[] probeTemplate, byte[] galleryTemplate, int matchingThreshold);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchingService/match", ReplyAction="http://tempuri.org/IMatchingService/matchResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(System.Exception), Action="http://tempuri.org/IMatchingService/matchExceptionFault", Name="Exception", Namespace="http://schemas.datacontract.org/2004/07/System")]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate, int matchingThreshold);
+        PSCBioIdentification.MemoryCacheMatchingService.MatchingResult match(string guid, System.Collections.Generic.List<string> fingerList, int gender, int firstMatch, byte[] probeTemplate, int matchingThreshold);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -60,20 +109,20 @@ namespace PSCBioIdentification.MemoryCacheMatchingService {
                 base(binding, remoteAddress) {
         }
         
-        public System.Collections.ArrayList getFingerList() {
+        public System.Collections.Generic.List<object> getFingerList() {
             return base.Channel.getFingerList();
         }
         
-        public int Terminate(string guid) {
-            return base.Channel.Terminate(guid);
+        public void Terminate(string guid) {
+            base.Channel.Terminate(guid);
         }
         
         public bool verify(byte[] probeTemplate, byte[] galleryTemplate, int matchingThreshold) {
             return base.Channel.verify(probeTemplate, galleryTemplate, matchingThreshold);
         }
         
-        public uint match(string guid, System.Collections.ArrayList fingerList, int gender, byte[] probeTemplate, int matchingThreshold) {
-            return base.Channel.match(guid, fingerList, gender, probeTemplate, matchingThreshold);
+        public PSCBioIdentification.MemoryCacheMatchingService.MatchingResult match(string guid, System.Collections.Generic.List<string> fingerList, int gender, int firstMatch, byte[] probeTemplate, int matchingThreshold) {
+            return base.Channel.match(guid, fingerList, gender, firstMatch, probeTemplate, matchingThreshold);
         }
     }
 }

@@ -56,8 +56,9 @@ namespace PSCBioIdentification
         string  _guid = string.Empty;
         int     _trackBarValue = 0;
         int     _gender = 1;
+        int     _firstMatch = 1;
         byte[]  _probeTemplate;
-        ArrayList _fingerList = null;
+        List<string> _fingerList = null;
         Record  _record;
 
         Stopwatch _stw = new Stopwatch();
@@ -115,7 +116,7 @@ namespace PSCBioIdentification
             _trackBarValue = trackBar1.Value;
             _guid = Guid.NewGuid().ToString();
 
-            _fingerList = new ArrayList();
+            _fingerList = new List<string>();
             CheckBox cb;
             for (int i = 4; i > 0; i--)
             {
@@ -137,6 +138,11 @@ namespace PSCBioIdentification
                 _gender = 2;
             else if (radioButtonManAndWoman.Checked)
                 _gender = 0;
+
+            if (radioButtonFirstMatch.Checked)
+                _firstMatch = 1;
+            else
+                _firstMatch = 0;
 
             backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
         }
@@ -164,12 +170,12 @@ namespace PSCBioIdentification
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
             {
                 client = e.Argument as MemoryCacheMatchingService.MatchingServiceClient;
-                e.Result = null; _matchingResult = 0;
+                e.Result = null; //_matchingResult = 0;
                 //try
                 //{
-                    //int i = Thread.CurrentThread.ManagedThreadId;
-                    e.Result = client.match(_guid, _fingerList, _gender, _record.probeTemplate, _trackBarValue);
-
+                //int i = Thread.CurrentThread.ManagedThreadId;
+                e.Result = client.match(_guid, _fingerList, _gender, _firstMatch, _record.probeTemplate, _trackBarValue);
+                //int i = 0;
                     //tl.Loop();
 
                     //RunMatching(client, fingerList, gender, record, e);
@@ -244,7 +250,8 @@ namespace PSCBioIdentification
                 //}
                 _record.fingerListSize = _fingerList.Count;
                 //record.fingerList = new string[ar.Count];
-                _record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
+                _record.fingerList = _fingerList.ToArray() as string[];
+                //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
                 _fingerList.Clear();
 
@@ -256,7 +263,8 @@ namespace PSCBioIdentification
                 _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
                 _fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
                 _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                _record.appSettings = _fingerList.ToArray(typeof(string)) as string[];
+                _record.appSettings = _fingerList.ToArray() as string[];
+                //_record.appSettings = _fingerList.ToArray(typeof(string)) as string[];
 
                 //UInt32 score = 0;
                 unsafe
@@ -415,19 +423,39 @@ namespace PSCBioIdentification
             }
             else
             {
-                UInt32 score;
+                int score = 0;
 
-                if (e.Result == null)
-                    score = _matchingResult;
-                else
-                    score = (UInt32)e.Result;
+                //if (e.Result != null && (e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 0)
+                //    score = (e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item2;
 
+                if (e.Result != null) {
+                    if ((e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 0)
+                        score = (e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item2;
+
+                    if ((e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 1)
+                    {
+                        int count = (e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count;
+                        if (count > 20)
+                            count = 20;
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            string str2 = string.Format("Id: {0}, Score({1})",
+                                (e.Result as MemoryCacheMatchingService.MatchingResult).Result[i].Item1,
+                                (e.Result as MemoryCacheMatchingService.MatchingResult).Result[i].Item2);
+                            Log(str2, false, true);
+                            HighlightCurrentLine();
+                            LogLine(true);
+                            LogLine(true);
+                        }
+                    }
+                }
                 //string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
                 //string str = string.Format("Identification: {0}", score == 0 ? "failed" : "succeess");
                 //LogLine(str, true);
 
-                string str = string.Format("{0}, Time elapsed: {1:hh\\:mm\\:ss}", score == 0 ? "Failure" : "Succeess", _stw.Elapsed);
-                LogLine(str, true);
+                string str = string.Format("{0} , Score({2}), Time elapsed: {1:hh\\:mm\\:ss}", score == 0 ? "Failure" : "Succeess", _stw.Elapsed, score);
+                Log(str, false, true);
                 LogLine("", true);
 
                 //ShowStatusMessage(str);
@@ -435,8 +463,8 @@ namespace PSCBioIdentification
                 personId.Text = "";
                 if (score > 0)
                 {
-                    this.userId = (int)score;
-                    personId.Text = score.ToString();
+                    this.userId = Int32.Parse((e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item1);
+                    personId.Text = this.userId.ToString();
                     pictureBoxCheckMark.Image = Properties.Resources.checkmark;
                     Mode = ProgramMode.PreEnrolled;
                     startDataServiceProcess();

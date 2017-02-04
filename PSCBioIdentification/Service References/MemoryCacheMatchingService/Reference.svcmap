@@ -9,7 +9,7 @@
     <GenerateMessageContracts>false</GenerateMessageContracts>
     <NamespaceMappings />
     <CollectionMappings>
-      <CollectionMapping TypeName="System.Collections.ArrayList" Category="List" />
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
     </CollectionMappings>
     <GenerateSerializableTypes>true</GenerateSerializableTypes>
     <Serializer>Auto</Serializer>
@@ -28,6 +28,7 @@
     <MetadataFile FileName="MatchingService1.xsd" MetadataType="Schema" ID="dcaed5ba-1520-4a41-b7f9-2d3311c576aa" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd1" />
     <MetadataFile FileName="MatchingService.disco" MetadataType="Disco" ID="dd9668cb-eb48-46b9-ba8d-0685e32205b0" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?disco" />
     <MetadataFile FileName="MatchingService2.xsd" MetadataType="Schema" ID="d6f03277-07bd-4147-918d-e6c95bb76752" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MatchingService4.xsd" MetadataType="Schema" ID="4c94a345-24c5-4aa2-8522-a52cd571cbb0" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd4" />
     <MetadataFile FileName="MatchingService3.xsd" MetadataType="Schema" ID="3bd4584e-3472-4890-bc2a-c6f13351856f" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>

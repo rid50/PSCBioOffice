@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost/MemoryCacheService/MatchingService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/MemoryCacheService" />
   <xs:element name="getFingerList">
     <xs:complexType>
       <xs:sequence />
@@ -22,9 +23,7 @@
   </xs:element>
   <xs:element name="TerminateResponse">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="TerminateResult" type="xs:int" />
-      </xs:sequence>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="verify">
@@ -47,8 +46,9 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
-        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q2:ArrayOfanyType" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q2:ArrayOfstring" />
         <xs:element minOccurs="0" name="gender" type="xs:int" />
+        <xs:element minOccurs="0" name="firstMatch" type="xs:int" />
         <xs:element minOccurs="0" name="probeTemplate" nillable="true" type="xs:base64Binary" />
         <xs:element minOccurs="0" name="matchingThreshold" type="xs:int" />
       </xs:sequence>
@@ -57,7 +57,7 @@
   <xs:element name="matchResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="matchResult" type="xs:unsignedInt" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/MemoryCacheService" minOccurs="0" name="matchResult" nillable="true" type="q3:MatchingResult" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

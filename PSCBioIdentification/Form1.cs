@@ -1018,7 +1018,13 @@ namespace PSCBioIdentification
             if (_isCapturing)
             {
                 if (radioButtonIdentify.Checked && mouseclick)
-                    ((NFScanner)GetSelectedDevice()).Cancel();
+                {
+                    var scanner = (NFScanner)GetSelectedDevice();
+                    if (scanner != null)
+                        scanner.Cancel();
+
+                    //((NFScanner)GetSelectedDevice()).Cancel();
+                }
                 else
                     _biometricClient.Cancel();
                 
@@ -2079,6 +2085,7 @@ namespace PSCBioIdentification
                 NBiometricStatus status;
                 if (ConfigurationManager.AppSettings["verificationService"] == "local")
                 {
+                    _biometricClient.MatchingThreshold = trackBar1.Value;
                     try
                     {
                         status = _biometricClient.Verify(_subject, _subject2);
@@ -3599,6 +3606,9 @@ namespace PSCBioIdentification
             radioButtonWoman.Visible = !show;
             radioButtonManAndWoman.Visible = !show;
 
+            radioButtonFirstMatch.Visible = !show;
+            radioButtonAllOccurrences.Visible = !show;
+
         }
 
         private void setCulture()
@@ -4158,6 +4168,62 @@ namespace PSCBioIdentification
         //    }
         //}    
 
+        //int lastLine = 0;
+        private void HighlightCurrentLine()
+        {
+            // Save current selection
+            int selectionStart = rtbMain.SelectionStart;
+            int selectionLength = rtbMain.SelectionLength;
+
+            // Get character positions for the current line
+            int firstCharPosition = rtbMain.GetFirstCharIndexOfCurrentLine();
+            int lineNumber = rtbMain.GetLineFromCharIndex(firstCharPosition);
+            int lastCharPosition = rtbMain.GetFirstCharIndexFromLine(lineNumber + 1);
+            if (lastCharPosition == -1)
+                lastCharPosition = rtbMain.TextLength;
+
+            //// Clear any previous color
+            //if (lineNumber != lastLine)
+            //{
+            //    int previousFirstCharPosition = rtbMain.GetFirstCharIndexFromLine(lastLine);
+            //    int previousLastCharPosition = rtbMain.GetFirstCharIndexFromLine(lastLine + 1);
+            //    if (previousLastCharPosition == -1)
+            //        previousLastCharPosition = rtbMain.TextLength;
+
+            //    rtbMain.SelectionStart = previousFirstCharPosition;
+            //    rtbMain.SelectionLength = previousLastCharPosition - previousFirstCharPosition;
+            //    rtbMain.SelectionBackColor = SystemColors.Window;
+            //    lastLine = lineNumber;
+            //}
+
+            // Set new color
+            rtbMain.SelectionStart = firstCharPosition;
+            rtbMain.SelectionLength = lastCharPosition - firstCharPosition;
+            if (rtbMain.SelectionLength > 0)
+                rtbMain.SelectionBackColor = Color.PaleTurquoise;
+
+            // Reset selection
+            rtbMain.SelectionStart = selectionStart;
+            rtbMain.SelectionLength = selectionLength;
+        }
+
+        private void rtbMain_Click(object sender, EventArgs e)
+        {
+            if (rtbMain.SelectionBackColor == Color.PaleTurquoise)
+            {
+                int i = rtbMain.Text.IndexOf(':', rtbMain.GetFirstCharIndexOfCurrentLine());
+                if (i != -1)
+                {
+                    i++;i++;
+                    int j = rtbMain.Text.IndexOf(',', i);
+                    personId.Text = rtbMain.Text.Substring(i, j - i);
+                    this.userId = Int32.Parse(personId.Text);
+                    pictureBoxCheckMark.Image = Properties.Resources.checkmark;
+                    Mode = ProgramMode.PreEnrolled;
+                    startDataServiceProcess();
+                }
+            }
+        }
     }
 
     [Serializable]
