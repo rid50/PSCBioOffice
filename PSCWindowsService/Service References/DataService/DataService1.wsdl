@@ -11,6 +11,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost/CommonService/DataService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost/CommonService/DataService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/CommonService/DataService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IDataService_GetWSQImages_InputMessage">
@@ -25,11 +26,11 @@
   <wsdl:message name="IDataService_SetWSQImages_OutputMessage">
     <wsdl:part name="parameters" element="tns:SetWSQImagesResponse" />
   </wsdl:message>
-  <wsdl:message name="IDataService_saveWsqInDatabase_InputMessage">
-    <wsdl:part name="parameters" element="tns:saveWsqInDatabase" />
+  <wsdl:message name="IDataService_SaveWSQInDatabase_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveWSQInDatabase" />
   </wsdl:message>
-  <wsdl:message name="IDataService_saveWsqInDatabase_OutputMessage">
-    <wsdl:part name="parameters" element="tns:saveWsqInDatabaseResponse" />
+  <wsdl:message name="IDataService_SaveWSQInDatabase_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveWSQInDatabaseResponse" />
   </wsdl:message>
   <wsdl:portType name="IDataService">
     <wsdl:operation name="GetWSQImages">
@@ -40,9 +41,9 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IDataService/SetWSQImages" message="tns:IDataService_SetWSQImages_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDataService/SetWSQImagesResponse" message="tns:IDataService_SetWSQImages_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="saveWsqInDatabase">
-      <wsdl:input wsaw:Action="http://tempuri.org/IDataService/saveWsqInDatabase" message="tns:IDataService_saveWsqInDatabase_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IDataService/saveWsqInDatabaseResponse" message="tns:IDataService_saveWsqInDatabase_OutputMessage" />
+    <wsdl:operation name="SaveWSQInDatabase">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDataService/SaveWSQInDatabase" message="tns:IDataService_SaveWSQInDatabase_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDataService/SaveWSQInDatabaseResponse" message="tns:IDataService_SaveWSQInDatabase_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IDataService" type="tns:IDataService">
@@ -66,8 +67,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="saveWsqInDatabase">
-      <soap:operation soapAction="http://tempuri.org/IDataService/saveWsqInDatabase" style="document" />
+    <wsdl:operation name="SaveWSQInDatabase">
+      <soap:operation soapAction="http://tempuri.org/IDataService/SaveWSQInDatabase" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

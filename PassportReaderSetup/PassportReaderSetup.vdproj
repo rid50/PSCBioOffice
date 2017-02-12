@@ -184,12 +184,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F43E81028A1B5D05748668F5ED635538"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3E9A7EF1320C4895B32A8725A5B01A9A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -245,6 +239,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_75AB0DD7145CF7CBD34BF20329F66E8A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F43E81028A1B5D05748668F5ED635538"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -739,7 +739,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PassportReader"
         "ProductCode" = "8:{44457732-EE81-4212-9114-6A692508CB80}"
-        "PackageCode" = "8:{BA1E6DE1-BD59-4F8B-9BDB-1FC501C62812}"
+        "PackageCode" = "8:{D6B1BFC0-6C55-438C-B7BD-1275A9F37495}"
         "UpgradeCode" = "8:{032D6C2A-2E0C-43FF-8139-056C9B24F591}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1274,7 +1274,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3E9A7EF1320C4895B32A8725A5B01A9A"
             {
-            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\Release\\PassportReader.exe"
+            "SourcePath" = "8:..\\PassportReader\\PassportReader\\obj\\x64\\Release\\PassportReader.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0B7ADF756B0A40FB8CCE8FD183EED1AB"

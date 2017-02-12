@@ -16,55 +16,55 @@
         "Entry"
         {
         "MsmKey" = "8:_37E4C47A8001E592FDA01CFC702069DC"
-        "OwnerKey" = "8:_6252AABFE47542C1BAF92BE459249DC5"
+        "OwnerKey" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6252AABFE47542C1BAF92BE459249DC5"
+        "MsmKey" = "8:_4787B68C973A4263A8CA4E3BA3A5C32E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_707441F5673AA7006961E86B72CDDF0A"
-        "OwnerKey" = "8:_6252AABFE47542C1BAF92BE459249DC5"
+        "OwnerKey" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_89B88CF30A7F422A8FE4A247F0840C85"
+        "MsmKey" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9F09BC960C144373B818D7979ED3D398"
+        "MsmKey" = "8:_F81525EEB3524DB4A1FB7B3814623E09"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9F09BC960C144373B818D7979ED3D398"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6252AABFE47542C1BAF92BE459249DC5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_707441F5673AA7006961E86B72CDDF0A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_37E4C47A8001E592FDA01CFC702069DC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F81525EEB3524DB4A1FB7B3814623E09"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_707441F5673AA7006961E86B72CDDF0A"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -75,7 +75,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:..\\..\\..\\Program Files\\PSC\\PSCWindowsService\\PSCWindowsServiceSetup.msi"
+        "OutputFilename" = "8:..\\bin\\PSCWindowsServiceSetup\\PSCWindowsServiceSetup.msi"
         "PackageFilesAs" = "3:1"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -112,7 +112,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\..\\..\\Program Files\\PSC\\PSCWindowsService\\PSCWindowsServiceSetup.msi"
+        "OutputFilename" = "8:..\\bin\\PSCWindowsServiceSetup\\PSCWindowsServiceSetup.msi"
         "PackageFilesAs" = "3:1"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -149,59 +149,59 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_33CC9D5B17B44E4181DB60152E2E4639"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_1B0FB7B374C4488897EC31A6879EF2FA"
             {
-            "Name" = "8:Primary output from PSCWindowsService (Release x64)"
+            "Name" = "8:Primary output from PSCWindowsService (Active)"
             "Condition" = "8:"
-            "Object" = "8:_6252AABFE47542C1BAF92BE459249DC5"
-            "FileType" = "3:2"
-            "InstallAction" = "3:4"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_D022C8F8_C4C7_42CC_932D_957E1480AC72"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_8AE451AAA5684C529176E2505E25EE0C"
-            {
-            "Name" = "8:Primary output from PSCWindowsService (Release x64)"
-            "Condition" = "8:"
-            "Object" = "8:_6252AABFE47542C1BAF92BE459249DC5"
-            "FileType" = "3:2"
-            "InstallAction" = "3:3"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_21B00D9C_317E_44D3_B123_0128546DBBFD"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_B757E38E5C224455947055715EFC8503"
-            {
-            "Name" = "8:Primary output from PSCWindowsService (Release x64)"
-            "Condition" = "8:"
-            "Object" = "8:_6252AABFE47542C1BAF92BE459249DC5"
-            "FileType" = "3:2"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_2AA947EF_0D48_4701_82E6_9FDE7C660845"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_CB9F9D8F534C465FBA012C898E6B3FF6"
-            {
-            "Name" = "8:Primary output from PSCWindowsService (Release x64)"
-            "Condition" = "8:"
-            "Object" = "8:_6252AABFE47542C1BAF92BE459249DC5"
+            "Object" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
             "FileType" = "3:2"
             "InstallAction" = "3:2"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_82282998_21AF_4449_946E_1035AC84541A"
+            "Identifier" = "8:_BC5168B0_441D_484E_98A6_2797C884E013"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C28CE5D7FCEE4EDCB4656243695630AB"
+            {
+            "Name" = "8:Primary output from PSCWindowsService (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_849C7B3C_B0D1_4441_9A64_67859AA7EE33"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C8C8517CF59C457DADDAFF9C234B244A"
+            {
+            "Name" = "8:Primary output from PSCWindowsService (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
+            "FileType" = "3:2"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_2DD5358E_73EA_4FEC_BFFB_AA2C5D2E937E"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D1E3DF203A19416097A7D0AB39660BCB"
+            {
+            "Name" = "8:Primary output from PSCWindowsService (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_E2C131BB7FA940C1BDA35A4EEA4745AA"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_B8C51E2E_9F49_4C2D_BAC9_DAE5F69A2B09"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
@@ -259,6 +259,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4787B68C973A4263A8CA4E3BA3A5C32E"
+            {
+            "SourcePath" = "8:..\\PSCWindowsService\\Installation Commands.txt"
+            "TargetName" = "8:Installation Commands.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_987FEDDD92614A8BB57A1A992A2C4B26"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_707441F5673AA7006961E86B72CDDF0A"
             {
             "AssemblyRegister" = "3:1"
@@ -290,34 +310,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_89B88CF30A7F422A8FE4A247F0840C85"
-            {
-            "SourcePath" = "8:Installation Commands.txt"
-            "TargetName" = "8:Installation Commands.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_987FEDDD92614A8BB57A1A992A2C4B26"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9F09BC960C144373B818D7979ED3D398"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F81525EEB3524DB4A1FB7B3814623E09"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:InstallUtil, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_9F09BC960C144373B818D7979ED3D398"
+                    "_F81525EEB3524DB4A1FB7B3814623E09"
                     {
                     "Name" = "8:InstallUtil.exe"
                     "Attributes" = "3:512"
@@ -398,11 +398,11 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PSCWindowsService"
         "ProductCode" = "8:{7B755183-A906-41F5-9E1D-2748F8001D04}"
-        "PackageCode" = "8:{69C7EC6C-B1ED-462F-B6C0-B3C1F2724AD9}"
+        "PackageCode" = "8:{C041FFE8-8AAA-485C-B99D-D7D02EAF7A49}"
         "UpgradeCode" = "8:{68D25144-0590-488B-A4D0-F902E2D71B51}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
@@ -917,7 +917,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6252AABFE47542C1BAF92BE459249DC5"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E2C131BB7FA940C1BDA35A4EEA4745AA"
             {
             "SourcePath" = "8:..\\PSCWindowsService\\obj\\x64\\Release\\PSCWindowsService.exe"
             "TargetName" = "8:"
@@ -937,7 +937,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:Release|x64"
+            "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{79CE48BE-4787-4ECC-8789-03C5CA600DE4}"
             "ShowKeyOutput" = "11:TRUE"

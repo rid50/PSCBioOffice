@@ -77,6 +77,8 @@ namespace PSCWindowsService
                     offset = 0;
                 }
 
+                bool[] processAsTemplate = new bool[_fingersCollection.Count];
+
                 for (int i = hand; i < count; i++, hand++)
                 {
                     if ((ErrorCode = scanFingers(i, checks)) != 0)
@@ -91,9 +93,11 @@ namespace PSCWindowsService
                         if (hand == 2 && k == 0)
                             continue;
 
-                        if (_sc.ArrayOfWSQ[k] != null && ((WsqImage)_sc.ArrayOfWSQ[k]).Content != null)
+                        //if (_sc.ArrayOfWSQ[k] != null && ((WsqImage)_sc.ArrayOfWSQ[k]).Content != null)
+                        if (_sc.ArrayOfWSQ[k] != null)
                         {
                             _fingersCollection[k + offset] = _sc.ArrayOfWSQ[k];
+                            processAsTemplate[k + offset] = true;
                             if (hand == 0)
                                 retCode.Insert(0, '0');
                             else
@@ -128,7 +132,7 @@ namespace PSCWindowsService
                         buff = ms.ToArray();
 
                         var client = new DataServiceClient();
-                        client.saveWsqInDatabase(Convert.ToInt32(id), buff);
+                        client.SaveWSQInDatabase(Convert.ToInt32(id), buff, processAsTemplate);
                         //client.SetWSQImages(Convert.ToInt32(id), ref buff);
 
                         //SendImage(IMAGE_TYPE.wsq, Convert.ToInt32(id), ref buff);

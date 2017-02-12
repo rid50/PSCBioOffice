@@ -41,7 +41,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
@@ -89,6 +89,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PrFps22">
@@ -142,6 +145,9 @@
   <ItemGroup>
     <Content Include="CommandService.svc" />
     <Content Include="Installation Commands.txt" />
+    <None Include="Service References\DataService\DataService.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\DataService\DataService1.disco" />
     <None Include="Service References\CacheService\MemoryCacheService.disco" />
     <None Include="Service References\CacheService\MemoryCacheService.wsdl" />

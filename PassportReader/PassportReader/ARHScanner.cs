@@ -460,7 +460,6 @@ class ARHScanner
                     //_arrayOfWSQ.Add(null);
                     _arrayOfBMP.Add(new Byte[] { new Byte() });
                     _arrayOfWSQ.Add(new WsqImage());
-
                 }
 
                 if (fingerImage != null)
