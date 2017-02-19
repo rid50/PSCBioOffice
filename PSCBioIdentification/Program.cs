@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Neurotec.Licensing;
+using System.Threading;
 
 namespace PSCBioIdentification
 {
@@ -41,33 +42,37 @@ namespace PSCBioIdentification
             //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Devices.FingerScanners,Images.WSQ,Biometrics.FingerSegmentation,Biometrics.FingerQualityAssessmentBase";
             //const string Components = "Biometrics.FingerExtraction,Biometrics.FingerMatching,Biometrics.FingerDetection,Devices.FingerScanners,Images.WSQ";
             const string Components = "Biometrics.FingerExtraction,Biometrics.FingerSegmentation,Images.WSQ,Devices.FingerScanners";
+            //const string Components = "Devices.FingerScanners";
 
             try
             {
-                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                string str = typeof(Program).AssemblyQualifiedName;
+                using (Mutex mutex = new Mutex(false, @"Global\" + str))
                 {
-                    NLicense.ObtainComponents("/local", "5000", component);
+                    if (!mutex.WaitOne(0, false))
+                    {
+                        MessageBox.Show("PSCBioIdentification already running");
+                        return;
+                    }
+
+                    foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        NLicense.ObtainComponents("/local", "5000", component);
+                    }
+
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new Form1());
                 }
-
-                //Helpers.ObtainLicenses(licensesMain);
-
-                //try
-                //{
-                //    Helpers.ObtainLicenses(licensesBss);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.ToString());
-                //}
-
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
             }
             catch (Exception ex)
             {
+                while ((ex is AggregateException) && (ex.InnerException != null))
+                    ex = ex.InnerException;
 
-                Utils.ShowException(ex);
+                MessageBox.Show(ex.ToString(), null, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                //Utils.ShowException(ex);
 
                 //MessageBox.Show("Error. Details: " + ex.Message, "Fingers Sample", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -91,10 +91,22 @@ namespace PSCWindowsService
                     System.Diagnostics.Debugger.Launch();
 #endif
 
+                    string errorMessage;
                     var cache = new MemoryCacheServiceClient();
+                    if (!WindowsService.IsServiceAvailable(cache, out errorMessage))
+                    {
+                        cache.Close();
+                        throw new Exception(errorMessage);
+                    }
                     //ArrayList fingersCollection = cache.GetQualityFingerCollection(id);
 
                     var client = new DataServiceClient();
+                    if (!WindowsService.IsServiceAvailable(client, out errorMessage))
+                    {
+                        client.Close();
+                        throw new Exception(errorMessage);
+                    }
+
                     byte[] buffer = client.GetWSQImages(id);
                     ms = new MemoryStream(buffer);
                     BinaryFormatter formatter = new BinaryFormatter();

@@ -22,13 +22,7 @@
         "Entry"
         {
         "MsmKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
-        "OwnerKey" = "8:_E2F97A93CFA8442BB489A84257A980F4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
-        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
+        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -40,7 +34,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
-        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
+        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
+        "OwnerKey" = "8:_E2F97A93CFA8442BB489A84257A980F4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -64,31 +64,7 @@
         "Entry"
         {
         "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_A4872F2246EE65B1A0808C429939DF69"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_E2F97A93CFA8442BB489A84257A980F4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_E5FB10F10C4A3F1F09F863F8B99E03F8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_E9C4BA6C251F7055226DEE8C9085A59E"
+        "OwnerKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,7 +76,31 @@
         "Entry"
         {
         "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
-        "OwnerKey" = "8:_4BFB42504CA2889C46B3F149CAB39E1B"
+        "OwnerKey" = "8:_E9C4BA6C251F7055226DEE8C9085A59E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
+        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
+        "OwnerKey" = "8:_E5FB10F10C4A3F1F09F863F8B99E03F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
+        "OwnerKey" = "8:_E2F97A93CFA8442BB489A84257A980F4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
+        "OwnerKey" = "8:_A4872F2246EE65B1A0808C429939DF69"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,7 +142,7 @@
         "Entry"
         {
         "MsmKey" = "8:_DF2A3564F550A8EC232DF6D8F495EA00"
-        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
+        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -154,7 +154,7 @@
         "Entry"
         {
         "MsmKey" = "8:_DF2A3564F550A8EC232DF6D8F495EA00"
-        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
+        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -190,37 +190,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A4872F2246EE65B1A0808C429939DF69"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E5FB10F10C4A3F1F09F863F8B99E03F8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E9C4BA6C251F7055226DEE8C9085A59E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DF2A3564F550A8EC232DF6D8F495EA00"
+        "OwnerKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -232,7 +202,37 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_59269D92490991B4D35F5B556F3F1A50"
+        "OwnerKey" = "8:_DF2A3564F550A8EC232DF6D8F495EA00"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CF8C2CE977E1C9EEC1962C438E7481B1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E9C4BA6C251F7055226DEE8C9085A59E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E5FB10F10C4A3F1F09F863F8B99E03F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5250128A75A345EBA0A611A5484B7F90"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A4872F2246EE65B1A0808C429939DF69"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -260,6 +260,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -267,7 +275,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\bin\\PSCBioIdentificationSetup\\PSCBioIdentificationSetup.msi"
+        "OutputFilename" = "8:..\\..\\Setups\\PSCBioIdentificationSetup\\PSCBioIdentificationSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -334,11 +342,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Media, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4BFB42504CA2889C46B3F149CAB39E1B"
-                    {
-                    "Name" = "8:Neurotec.Media.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Media.dll"
             "TargetName" = "8:"
@@ -385,11 +388,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics.Gui, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5250128A75A345EBA0A611A5484B7F90"
-                    {
-                    "Name" = "8:Neurotec.Biometrics.Gui.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Biometrics.Gui.dll"
             "TargetName" = "8:"
@@ -416,11 +414,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_59269D92490991B4D35F5B556F3F1A50"
-                    {
-                    "Name" = "8:Neurotec.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.dll"
             "TargetName" = "8:"
@@ -447,11 +440,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Licensing, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A4872F2246EE65B1A0808C429939DF69"
-                    {
-                    "Name" = "8:Neurotec.Licensing.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Licensing.dll"
             "TargetName" = "8:"
@@ -498,11 +486,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Devices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CF8C2CE977E1C9EEC1962C438E7481B1"
-                    {
-                    "Name" = "8:Neurotec.Devices.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Devices.dll"
             "TargetName" = "8:"
@@ -549,11 +532,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DF2A3564F550A8EC232DF6D8F495EA00"
-                    {
-                    "Name" = "8:Neurotec.Biometrics.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Biometrics.dll"
             "TargetName" = "8:"
@@ -580,11 +558,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Gui, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E5FB10F10C4A3F1F09F863F8B99E03F8"
-                    {
-                    "Name" = "8:Neurotec.Gui.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Gui.dll"
             "TargetName" = "8:"
@@ -611,11 +584,6 @@
             "AssemblyAsmDisplayName" = "8:Neurotec.Biometrics.Client, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ea4ecf06177ea613, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E9C4BA6C251F7055226DEE8C9085A59E"
-                    {
-                    "Name" = "8:Neurotec.Biometrics.Client.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Neurotec.Biometrics.Client.dll"
             "TargetName" = "8:"

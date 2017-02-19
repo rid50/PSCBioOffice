@@ -1,9 +1,8 @@
-﻿run VS2015 x64 Native Tools Command Prompt
-
-cd C:\psc\PSCBioOffice\bin\PSCWindowsServiceSetup
-installutil "C:\Program Files\PSC\PSCWindowsService\PSCWindowsService.exe"
-net start PSCWindowsService
-
-
-net stop PSCWindowsService
+﻿cd  C:\PSC\Setups\PSCWindowsServiceSetup
 installutil /u "C:\Program Files\PSC\PSCWindowsService\PSCWindowsService.exe"
+
+cd  C:\Program Files\PSC\PSCWindowsService
+
+copy /Y C:\PSC\Setups\PSCWindowsServiceSetup\*.*
+installutil PSCWindowsService.exe
+net start PSCWindowsService

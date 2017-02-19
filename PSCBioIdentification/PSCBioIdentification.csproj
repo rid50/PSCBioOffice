@@ -216,9 +216,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="WebService.cs" />
     <EmbeddedResource Include="Form1.ar-KW.resx">
       <DependentUpon>Form1.cs</DependentUpon>

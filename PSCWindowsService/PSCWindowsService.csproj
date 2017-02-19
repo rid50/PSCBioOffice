@@ -94,6 +94,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PrFps22">
       <HintPath>.\PrFps22.dll</HintPath>
     </Reference>

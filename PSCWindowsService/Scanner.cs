@@ -131,7 +131,14 @@ namespace PSCWindowsService
                         formatter.Serialize(ms, _fingersCollection as ArrayList);
                         buff = ms.ToArray();
 
+                        string errorMessage;
                         var client = new DataServiceClient();
+                        if (!WindowsService.IsServiceAvailable(client, out errorMessage))
+                        {
+                            client.Close();
+                            throw new Exception(errorMessage);
+                        }
+
                         client.SaveWSQInDatabase(Convert.ToInt32(id), buff, processAsTemplate);
                         //client.SetWSQImages(Convert.ToInt32(id), ref buff);
 

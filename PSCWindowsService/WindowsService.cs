@@ -1,8 +1,8 @@
 ﻿using System.ServiceProcess;
 using System.ServiceModel;
 using System;
+using System.ServiceModel.Description;
 using System.Configuration;
-using System.ServiceModel.Configuration;
 
 namespace PSCWindowsService
 {
@@ -26,7 +26,7 @@ namespace PSCWindowsService
         protected override void OnStart(string[] args)
         {
 
-            String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
+            //String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
 
             //String baseAddress = ConfigurationManager.AppSettings["endPointServer"];
             //configurationServiceClient.Endpoint.Address
@@ -49,28 +49,28 @@ namespace PSCWindowsService
 //            System.Diagnostics.Debugger.Launch();
 //#endif
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
-            ClientSection serviceModelClientSection = serviceModelSection.Client;
-            if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
-            {
-                foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
-                {
-                    var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                    endPoint.Address = uri;
-                    //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
-                }
-                //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
-                //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
+            //Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //ServiceModelSectionGroup serviceModelSection = ServiceModelSectionGroup.GetSectionGroup(config);
+            //ClientSection serviceModelClientSection = serviceModelSection.Client;
+            //if (serviceModelClientSection.Endpoints[0].Address.Host != endPointHost)
+            //{
+            //    foreach (ChannelEndpointElement endPoint in serviceModelClientSection.Endpoints)
+            //    {
+            //        var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+            //        endPoint.Address = uri;
+            //        //endPoint.Address = new Uri(endPoint.Address.Scheme + "://" + endPointAddress + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+            //    }
+            //    //serviceModelClientSection.Endpoints.Cast<ChannelEndpointElement>()
+            //    //                                         .Select(endpoint => { endpoint.Address.Host = endPointHost; return endpoint; });
 
-                //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
-                //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
+            //    //ChannelEndpointElement endPoint = serviceModelClientSection.Endpoints[0];
+            //    //var uri = new Uri(endPoint.Address.Scheme + "://" + endPointHost + ":" + endPoint.Address.Port + endPoint.Address.PathAndQuery);
 
-                //serviceModelClientSection.Endpoints[0].Address = uri;
-                config.Save();
+            //    //serviceModelClientSection.Endpoints[0].Address = uri;
+            //    config.Save();
 
-                ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
-            }
+            //    ConfigurationManager.RefreshSection(serviceModelClientSection.SectionInformation.SectionName);
+            //}
 
             if (serviceHost != null)
             {
@@ -93,6 +93,48 @@ namespace PSCWindowsService
                 serviceHost.Close();
                 serviceHost = null;
             }
+        }
+        public static bool IsServiceAvailable(dynamic client, out string errorMessage)
+        {
+            String endPointHost = ConfigurationManager.AppSettings["endPointHost"];
+            ServiceEndpoint serviceEndpoint = client.Endpoint;
+            Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + endPointHost + ":" + serviceEndpoint.Address.Uri.Port + serviceEndpoint.Address.Uri.PathAndQuery);
+            client.Endpoint.Address = new EndpointAddress(uri.ToString());
+
+            //string absoluteUri = client.Endpoint.Address.Uri.AbsoluteUri;
+
+            return IsServiceAvailable(client.Endpoint.Address, out errorMessage);
+        }
+        public static bool IsServiceAvailable(EndpointAddress endpointAddress, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            Uri uri = endpointAddress.Uri;
+
+            try
+            {
+                string address = uri.AbsoluteUri + "?wsdl";
+                MetadataExchangeClient mexClient = null;
+                if (uri.Scheme == "http")
+                    mexClient = new MetadataExchangeClient(new Uri(address), MetadataExchangeClientMode.HttpGet);
+                else if (uri.Scheme == "net.tcp")
+                {
+                    return true;
+                    //mexClient = new MetadataExchangeClient(new EndpointAddress("net.tcp://localhost/MemoryCacheService/PopulateCacheService/mex"));
+                    //mexClient.ResolveMetadataReferences = true;
+                    //mexClient.OperationTimeout = new TimeSpan(0, 10, 0);
+                }
+                MetadataSet metadata = mexClient.GetMetadata();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                errorMessage = ex.Message + " : " + uri.AbsoluteUri;
+            }
+
+            return false;
         }
     }
 }

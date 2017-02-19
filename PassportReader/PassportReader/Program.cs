@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Configuration;
 using Neurotec.Licensing;
+using System.Threading;
 
 namespace PassportReaderNS
 {
@@ -24,14 +25,25 @@ namespace PassportReaderNS
 
             try
             {
-                foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                string str = typeof(Program).AssemblyQualifiedName;
+                using (Mutex mutex = new Mutex(false, @"Global\" + str))
                 {
-                    NLicense.ObtainComponents("/local", "5000", component);
-                }
+                    if (!mutex.WaitOne(0, false))
+                    {
+                        MessageBox.Show("Passport reader already running");
+                        return;
+                    }
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
+                    foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        NLicense.ObtainComponents("/local", "5000", component);
+                    }
+
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+
+                    Application.Run(new Form1());
+                }
             }
             catch (Exception ex)
             {
