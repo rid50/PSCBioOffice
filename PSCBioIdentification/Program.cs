@@ -58,7 +58,10 @@ namespace PSCBioIdentification
 
                     foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        NLicense.ObtainComponents("/local", "5000", component);
+                        if (!NLicense.IsComponentActivated(component))
+                        {
+                            NLicense.ObtainComponents("/local", "5000", component);
+                        }
                     }
 
                     Application.EnableVisualStyles();

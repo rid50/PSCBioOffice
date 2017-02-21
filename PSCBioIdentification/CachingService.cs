@@ -132,7 +132,7 @@ namespace PSCBioIdentification
             startProgressBar();
             manageCacheButton.Tag = "off";
             EnableControls(false);
-            manageCacheButton.Text = "Cancel";
+            //manageCacheButton.Text = "Cancel";
 
             backgroundWorkerCachingService.RunWorkerAsync(_serviceClient);
 

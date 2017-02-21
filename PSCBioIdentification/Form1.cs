@@ -549,7 +549,7 @@ namespace PSCBioIdentification
             {
                 //fillAppFabricCache.Enabled = enable;
                 //if (enable && (string)manageCacheButton.Tag != "off")
-                if ((string)manageCacheButton.Tag != "off")
+                //if ((string)manageCacheButton.Tag != "off")
                     manageCacheButton.Enabled = enable;
 
                 buttonRequest.Enabled = enable;
@@ -973,7 +973,7 @@ namespace PSCBioIdentification
                 //subjectFinger.PropertyChanged += OnAttributesPropertyChanged;
                 //fingerView2.Finger = subjectFinger;
 
-                _biometricClient.FingersTemplateSize = NTemplateSize.Large;
+                _biometricClient.FingersTemplateSize = NTemplateSize.Small;
                 //_biometricClient.FingersReturnProcessedImage = true;
 
                 AsyncCallback callback = new AsyncCallback(OnImage);
