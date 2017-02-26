@@ -15,7 +15,7 @@ namespace BiometricsTest
         [STAThread]
         static void Main()
         {
-            const string Components = "Biometrics.FingerExtractionFast,Images.WSQ";
+            const string Components = "Biometrics.FingerExtractionFast,Biometrics.FingerMatchingFast,Images.WSQ";
             try
             {
                 foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -25,6 +25,8 @@ namespace BiometricsTest
                         if (!NLicense.ObtainComponents("/local", "5000", component))
                             if (component.Equals("Biometrics.FingerExtractionFast"))
                                 NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerExtraction");
+                            else if (component.Equals("Biometrics.FingerMatchingFast"))
+                                NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerMatching");
                     }
                 }
 

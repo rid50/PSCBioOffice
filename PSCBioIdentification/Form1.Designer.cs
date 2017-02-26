@@ -32,6 +32,9 @@
             this.nfViewSplitContainer = new System.Windows.Forms.SplitContainer();
             this.fingerView1 = new Neurotec.Biometrics.Gui.NFingerView();
             this.fingerView2 = new Neurotec.Biometrics.Gui.NFingerView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.radioButtonFirstMatch = new System.Windows.Forms.RadioButton();
+            this.radioButtonAllOccurrences = new System.Windows.Forms.RadioButton();
             this.gbMainLog = new System.Windows.Forms.GroupBox();
             this.lblWaitingForImg = new System.Windows.Forms.Label();
             this.rtbMain = new System.Windows.Forms.RichTextBox();
@@ -130,8 +133,6 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
             this.trackBarLabel = new System.Windows.Forms.Label();
-            this.radioButtonFirstMatch = new System.Windows.Forms.RadioButton();
-            this.radioButtonAllOccurrences = new System.Windows.Forms.RadioButton();
             this.pictureBoxRed = new PSCBioIdentification.MyPictureBox();
             this.pictureBoxGreen = new PSCBioIdentification.MyPictureBox();
             this.fpPictureBox9 = new PSCBioIdentification.MyPictureBox();
@@ -148,6 +149,7 @@
             this.nfViewSplitContainer.Panel1.SuspendLayout();
             this.nfViewSplitContainer.Panel2.SuspendLayout();
             this.nfViewSplitContainer.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.gbMainLog.SuspendLayout();
             this.gbResults.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -231,6 +233,27 @@
             this.fingerView2.TreeMinutiaNumberFont = new System.Drawing.Font("Arial", 10F);
             this.fingerView2.TreeWidth = 2D;
             this.fingerView2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FingerViewMouseClick);
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.radioButtonFirstMatch);
+            this.panel4.Controls.Add(this.radioButtonAllOccurrences);
+            resources.ApplyResources(this.panel4, "panel4");
+            this.panel4.Name = "panel4";
+            // 
+            // radioButtonFirstMatch
+            // 
+            resources.ApplyResources(this.radioButtonFirstMatch, "radioButtonFirstMatch");
+            this.radioButtonFirstMatch.Checked = true;
+            this.radioButtonFirstMatch.Name = "radioButtonFirstMatch";
+            this.radioButtonFirstMatch.TabStop = true;
+            this.radioButtonFirstMatch.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAllOccurrences
+            // 
+            resources.ApplyResources(this.radioButtonAllOccurrences, "radioButtonAllOccurrences");
+            this.radioButtonAllOccurrences.Name = "radioButtonAllOccurrences";
+            this.radioButtonAllOccurrences.UseVisualStyleBackColor = true;
             // 
             // gbMainLog
             // 
@@ -329,8 +352,7 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.radioButtonAllOccurrences);
-            this.panel2.Controls.Add(this.radioButtonFirstMatch);
+            this.panel2.Controls.Add(this.panel4);
             this.panel2.Controls.Add(this.lblLeft);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.checkBox10);
@@ -955,20 +977,6 @@
             resources.ApplyResources(this.trackBarLabel, "trackBarLabel");
             this.trackBarLabel.Name = "trackBarLabel";
             // 
-            // radioButtonFirstMatch
-            // 
-            resources.ApplyResources(this.radioButtonFirstMatch, "radioButtonFirstMatch");
-            this.radioButtonFirstMatch.Checked = true;
-            this.radioButtonFirstMatch.Name = "radioButtonFirstMatch";
-            this.radioButtonFirstMatch.TabStop = true;
-            this.radioButtonFirstMatch.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonAllOccurrences
-            // 
-            resources.ApplyResources(this.radioButtonAllOccurrences, "radioButtonAllOccurrences");
-            this.radioButtonAllOccurrences.Name = "radioButtonAllOccurrences";
-            this.radioButtonAllOccurrences.UseVisualStyleBackColor = true;
-            // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Active = false;
@@ -1124,6 +1132,8 @@
             this.nfViewSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nfViewSplitContainer)).EndInit();
             this.nfViewSplitContainer.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.gbMainLog.ResumeLayout(false);
             this.gbMainLog.PerformLayout();
             this.gbResults.ResumeLayout(false);
@@ -1281,6 +1291,7 @@
         private System.Windows.Forms.Label trackBarLabel;
         private System.Windows.Forms.RadioButton radioButtonAllOccurrences;
         private System.Windows.Forms.RadioButton radioButtonFirstMatch;
+        private System.Windows.Forms.Panel panel4;
     }
 }
 

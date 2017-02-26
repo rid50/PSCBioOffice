@@ -23,6 +23,7 @@ namespace BiometricsTest
     {
         private static MemoryCache _cache = null;
         private NBiometricClient _biometricClient;
+        private NBiometricTask _enrollTask = null;
 
         public Form1()
         {
@@ -41,87 +42,155 @@ namespace BiometricsTest
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
+            button1.Enabled = false;
+            button3.Enabled = false;
 
-        }
+            //insertWSQ();
 
-        private void button4_Click(object sender, EventArgs e)
-        {
+            await Task.Run(() => identify());
+            //splitWSQ();
 
+            button1.Enabled = true;
+            button3.Enabled = true;
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
-            button2.Enabled = false;
             button3.Enabled = false;
 
             //insertWSQ();
 
-            await Task.Run(() => splitWSQ());
-            //splitWSQ();
+            await Task.Run(() => FillCache());
 
             button1.Enabled = true;
-            button2.Enabled = true;
             button3.Enabled = true;
 
         }
 
-        String connectionString2 = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\psc\PSCBioOffice\BiometricsTest\Database1.mdf;Integrated Security=True";
-        enum FingerListEnum { li, lm, lr, ll, ri, rm, rr, rl, lt, rt }
+        //enum FingerListEnum { li, lm, lr, ll, ri, rm, rr, rl, lt, rt }
 
-        private void insertWSQ()
+        private void identify()
         {
+            clearLog();
 
-            String connectionString = @"Server = (local); Database = MCCS_FP; Trusted_Connection = no; User ID = sa; Password = psc; Connection Timeout = 0; Pooling = true; Min Pool Size = 1;";
+            _biometricClient = new NBiometricClient { BiometricTypes = NBiometricType.Finger };
+            _biometricClient.FingersFastExtraction = false;
+            _biometricClient.FingersTemplateSize = NTemplateSize.Small;
+            _biometricClient.FingersQualityThreshold = 48;
+            _biometricClient.MatchingThreshold = 60;
+            _biometricClient.FingersMatchingSpeed = NMatchingSpeed.High;
+            _biometricClient.MatchingFirstResultOnly = false;
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlConnection conn2 = new SqlConnection(connectionString2))
+            _biometricClient.Initialize();
+
+            _enrollTask = _biometricClient.CreateTask(NBiometricOperations.Enroll, null);
+
+            var fingerList = new List<NFPosition>();
+            var sb = new StringBuilder();
+
+            NSubject probeSubject = NSubject.FromFile(@"LeftIndexMiddle.template");
+
+            for (int i = 0; i < probeSubject.Fingers.Count; i++)
             {
-                conn.Open();
-                conn2.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = conn;
-                SqlCommand cmd2 = new SqlCommand();
-                cmd2.Connection = conn2;
-
-                int from = 0;
-                int count = 10;
-                byte[] wsq = new byte[0];
-                //int id = 0;
-
-                cmd2.CommandText = "DELETE FROM Egy_T_FingerPrint";
-                cmd2.ExecuteNonQuery();
-
-                cmd.CommandText = String.Format("SELECT AppWsq FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", from, count);
-                //cmd.CommandText = String.Format("SELECT AppID, AppWsq FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", from, count);
-                cmd2.CommandText = "INSERT INTO Egy_T_FingerPrint(AppWsq) VALUES (@wsq)";
-
-                //cmd2.Parameters.Add("@id", SqlDbType.Int);
-                cmd2.Parameters.Add("@wsq", SqlDbType.Image);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                if (probeSubject.Fingers[i].Status == NBiometricStatus.Ok)
                 {
-                    while (reader.Read())
+                    if (sb.Length == 0)
+                        sb.Append(string.Format("Templates extracted: \n"));
+
+                    if (probeSubject.Fingers[i].Objects[0].Template != null)
                     {
-                        if (!reader.IsDBNull(0))
-                        {
-                            wsq = (byte[])reader["AppWsq"];
-
-                            cmd2.Parameters["@wsq"].Value = wsq;
-
-                            cmd2.ExecuteNonQuery();
-                        }
+                        fingerList.Add(probeSubject.Fingers[i].Position);
+                        sb.Append(string.Format("{0}: {1}. Size: {2}\n", fingerList[0].ToString(),
+                                            string.Format("Quality: {0}", probeSubject.Fingers[i].Objects[0].Quality), probeSubject.Fingers[i].Objects[0].Template.GetSize()));
                     }
                 }
             }
+
+            this.Invoke((Action<string>)((txt) =>
+            {
+                log(txt);
+            }), sb.ToString());
+
+
+            foreach (KeyValuePair<string, object> item in _cache.Select(x => new KeyValuePair<string, object>(x.Key, x.Value)))
+            {
+                var template = new NFTemplate();
+
+                foreach (byte[] bt in item.Value as byte[][])
+                {
+                    if (bt != null && bt.Length != 0)
+                    {
+                        foreach (NFPosition pos in fingerList)
+                        {
+                            var record = new NFRecord(bt);
+                            if (record.Position == pos)
+                            {
+                                template.Records.Add((NFRecord)record.Clone());
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (template == null)
+                    throw new Exception("Gallery template is null");
+
+                using (var gallerySubject = NSubject.FromMemory(template.Save().ToArray()))
+                {
+                    if (gallerySubject == null)
+                        throw new Exception("Gallery template is null");
+
+                    gallerySubject.Id = string.Format("GallerySubject_{0}", item.Key);
+                    _enrollTask.Subjects.Add(gallerySubject);
+                }
+
+            }
+
+            var list = new List<Tuple<string, int>>();
+            string retcode = string.Empty;
+
+            NBiometricStatus status = NBiometricStatus.None;
+
+            _biometricClient.PerformTask(_enrollTask);
+            status = _enrollTask.Status;
+            if (status != NBiometricStatus.Ok)
+            {
+                log(string.Format("Enrollment was unsuccessful. Status: {0}.", status));
+                if (_enrollTask.Error != null) throw _enrollTask.Error;
+            }
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            status = _biometricClient.Identify(probeSubject);
+
+            log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
+
+            if (status == NBiometricStatus.Ok)
+            {
+                foreach (var matchingResult in probeSubject.MatchingResults)
+                {
+                    int i = matchingResult.Id.IndexOf('_');
+                    //list.Add(new Tuple<string, int>(matchingResult.Id, matchingResult.Score));
+                    log(string.Format(" ----- Matching Id: {0}, Matching Score: {1}", matchingResult.Id.Substring(i + 1), matchingResult.Score));
+                }
+            }
+
+            _enrollTask.Dispose();
+            _enrollTask = null;
+            _biometricClient.Cancel();
         }
 
-        private void splitWSQ()
+
+        String connectionString2 = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\psc\PSCBioOffice\BiometricsTest\Database1.mdf;Integrated Security=True";
+
+        private void FillCache()
         {
-            int chunk = 0;
-            if (!Int32.TryParse(textBoxChunk.Text, out chunk))
+            int numOfChunks = 0;
+            if (!Int32.TryParse(textBoxChunk.Text, out numOfChunks))
             {
                 log("Number of chunks is invalid");
                 return;
@@ -173,7 +242,7 @@ namespace BiometricsTest
             Stopwatch sw = new Stopwatch();
             sw.Start();
             int ii = 0;
-            for (int k = 0; k < chunk; k++)
+            for (int k = 0; k < numOfChunks; k++)
             {
                 foreach (KeyValuePair<int, byte[]> entry in dict)
                 {
@@ -348,8 +417,55 @@ namespace BiometricsTest
             }
 
             log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
+            _biometricClient.Cancel();
         }
 
+        private void insertWSQ()
+        {
+
+            String connectionString = @"Server = (local); Database = MCCS_FP; Trusted_Connection = no; User ID = sa; Password = psc; Connection Timeout = 0; Pooling = true; Min Pool Size = 1;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn2 = new SqlConnection(connectionString2))
+            {
+                conn.Open();
+                conn2.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+                SqlCommand cmd2 = new SqlCommand();
+                cmd2.Connection = conn2;
+
+                int from = 0;
+                int count = 10;
+                byte[] wsq = new byte[0];
+                //int id = 0;
+
+                cmd2.CommandText = "DELETE FROM Egy_T_FingerPrint";
+                cmd2.ExecuteNonQuery();
+
+                cmd.CommandText = String.Format("SELECT AppWsq FROM Egy_T_FingerPrint WITH (NOLOCK) WHERE datalength(AppWsq) IS NOT NULL ORDER BY AppID ASC OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", from, count);
+                //cmd.CommandText = String.Format("SELECT AppID, AppWsq FROM Egy_T_FingerPrint WITH (NOLOCK) ORDER BY AppID ASC OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", from, count);
+                cmd2.CommandText = "INSERT INTO Egy_T_FingerPrint(AppWsq) VALUES (@wsq)";
+
+                //cmd2.Parameters.Add("@id", SqlDbType.Int);
+                cmd2.Parameters.Add("@wsq", SqlDbType.Image);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                        {
+                            wsq = (byte[])reader["AppWsq"];
+
+                            cmd2.Parameters["@wsq"].Value = wsq;
+
+                            cmd2.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
 
         private delegate void LogHandler(string text);
 
@@ -374,6 +490,5 @@ namespace BiometricsTest
                 richTextBox.Clear();
             }));
         }
-
     }
 }

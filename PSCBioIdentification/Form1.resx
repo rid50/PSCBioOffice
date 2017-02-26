@@ -225,6 +225,87 @@
   <data name="&gt;&gt;nfViewSplitContainer.ZOrder" xml:space="preserve">
     <value>32</value>
   </data>
+  <data name="radioButtonFirstMatch.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioButtonFirstMatch.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioButtonFirstMatch.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="radioButtonFirstMatch.Size" type="System.Drawing.Size, System.Drawing">
+    <value>77, 17</value>
+  </data>
+  <data name="radioButtonFirstMatch.TabIndex" type="System.Int32, mscorlib">
+    <value>58</value>
+  </data>
+  <data name="radioButtonFirstMatch.Text" xml:space="preserve">
+    <value>First Match</value>
+  </data>
+  <data name="&gt;&gt;radioButtonFirstMatch.Name" xml:space="preserve">
+    <value>radioButtonFirstMatch</value>
+  </data>
+  <data name="&gt;&gt;radioButtonFirstMatch.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioButtonFirstMatch.Parent" xml:space="preserve">
+    <value>panel4</value>
+  </data>
+  <data name="&gt;&gt;radioButtonFirstMatch.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="radioButtonAllOccurrences.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioButtonAllOccurrences.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioButtonAllOccurrences.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 26</value>
+  </data>
+  <data name="radioButtonAllOccurrences.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 17</value>
+  </data>
+  <data name="radioButtonAllOccurrences.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="radioButtonAllOccurrences.Text" xml:space="preserve">
+    <value>All Occurrences</value>
+  </data>
+  <data name="&gt;&gt;radioButtonAllOccurrences.Name" xml:space="preserve">
+    <value>radioButtonAllOccurrences</value>
+  </data>
+  <data name="&gt;&gt;radioButtonAllOccurrences.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;radioButtonAllOccurrences.Parent" xml:space="preserve">
+    <value>panel4</value>
+  </data>
+  <data name="&gt;&gt;radioButtonAllOccurrences.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 129</value>
+  </data>
+  <data name="panel4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 51</value>
+  </data>
+  <data name="panel4.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panel4.Name" xml:space="preserve">
+    <value>panel4</value>
+  </data>
+  <data name="&gt;&gt;panel4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel4.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel4.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="gbMainLog.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom</value>
   </data>
@@ -522,66 +603,6 @@
   <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="radioButtonAllOccurrences.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioButtonAllOccurrences.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioButtonAllOccurrences.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 155</value>
-  </data>
-  <data name="radioButtonAllOccurrences.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 17</value>
-  </data>
-  <data name="radioButtonAllOccurrences.TabIndex" type="System.Int32, mscorlib">
-    <value>59</value>
-  </data>
-  <data name="radioButtonAllOccurrences.Text" xml:space="preserve">
-    <value>All Occurrences</value>
-  </data>
-  <data name="&gt;&gt;radioButtonAllOccurrences.Name" xml:space="preserve">
-    <value>radioButtonAllOccurrences</value>
-  </data>
-  <data name="&gt;&gt;radioButtonAllOccurrences.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;radioButtonAllOccurrences.Parent" xml:space="preserve">
-    <value>panel2</value>
-  </data>
-  <data name="&gt;&gt;radioButtonAllOccurrences.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="radioButtonFirstMatch.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioButtonFirstMatch.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioButtonFirstMatch.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 132</value>
-  </data>
-  <data name="radioButtonFirstMatch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>77, 17</value>
-  </data>
-  <data name="radioButtonFirstMatch.TabIndex" type="System.Int32, mscorlib">
-    <value>58</value>
-  </data>
-  <data name="radioButtonFirstMatch.Text" xml:space="preserve">
-    <value>First Match</value>
-  </data>
-  <data name="&gt;&gt;radioButtonFirstMatch.Name" xml:space="preserve">
-    <value>radioButtonFirstMatch</value>
-  </data>
-  <data name="&gt;&gt;radioButtonFirstMatch.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;radioButtonFirstMatch.Parent" xml:space="preserve">
-    <value>panel2</value>
-  </data>
-  <data name="&gt;&gt;radioButtonFirstMatch.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="lblLeft.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -610,7 +631,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;lblLeft.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -640,7 +661,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="checkBox10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -667,7 +688,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox10.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="radioButton4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -694,7 +715,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton4.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="checkBox9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -721,7 +742,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox9.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -751,7 +772,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="checkBox8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -778,7 +799,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox8.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="radioButton3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -805,7 +826,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton3.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>8</value>
   </data>
   <data name="checkBox7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -832,7 +853,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox7.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>9</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -862,7 +883,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="checkBox6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -889,7 +910,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox6.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="checkBox5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -916,7 +937,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox5.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>12</value>
   </data>
   <data name="radioButton2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -943,7 +964,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton2.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>13</value>
   </data>
   <data name="checkBox1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -970,7 +991,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox1.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>14</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1000,7 +1021,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>15</value>
   </data>
   <data name="checkBox2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1027,7 +1048,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox2.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>16</value>
   </data>
   <data name="radioButton1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1054,7 +1075,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton1.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>17</value>
   </data>
   <data name="checkBox3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1081,7 +1102,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox3.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>18</value>
   </data>
   <data name="radioButton7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1108,7 +1129,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton7.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>19</value>
   </data>
   <data name="checkBox4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1135,7 +1156,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;checkBox4.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>20</value>
   </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1165,7 +1186,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>21</value>
   </data>
   <data name="radioButton5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1192,7 +1213,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton5.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>22</value>
   </data>
   <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1222,7 +1243,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>23</value>
   </data>
   <data name="radioButton6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1249,7 +1270,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton6.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>24</value>
   </data>
   <data name="label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1279,7 +1300,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>25</value>
   </data>
   <data name="label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1309,7 +1330,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>26</value>
   </data>
   <data name="lblThumbs.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1339,7 +1360,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;lblThumbs.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>27</value>
   </data>
   <data name="radioButton8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1366,7 +1387,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton8.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>28</value>
   </data>
   <data name="radioButton10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1393,7 +1414,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton10.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>29</value>
   </data>
   <data name="lblRight.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1423,7 +1444,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;lblRight.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>30</value>
   </data>
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1453,7 +1474,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>32</value>
+    <value>31</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1483,7 +1504,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>33</value>
+    <value>32</value>
   </data>
   <data name="radioButton9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1510,7 +1531,7 @@
     <value>panel2</value>
   </data>
   <data name="&gt;&gt;radioButton9.ZOrder" xml:space="preserve">
-    <value>34</value>
+    <value>33</value>
   </data>
   <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
     <value>154, 19</value>
@@ -3654,6 +3675,9 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>912, 556</value>

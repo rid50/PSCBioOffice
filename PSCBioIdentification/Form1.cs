@@ -195,8 +195,6 @@ namespace PSCBioIdentification
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
-
             backgroundWorkerProgressBar = new BackgroundWorker();
             backgroundWorkerProgressBar.WorkerReportsProgress = true;
             backgroundWorkerProgressBar.DoWork += new DoWorkEventHandler(backgroundWorkerProgressBar_DoWork);
@@ -222,36 +220,17 @@ namespace PSCBioIdentification
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             trackBarLabel.Text = "" + trackBar1.Value;
 
-            //Data.NFExtractor = new NFExtractor();
-            //Data.UpdateNfe();
-            //Data.UpdateNfeSettings();
-
-            //Data.NMatcher = new NMatcher();
-            //Data.UpdateNM();
-            //Data.UpdateNMSettings();
-
-            //Data.Database = new Database();
+            ResourceManager rm = new ResourceManager("PSCBioIdentification.Form1", this.GetType().Assembly);
 
             _biometricClient = new NBiometricClient { UseDeviceManager = true, BiometricTypes = NBiometricType.Finger };
             _biometricClient.Initialize();
-            //_biometricClient.FingersQualityThreshold = 48;
-            //_biometricClient.FingerScanner.CapturePreview += OnFingerPropertyChanged;
-
-            //_biometricClient.FingersReturnProcessedImage = true;
 
             _deviceManager = new NDeviceManager { DeviceTypes = NDeviceType.FingerScanner, AutoPlug = true };
-            //_deviceManager = _biometricClient.DeviceManager;
             _deviceManager.Initialize();
             _deviceManager.Devices.CollectionChanged += deviceManager_CollectionChanged;
 
-            //set type of the device used
-            //_deviceManager.DeviceTypes = NDeviceType.FingerScanner;
-
             UpdateScannerList(false);
 
-            //var client = new CacheMatchingService.MatchingServiceClient();
-
-            //var conf = new MyConfigurationSettings();
             MyConfigurationSettings conf;
 
             try
@@ -268,16 +247,11 @@ namespace PSCBioIdentification
                 EnableControls(false);
                 manageCacheButton.Enabled = false;
                 return;
-                //MessageBox.Show("Error connecting to endpoint server");
-                //Application.Exit();
             }
 
             _callbackFromDualHttpBindingService = new CallbackFromDualHttpBindingService { TotalRecords = 0, RunningSum = 0 };
             _callbackFromDualHttpBindingService.MyEvent += MyEvent;
             _instanceContext = new InstanceContext(_callbackFromDualHttpBindingService);
-
-            //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-            //InstanceContext context = new InstanceContext(callback);
 
             dynamic client = null;
             string errorMessage;
@@ -286,10 +260,8 @@ namespace PSCBioIdentification
             {
                 client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
 
-                //if (!IsServiceAvailable(client.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
                 if (!IsServiceAvailable(client, out errorMessage))
                 {
-                    //ShowErrorMessage(errorMessage + " : " + client.Endpoint.Address.Uri.AbsoluteUri);
                     ShowErrorMessage(errorMessage);
                     client.Close();
                     return;
@@ -360,8 +332,6 @@ namespace PSCBioIdentification
 */
             if (fingerList == null)
                 fingerList = new ArrayList();
-            //else
-              //  labelCacheValidationTime.Text += string.Format(" {0:MMM dd} {0:t}", client.getExpirationTime());
 
             Label lab; CheckBox cb;
             for (int i = 1; i < 11; i++)
@@ -387,26 +357,6 @@ namespace PSCBioIdentification
                 else
                     cb.Enabled = false;
             }
-
-            //string selectedScannerModules = "Futronic";
-            //scannerMan = new FPScannerMan(selectedScannerModules, this);
-            ////scannerMan = new NDeviceManager(selectedScannerModules, this);
-            //FPScanner scanner;
-            //if (scannerMan.Scanners.Count != 0)
-            //{
-            //    scanner = scannerMan.Scanners[0];
-            //    scanner.FingerPlaced += new EventHandler(scanner_FingerPlaced);
-            //    scanner.FingerRemoved += new EventHandler(scanner_FingerRemoved);
-            //    scanner.ImageScanned += new FPScannerImageScannedEventHandler(scanner_ImageScanned);
-            //}
-            //else
-            //{
-            //    //ResourceManager rm = new ResourceManager("rmc", System.Reflection.Assembly.GetExecutingAssembly());
-            //    string text = rm.GetString("msgNoScannersAttached"); // "No scanners attached"
-            //    //string text = Resources.ResourceManager.GetString("msgNoScannersAttached"); // "No scanners attached"
-            //    LogLine(text, true);
-            //    ShowErrorMessage(text);
-            //}
 
             _toolTip = new System.Windows.Forms.ToolTip();
             _toolTip.AutoPopDelay = 5000;
@@ -442,36 +392,13 @@ namespace PSCBioIdentification
 
             AcceptButton = buttonRequest;
  
-            //ProgramMode mode = (ProgramMode)Settings.Default.ProgramMode;
-            //ProgramMode mode = ProgramMode.Identify;
-
             radioButtonVerify.Checked = true;
-            //radioButtonIdentify.Checked = true;
             EnableSemaphorControls(false);
             EnableControls(true);
 
-            //setMode(mode);
-            //setModeRadioButtons(mode);
-
-            //personId.Focus();
-
-            //personId.Text = "123"; 20010235
             personId.Text = "210067490";
-            //personId.Text = "20005140";
+            personId.Text = "20005140";
             personId.Text = "20000004";
-
-            //personId.Text = "20005232";
-            //personId.Text = "20002346";            
-
-            //buttonRequest.Focus();
-            //buttonScan.Enabled = false;
-            //if (!initFingerMatcher())
-            //    ShowErrorMessage("Lookup service: Error connecting to database");
-
-
-            //var cl = new MemoryCache.MemoryCacheServiceClient();
-            //var fingersCollection = cl.GetQualityFingerCollection("210067490");
-            //var fingersCollection = cl.GetRawFingerCollection("210067490");
         }
 
         private void trackBar1_Scroll(object sender, System.EventArgs e)
@@ -718,7 +645,17 @@ namespace PSCBioIdentification
             Boolean fileTemplate = false;
 
             if (ConfigurationManager.AppSettings["fingerFrom"] == "file")
+            {
                 fileTemplate = true;
+                for (int i = 0; i < 10; i++)
+                {
+                    CheckBox bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                    bb.Checked = false;
+                }
+
+                checkBox1.Checked = true;
+                checkBox2.Checked = true;
+            }
 
             if (_isCapturing)
                 return;
@@ -736,16 +673,20 @@ namespace PSCBioIdentification
                 short count = 0;
                 //if (radioButtonIdentify.Checked)
                 //{
-                //    CheckBox bb;
-                //    for (int i = 0; i < 10; i++)
-                //    {
-                //        bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
-                //        if (bb.Checked)
-                //            count++;
-                //    }
+                CheckBox bb;
+                for (int i = 0; i < 10; i++)
+                {
+                    bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                    if (bb.Checked)
+                        count++;
+                }
 
-                //    if (count == 0)
-                //        return;
+                if (count == 0)
+                {
+                    ShowErrorMessage("No fingers selected");
+                    return;
+                }
+
                 //}
                 NFPosition nFPosition = 0;
 
@@ -1506,6 +1447,12 @@ namespace PSCBioIdentification
             }
 #pragma warning restore 0162
 
+            //if (segmentsCount != fingerList.Count)
+            //{
+            //    ShowErrorMessage("Not allowed combination of fingers");
+            //    return;
+            //}
+
             if (segmentsCount > 0 && _subject2.Fingers[i].Status == NBiometricStatus.Ok)
             {
                 sb.Append(string.Format("Templates extracted: \n"));
@@ -2145,35 +2092,9 @@ namespace PSCBioIdentification
                 //ShowStatusMessage(str);
 
                 if (status == NBiometricStatus.Ok)
-                //if (status)
                 {
-                    // Get matching score
-                    //int score = _subject.MatchingResults[0].Score;
-                    //LogLine(string.Format("Score of matched templates: {0}", score), true);
-                    //if (_subject.MatchingResults.Count > 0)
-                    //{
-                    //    //fingerView1.ShownImage = ShownImage.Original;
-
-                    //    var matedMinutiae = _subject.MatchingResults[0].MatchingDetails.Fingers[0].GetMatedMinutiae();
-
-                    //    fingerView1.MatedMinutiaIndex = 0;
-                    //    fingerView1.MatedMinutiae = matedMinutiae;
-
-                    //    fingerView1.MatedMinutiaIndex = 1;
-                    //    fingerView1.MatedMinutiae = matedMinutiae;
-                    //}
-
-                    //fingerView1.PrepareTree();
-                    //fingerView2.Tree = fingerView1.Tree;
-
                     pictureBoxCheckMark.Image = Properties.Resources.checkmark;
-
-                    //startProgressBar();
                     startDataServiceProcess();  // to get a picture
-
-                    //Thread.Sleep(1000);
-                    //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
-
                 }
                 else
                 {
@@ -2188,229 +2109,14 @@ namespace PSCBioIdentification
 
 
             }
-
-            //NMMatchDetails matchDetails;
-            //try
-            //{
-            //    score = Data.NMatcher.Verify(Template.Save(), this.enrolledTemplate.Save(), out matchDetails);
-            //}
-            //catch (Exception ex)
-            //{
-            //    string text = string.Format("Error verifying templates: {0}", ex.Message);
-            //    ShowErrorMessage(text);
-
-            //    LogLine(string.Format("Error verifying templates: {0}", ex.Message), true);
-
-            //    pictureBox2.Image = Properties.Resources.redcross;
-
-            //    return;
-            //}
-
-            //sw.Stop();
-
-            //string str = string.Format("Verification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
-
-            //LogLine(str, true);
-
-            //ShowStatusMessage(str);
-
-            //if (score > 0)
-            //    pictureBoxCheckMark.Image = Properties.Resources.checkmark;
-            //else
-            //    pictureBoxCheckMark.Image = Properties.Resources.redcross;
-
-            //if (score > 0)
-            //{
-            //    startProgressBar();
-            //    startDataServiceProcess();  // to get a picture
-            //}
-
-            //Thread.Sleep(1000);
-            //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
         }
 
-        //class Record
-        //{
-        //    public UInt32 size;
-        //    public byte[] template;
-        //    //public String errorMessage;
-        //    //public String[] errorMessage = new String[1];
-        //    public System.Text.StringBuilder errorMessage;
-
-        //}
-
-        //private void doIdentify(NFRecord template)
-        //private void doIdentify(NSubject.FingerCollection probeFingerCollection)
         private void doIdentify(byte[] probeTemplate)
         {
-            //var pos = template.Position;
-            //var dc = template.DoubleCores;
-
-            //bool retcode = true;
-            //long retcode = match();
-            //System.Runtime.Remoting.ObjRef objRef = template.CreateObjRef(template.GetType());
-            //UInt32 score = match(objRef);
-            //byte[] ar = template.Save();
-            //int i = ar.Length;
-            //UInt32 score = match(template.Save);
-            //UInt32 score = (UInt32)template.GetSize();
-
-           //IntPtr* ptr = template; }
-
-            //UInt32 score = match(template);
-
-            //Record record = new Record();
-            //record.size = (UInt32)template.GetSize();
-            //record.template = template.Save();
-            //record.errorMessage = new System.Text.StringBuilder(512);
-            
-            
-            //record.errorMessage.Append("kuku");
-            //record.errorMessage[0] = "kuku";
-            //record.errorMessage = "kuku";
-            //String errorMessage = "kuku";
-            //pt.x = 5;
-            //pt.y = 6;
-
-            //byte[] bt;
-            //this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
-
             startProgressBar();
             startMatchingServiceProcess(probeTemplate);
 
-            //UInt32 score = 0;
-            //unsafe
-            //{
-            //    fixed (UInt32* ptr = &record.size)
-            //    {
-            //        score = match(record.template, record.size, record.errorMessage, record.errorMessage.Capacity);
-            //    }
-            //}
-
-            //stopProgressBar();
-
-            ////NMMatchDetails matchDetails;
-            ////try
-            ////{
-            ////    //score = Data.NMatcher.Verify(Template.Save(), record.Template, out matchDetails);
-            ////    score = Data.NMatcher.Verify(Template.Save(), this.enrolledTemplate.Save(), out matchDetails);
-            ////}
-            ////catch (Exception ex)
-            ////{
-            ////    //MessageBox.Show(string.Format("Error verifying templates: {0}", ex.Message),
-            ////    //  Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
-            ////    string text = string.Format("Error verifying templates: {0}", ex.Message);
-            ////    ShowErrorMessage(text);
-
-            ////    LogLine(string.Format("Error verifying templates: {0}", ex.Message), true);
-
-            ////    pictureBox2.Image = Properties.Resources.redcross;
-
-            ////    return;
-            ////}
-
-            ////sw.Stop();
-
-            ////            string str = string.Format("Verification {0}. Time: {1}",
-            ////              score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score), Data.TimeToString(sw.Elapsed));
-            //string str = string.Format("Identification {0}", score == 0 ? "failed" : string.Format("succeeded. Score: {0}", score));
-
-            //LogLine(str, true);
-
-            ////ShowStatusMessage(str);
-
-            //personId.Text = "";
-            //if (score > 0)
-            //{
-            //    this.userId = (int)score;
-            //    personId.Text = score.ToString();
-            //    pictureBox2.Image = Properties.Resources.checkmark;
-            //} 
-            //else
-            //    pictureBox2.Image = Properties.Resources.redcross;
-
-            //if (score > 0)
-            //{
-            //    startProgressBar();
-            //    startDataServiceProcess();
-            //    /*
-            //                    DBHelper.DBUtil db = new DBHelper.DBUtil();
-            //                    byte[] buffer;
-
-            //                    MemoryStream ms = null;
-            //                    try
-            //                    {
-            //                        if (System.Configuration.ConfigurationManager.AppSettings["Enroll"] == "service")
-            //                            buffer = db.GetImageFromWebService(IMAGE_TYPE.picture, this.userId);
-            //                        else
-            //                            buffer = db.GetImage(IMAGE_TYPE.picture, this.userId);
-
-            //                        ms = new MemoryStream(buffer);
-            //                        pictureBox1.Image = Image.FromStream(ms);
-            //                    }
-            //                    catch (Exception ex)
-            //                    {
-            //                        ShowErrorMessage(ex.Message);
-            //                        return;
-            //                    }
-            //                    finally
-            //                    {
-            //                        ms.Dispose();
-            //                    }
-            //    */
-            //}
-            //else
-            //{
-            //    if (record.errorMessage.Length != 0)
-            //    {
-            //        //retcode = false;
-            //        MessageBox.Show(record.errorMessage.ToString());
-            //        //ShowErrorMessage(record.errorMessage.ToString());
-            //    }
-
-            //}
-
-            //return retcode;
-
         }
-
-        //private void backgroundWorkerDataService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    stopProgressBar();
-        //    Application.DoEvents();
-
-        //    //MessageBox.Show(toolStripProgressBar.Value.ToString());
-
-        //    if (e.Error != null)
-        //    {
-        //        LogLine(e.Error.Message, true); 
-        //        ShowErrorMessage(e.Error.Message);
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            if (mode == ProgramMode.Enroll)
-        //                processEnrolledData(e.Result as byte[]);
-        //            else if (mode == ProgramMode.Verify || mode == ProgramMode.Identify)
-        //            {
-        //                using (var ms = new MemoryStream(e.Result as byte[]))
-        //                {
-        //                    if (ms.Length != 0)
-        //                        pictureBox1.Image = Image.FromStream(ms);
-        //                    else
-        //                        pictureBox1.Image = null;
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            LogLine(ex.ToString(), true);
-        //            ShowErrorMessage(ex.ToString());
-        //        }
-        //    }
-        //}
 
         private delegate void LogHandler(string text, bool scroll, bool mainLog);
 
@@ -3901,7 +3607,8 @@ namespace PSCBioIdentification
                 }
             }
 
-            _deviceManager.Devices.CollectionChanged -= deviceManager_CollectionChanged;
+            if (_deviceManager != null)
+                _deviceManager.Devices.CollectionChanged -= deviceManager_CollectionChanged;
 
             //NDevice device = GetSelectedDevice();
 
