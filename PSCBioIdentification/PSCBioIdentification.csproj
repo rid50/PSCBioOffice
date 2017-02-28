@@ -334,12 +334,6 @@
     <None Include="Service References\MemoryCachePopulateService\PopulateCacheService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\MemoryCachePopulateService\PopulateCacheService4.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\UnmanagedMatchingService\MatchingService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.disco" />
     <None Include="Service References\ConfigurationService\ConfigurationService1.wsdl" />

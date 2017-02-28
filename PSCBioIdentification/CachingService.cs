@@ -131,7 +131,12 @@ namespace PSCBioIdentification
 
             startProgressBar();
             manageCacheButton.Tag = "off";
+
             EnableControls(false);
+
+            //buttonScan.Enabled = false;
+
+            //Application.DoEvents();
             //manageCacheButton.Text = "Cancel";
 
             backgroundWorkerCachingService.RunWorkerAsync(_serviceClient);
@@ -289,6 +294,7 @@ namespace PSCBioIdentification
 
             stopProgressBar();
             manageCacheButton.Tag = "on";
+            radioButtonIdentify.Tag = "on";
             EnableControls(true);
             manageCacheButton.Text = "Refresh Cache";
         }

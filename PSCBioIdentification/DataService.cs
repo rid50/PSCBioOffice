@@ -143,6 +143,9 @@ namespace PSCBioIdentification
                     stopProgressBar();
 
 //                    BeginInvoke(new MethodInvoker(delegate() { OnEnrollFromDataServiceCompleted(e.Result as byte[]); }));
+                } else
+                {
+                    EnableControls(true);
                 }
                 //int i = 0;
             }

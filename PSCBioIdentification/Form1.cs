@@ -146,45 +146,6 @@ namespace PSCBioIdentification
 
         private const string appName = "Public Services Company (Kuwait) - ";
 
-        //public NFRecord Template
-        //{
-        //    get
-        //    {
-        //        return template;
-        //    }
-        //}
-
- //       public NDevice Device
- //       {
- //           get
- //           {
- //               return _device;
- //           }
- //           set
- //           {
- //               if (_device != value)
- //               {
- ////                   if (_device != null && !IsValidDeviceType(_device.GetType())) throw new ArgumentException("Invalid NDevice type");
- ////                   CheckIsBusy();
- //                   _device = value;
- ////                   OnDeviceChanged();
- //               }
- //           }
- //       }
-        //public bool EnrollMode
-        //{
-        //    get
-        //    {
-        //        return enrollMode;
-        //    }
-        //    set
-        //    {
-        //        enrollMode = value;
-        //        //                OnEnrollModeChanged();
-        //    }
-        //}
-
-
         public Form1()
         {
             setCulture();
@@ -276,62 +237,45 @@ namespace PSCBioIdentification
             {
                 try
                 {
+                    //DateTime dt = client.getExpirationTime();
+
                     fingerList = client.getFingerList();
                     if (fingerList != null && fingerList.Count > 0)
                         labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
                 }
-                catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>)
+                catch (FaultException ex)
                 {
+
+                    ShowErrorMessage(ex.Message);
+
                     //labelCacheUnavailable.Text = fault.Detail;
                     fingerList = null;
                     //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
-                    labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
+                    //labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
                     //MessageBox.Show(string.Format("{0}", fault.Detail));
                     //EnableControls(false);
-                    manageCacheButton.Tag = "off";
-                    manageCacheButton.Enabled = false;
-                    radioButtonIdentify.Tag = "off";
-                    radioButtonIdentify.Enabled = false;
-                    buttonScan.Enabled = false;
-                } finally
+                    //manageCacheButton.Tag = "off";
+                    //manageCacheButton.Enabled = false;
+                    //radioButtonIdentify.Tag = "off";
+                    //radioButtonIdentify.Enabled = false;
+                    //buttonScan.Enabled = false;
+                }
+                finally
                 {
                     client.Close();
                 }
             }
 
+            radioButtonIdentify.Tag = "on";
 
-/*
-            if (ConfigurationManager.AppSettings["cachingProvider"] != "ODBCCache")
-            {
-                CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
-                InstanceContext context = new InstanceContext(callback);
-                var client = new AppFabricCachePopulateService.PopulateCacheServiceClient(context);
-
-                try
-                {
-                    fingerList = client.getFingerList();
-                    if (fingerList != null)
-                        labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
-                }
-                catch (FaultException<System.ComponentModel.DataAnnotations.ValidationException>)
-                {
-                    //labelCacheUnavailable.Text = fault.Detail;
-                    fingerList = null;
-                    //labelCacheUnavailable.Text = string.Format("Cache is unavailable ({0}), Identification mode is disabled", fault.Detail);
-                    labelCacheUnavailable.Text = "AppFabric caching service is not available. Launch PowerShell command \"get-cachehost\" to see if it is down";
-                    //MessageBox.Show(string.Format("{0}", fault.Detail));
-                    //EnableControls(false);
-                    manageCacheButton.Tag = "off";
-                    manageCacheButton.Enabled = false;
-                    radioButtonIdentify.Tag = "off";
-                    radioButtonIdentify.Enabled = false;
-                    buttonScan.Enabled = false;
-                    //               return;
-                }
-            }
-*/
             if (fingerList == null)
+            {
                 fingerList = new ArrayList();
+
+                radioButtonIdentify.Enabled = false;
+                buttonScan.Enabled = false;
+                radioButtonIdentify.Tag = "off";
+            }
 
             Label lab; CheckBox cb;
             for (int i = 1; i < 11; i++)
@@ -479,13 +423,27 @@ namespace PSCBioIdentification
                 //if ((string)manageCacheButton.Tag != "off")
                     manageCacheButton.Enabled = enable;
 
-                buttonRequest.Enabled = enable;
-                buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
-                groupBoxMode.Enabled = enable;
-                if ((string)radioButtonIdentify.Tag == "off")
+                //buttonRequest.Enabled = enable;
+                if (!radioButtonIdentify.Checked)
                 {
-                    radioButtonIdentify.Enabled = false;
-                    buttonScan.Enabled = false;
+                    buttonScan.Enabled = fingerView1.Finger != null;
+                    //buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
+                }
+
+                //buttonScan.Enabled = enable;
+                groupBoxMode.Enabled = enable;
+                if (radioButtonIdentify.Checked)
+                {
+                    if ((string)radioButtonIdentify.Tag == "off")
+                    {
+                        radioButtonIdentify.Enabled = false;
+                        buttonScan.Enabled = false;
+                    }
+                    else if ((string)radioButtonIdentify.Tag == "on")
+                    {
+                        radioButtonIdentify.Enabled = true;
+                        buttonScan.Enabled = true;
+                    }
                 }
 
                 panel2.Enabled = enable;
@@ -2217,8 +2175,8 @@ namespace PSCBioIdentification
                         buttonRequest.Show();
                         ShowRadioHideCheckButtons(true);
 
-                        LogLine("Enter Person ID:", true);
-                        ShowStatusMessage("Enter Person ID:");
+                        //LogLine("Enter Person ID:", true);
+                        //ShowStatusMessage("Enter Person ID:");
 
                         this.BeginInvoke(new MethodInvoker(delegate() { stopCapturing(); }));
 
@@ -3824,6 +3782,7 @@ namespace PSCBioIdentification
                 //}
 
                 manageCacheButton.Enabled = false;
+
                 Application.DoEvents();
                 //ShowStatusMessage("Terminating the request...");
             }

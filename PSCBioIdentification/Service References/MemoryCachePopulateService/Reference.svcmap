@@ -23,13 +23,11 @@
     <MetadataSource Address="http://localhost/MemoryCacheService/PopulateCacheService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="PopulateCacheService.xsd" MetadataType="Schema" ID="afb642a3-7e81-46b5-a9e6-70441514bb24" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd2" />
+    <MetadataFile FileName="PopulateCacheService.disco" MetadataType="Disco" ID="665aa7f2-5490-435d-a85d-a16dd5d631e8" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?disco" />
     <MetadataFile FileName="PopulateCacheService1.xsd" MetadataType="Schema" ID="0c6c6151-5149-4ded-99e9-f3d632085ce0" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd1" />
     <MetadataFile FileName="PopulateCacheService2.xsd" MetadataType="Schema" ID="3e5d614b-786c-41be-86db-f3f10983e683" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd0" />
-    <MetadataFile FileName="PopulateCacheService3.xsd" MetadataType="Schema" ID="69c14d76-a582-4929-9027-35a8ab0ef121" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd4" />
+    <MetadataFile FileName="PopulateCacheService.xsd" MetadataType="Schema" ID="afb642a3-7e81-46b5-a9e6-70441514bb24" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd2" />
     <MetadataFile FileName="PopulateCacheService.wsdl" MetadataType="Wsdl" ID="0d4bcfc3-df03-4fcc-85eb-702039fb02b8" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?wsdl" />
-    <MetadataFile FileName="PopulateCacheService.disco" MetadataType="Disco" ID="665aa7f2-5490-435d-a85d-a16dd5d631e8" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?disco" />
-    <MetadataFile FileName="PopulateCacheService4.xsd" MetadataType="Schema" ID="8767815a-d871-455f-80d8-e931418367b8" SourceId="1" SourceUrl="http://localhost/MemoryCacheService/PopulateCacheService.svc?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

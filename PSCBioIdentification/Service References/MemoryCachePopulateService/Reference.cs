@@ -17,24 +17,19 @@ namespace PSCBioIdentification.MemoryCachePopulateService {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IPopulateCacheService/Run")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
         void Run(System.Collections.ArrayList fingerList);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Run2", ReplyAction="http://tempuri.org/IPopulateCacheService/Run2Response")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
         void Run2(System.Collections.ArrayList fingerList);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/getFingerList", ReplyAction="http://tempuri.org/IPopulateCacheService/getFingerListResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException), Action="http://tempuri.org/IPopulateCacheService/getFingerListValidationExceptionFault", Name="ValidationException", Namespace="http://schemas.datacontract.org/2004/07/System.ComponentModel.DataAnnotations")]
+        [System.ServiceModel.FaultContractAttribute(typeof(string), Action="http://tempuri.org/IPopulateCacheService/getFingerListStringFault", Name="string", Namespace="http://schemas.microsoft.com/2003/10/Serialization/")]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Collections.ArrayList))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Exception))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.ComponentModel.DataAnnotations.ValidationException))]
         System.Collections.ArrayList getFingerList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/getExpirationTime", ReplyAction="http://tempuri.org/IPopulateCacheService/getExpirationTimeResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(string), Action="http://tempuri.org/IPopulateCacheService/getExpirationTimeStringFault", Name="string", Namespace="http://schemas.microsoft.com/2003/10/Serialization/")]
         System.DateTime getExpirationTime();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPopulateCacheService/Terminate", ReplyAction="http://tempuri.org/IPopulateCacheService/TerminateResponse")]

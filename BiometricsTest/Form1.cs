@@ -80,7 +80,7 @@ namespace BiometricsTest
             _biometricClient.FingersFastExtraction = false;
             _biometricClient.FingersTemplateSize = NTemplateSize.Small;
             _biometricClient.FingersQualityThreshold = 48;
-            _biometricClient.MatchingThreshold = 60;
+            _biometricClient.MatchingThreshold = trackBar1.Value;
             _biometricClient.FingersMatchingSpeed = NMatchingSpeed.High;
             _biometricClient.MatchingFirstResultOnly = false;
 
@@ -167,17 +167,23 @@ namespace BiometricsTest
 
             status = _biometricClient.Identify(probeSubject);
 
-            log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
-
             if (status == NBiometricStatus.Ok)
             {
-                foreach (var matchingResult in probeSubject.MatchingResults)
+                if (checkBox1.Checked)
                 {
-                    int i = matchingResult.Id.IndexOf('_');
-                    //list.Add(new Tuple<string, int>(matchingResult.Id, matchingResult.Score));
-                    log(string.Format(" ----- Matching Id: {0}, Matching Score: {1}", matchingResult.Id.Substring(i + 1), matchingResult.Score));
+                    foreach (var matchingResult in probeSubject.MatchingResults)
+                    {
+                        int i = matchingResult.Id.IndexOf('_');
+                        //list.Add(new Tuple<string, int>(matchingResult.Id, matchingResult.Score));
+                        log(string.Format(" ----- Matching Id: {0}, Matching Score: {1}", matchingResult.Id.Substring(i + 1), matchingResult.Score));
+                    }
                 }
+            } else
+            {
+                log(string.Format(" -- Matching has failed"));
             }
+
+            log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
 
             _enrollTask.Dispose();
             _enrollTask = null;
@@ -489,6 +495,18 @@ namespace BiometricsTest
             {
                 richTextBox.Clear();
             }));
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            trackBarLabel.Text = "" + trackBar1.Value;
+        }
+
+        private void trackBar1_Scroll(object sender, System.EventArgs e)
+        {
+            // Display the trackbar value in the label box.
+            trackBarLabel.Text = "" + trackBar1.Value;
         }
     }
 }
