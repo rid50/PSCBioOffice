@@ -47,10 +47,7 @@ namespace BiometricsTest
             button1.Enabled = false;
             button3.Enabled = false;
 
-            //insertWSQ();
-
             await Task.Run(() => identify());
-            //splitWSQ();
 
             button1.Enabled = true;
             button3.Enabled = true;
@@ -61,10 +58,9 @@ namespace BiometricsTest
             button1.Enabled = false;
             button3.Enabled = false;
 
-            //insertWSQ();
-
-            await Task.Run(() => FillCache());
-
+            //await Task.Run(() => fillCache());
+            await Task.Run(() => fillCacheByTemplates());
+            
             button1.Enabled = true;
             button3.Enabled = true;
 
@@ -74,6 +70,13 @@ namespace BiometricsTest
 
         private void identify()
         {
+
+            //if (InvokeRequired)
+            //{
+            //    BeginInvoke(new AsyncCallback(identify), result);
+            //}
+            //else
+//            {
             clearLog();
 
             _biometricClient = new NBiometricClient { BiometricTypes = NBiometricType.Finger };
@@ -178,7 +181,8 @@ namespace BiometricsTest
                         log(string.Format(" ----- Matching Id: {0}, Matching Score: {1}", matchingResult.Id.Substring(i + 1), matchingResult.Score));
                     }
                 }
-            } else
+            }
+            else
             {
                 log(string.Format(" -- Matching has failed"));
             }
@@ -188,12 +192,13 @@ namespace BiometricsTest
             _enrollTask.Dispose();
             _enrollTask = null;
             _biometricClient.Cancel();
+            //}
         }
 
 
         String connectionString2 = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\psc\PSCBioOffice\BiometricsTest\Database1.mdf;Integrated Security=True";
 
-        private void FillCache()
+        private void fillCache()
         {
             int numOfChunks = 0;
             if (!Int32.TryParse(textBoxChunk.Text, out numOfChunks))
@@ -424,6 +429,74 @@ namespace BiometricsTest
 
             log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
             _biometricClient.Cancel();
+        }
+
+        enum FingerListEnum { li, lm, lr, ll, ri, rm, rr, rl, lt, rt }
+
+        private void fillCacheByTemplates()
+        {
+            string fingerFields = "li,lm,lr,ll,ri,rm,rr,rl,lt,rt";
+            string[] fingerFieldsArray = fingerFields.Split(new char[] { ',' });
+
+            String connectionString = @"Server = (local); Database = MCCS_FP; Trusted_Connection = no; User ID = sa; Password = psc; Connection Timeout = 0; Pooling = true; Min Pool Size = 1;";
+
+            clearLog();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+
+                int id = 0;
+
+                cmd.CommandText = "SELECT " + fingerFields + " FROM Egy_T_FingerPrint";
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+
+                    while (reader.Read())
+                    {
+                        byte[][] buffer = new byte[10][];
+
+                        bool approved = false, confirmed = false;   // this two variables asure that no less than 2 finger templates will be saved in memry cache
+                        int i = 0;
+                        foreach (string finger in fingerFieldsArray)
+                        {
+                            FingerListEnum f = (FingerListEnum)Enum.Parse(typeof(FingerListEnum), finger);
+                            if (!reader.IsDBNull(i) && ((byte[])reader[finger]).Length > 1)
+                            {
+                                if (!approved)
+                                    approved = true;
+                                else if (approved && !confirmed)
+                                    confirmed = true;
+
+                                buffer[(int)f] = (byte[])reader[finger];
+                            }
+                            else
+                                buffer[(int)f] = new byte[0];
+
+                            i++;
+                        }
+
+                        //if (id.ToString() == "20005140")
+                        //{
+                        //    int k = 0;
+
+                        //}
+
+                        if (confirmed)
+                            _cache.Set((id++).ToString(), buffer, new DateTimeOffset(DateTime.Now).AddDays(1));
+
+                        if (id % 10000 == 0)
+                            log(id.ToString());
+                    }
+
+                    log(string.Format(" ----- Time elapsed: {0} sec", sw.Elapsed));
+                }
+            }
         }
 
         private void insertWSQ()

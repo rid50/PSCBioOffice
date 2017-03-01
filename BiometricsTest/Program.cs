@@ -18,21 +18,28 @@ namespace BiometricsTest
             const string Components = "Biometrics.FingerExtractionFast,Biometrics.FingerMatchingFast,Images.WSQ";
             try
             {
+                bool valid = false;
                 foreach (string component in Components.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (!NLicense.IsComponentActivated(component))
                     {
                         if (!NLicense.ObtainComponents("/local", "5000", component))
                             if (component.Equals("Biometrics.FingerExtractionFast"))
-                                NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerExtraction");
+                                valid = NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerExtraction");
                             else if (component.Equals("Biometrics.FingerMatchingFast"))
-                                NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerMatching");
+                                valid = NLicense.ObtainComponents("/local", "5000", "Biometrics.FingerMatching");
                     }
                 }
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
+                if (valid)
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new Form1());
+                }
+                else
+                    MessageBox.Show("Some licenses are missing");
+
             }
             catch (Exception ex)
             {

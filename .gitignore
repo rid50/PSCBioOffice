@@ -8,3 +8,4 @@ bin
 *.config
 *.cfg
 /dotNET
+/BiometricsTest/Database1_log.ldf
