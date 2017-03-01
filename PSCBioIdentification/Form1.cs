@@ -224,12 +224,26 @@ namespace PSCBioIdentification
                 if (!IsServiceAvailable(client, out errorMessage))
                 {
                     ShowErrorMessage(errorMessage);
-                    client.Close();
+                    if (client != null)
+                        client.Close();
+
                     return;
                 }
             }
             else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
                 client = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+
+
+            if (client == null  || (client != null && client.State == CommunicationState.Faulted))
+            {
+                ShowErrorMessage("PopulateCacheService communication faulted");
+                if (client != null)
+                    client.Close();
+
+                return;
+            }
+
+            radioButtonIdentify.Enabled = false;
 
             ArrayList fingerList = null;
 
@@ -266,24 +280,30 @@ namespace PSCBioIdentification
                 }
             }
 
-            radioButtonIdentify.Tag = "on";
+            //radioButtonIdentify.Tag = "on";
 
             if (fingerList == null)
             {
                 fingerList = new ArrayList();
 
-                radioButtonIdentify.Enabled = false;
-                buttonScan.Enabled = false;
-                radioButtonIdentify.Tag = "off";
+                //radioButtonIdentify.Enabled = false;
+                //buttonScan.Enabled = false;
+                //radioButtonIdentify.Tag = "off";
             }
 
-            Label lab; CheckBox cb;
+            Label lab; CheckBox cb; bool validCache = false;
             for (int i = 1; i < 11; i++)
             {
                 lab = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
                 cb = this.Controls.Find("checkBoxCache" + i.ToString(), true)[0] as CheckBox;
                 if (fingerList.IndexOf(lab.Text) != -1)
                 {
+                    if (!validCache)
+                    {
+                        validCache = true;
+                        radioButtonIdentify.Enabled = true;
+                    }
+
                     cb.Checked = true;
                     lab.BackColor = Color.Cyan;
                 }
@@ -421,34 +441,51 @@ namespace PSCBioIdentification
                 //fillAppFabricCache.Enabled = enable;
                 //if (enable && (string)manageCacheButton.Tag != "off")
                 //if ((string)manageCacheButton.Tag != "off")
-                    manageCacheButton.Enabled = enable;
+                manageCacheButton.Enabled = enable;
+                groupBoxMode.Enabled = enable;
 
+                buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
+                buttonScan.Enabled = false;
                 //buttonRequest.Enabled = enable;
-                if (!radioButtonIdentify.Checked)
+                if (!radioButtonIdentify.Checked && enable)
                 {
                     buttonScan.Enabled = fingerView1.Finger != null;
-                    //buttonScan.Enabled = fingerView1.Finger != null || radioButtonIdentify.Checked;
                 }
 
-                //buttonScan.Enabled = enable;
-                groupBoxMode.Enabled = enable;
-                if (radioButtonIdentify.Checked)
+                if (radioButtonIdentify.Checked && enable)
                 {
-                    if ((string)radioButtonIdentify.Tag == "off")
+                    int allowScan = 0;
+                    for (int i = 0; i < 10; i++)
                     {
-                        radioButtonIdentify.Enabled = false;
-                        buttonScan.Enabled = false;
+                        CheckBox bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                        if (bb.Checked)
+                        {
+                            if (++allowScan > 1)
+                                break;
+                        }
                     }
-                    else if ((string)radioButtonIdentify.Tag == "on")
-                    {
-                        radioButtonIdentify.Enabled = true;
-                        buttonScan.Enabled = true;
-                    }
+
+                    buttonScan.Enabled = allowScan > 1;
+
+                    //if ((string)radioButtonIdentify.Tag == "off")
+                    //{
+                    //    radioButtonIdentify.Enabled = false;
+                    //    buttonScan.Enabled = false;
+                    //}
+                    //else if ((string)radioButtonIdentify.Tag == "on")
+                    //{
+                    //    radioButtonIdentify.Enabled = true;
+                    //    buttonScan.Enabled = true;
+                    //}
                 }
+
+                buttonRequest.Enabled = enable;
+                radioButtonIdentify.Enabled = enable;
+                radioButtonVerify.Enabled = enable;
 
                 panel2.Enabled = enable;
                 //manageCacheButton.Text = IsCachingServiceRunning ? "Stop Cache Refreshing" : "Refresh Cache";
-                buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
+
                 //radioButtonVerify.Enabled = enable;
                 //radioButtonIdentify.Enabled = enable;
 
@@ -2221,13 +2258,15 @@ namespace PSCBioIdentification
 
                         personId.ReadOnly = true;
                         buttonRequest.Hide();
-                        buttonScan.Enabled = true;
+                        //buttonScan.Enabled = true;
                         ShowRadioHideCheckButtons(false);
 
                         //this.BeginInvoke(new MethodInvoker(delegate() { startCapturing(); }));
 
                         break;
                 }
+
+                EnableControls(true);
             }
         }
 
@@ -3153,6 +3192,11 @@ namespace PSCBioIdentification
                     if (bb.Checked)
                         count++;
                 }
+
+                if (count > 1)
+                    buttonScan.Enabled = true;
+                else
+                    buttonScan.Enabled = false;
 
                 var fScanner = ((NFingerScanner)GetSelectedDevice());
                 if (fScanner == null)

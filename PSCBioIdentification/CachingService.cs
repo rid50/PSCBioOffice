@@ -252,6 +252,8 @@ namespace PSCBioIdentification
         {
             _serviceClient = null;
 
+            radioButtonIdentify.Enabled = false;
+
             if (e.Error != null)
             {
                 LogLine("Caching service: " + e.Error.Message, true);
@@ -271,12 +273,21 @@ namespace PSCBioIdentification
                     }
                 }
 
-                Label lb;
+                Label lb; bool validCache = false; 
                 for (int i = 1; i < 11; i++)
                 {
                     lb = this.Controls.Find("labCache" + i.ToString(), true)[0] as Label;
                     if (fingerList.IndexOf(lb.Text) != -1)
+                    {
+                        if (!validCache)
+                        {
+                            validCache = true;
+                            radioButtonIdentify.Enabled = true;
+                            radioButtonIdentify.Checked = true;
+                        }
+
                         lb.BackColor = Color.Cyan;
+                    }
                     else
                         lb.BackColor = Color.Transparent;
                 }
@@ -294,7 +305,7 @@ namespace PSCBioIdentification
 
             stopProgressBar();
             manageCacheButton.Tag = "on";
-            radioButtonIdentify.Tag = "on";
+            //radioButtonIdentify.Tag = "on";
             EnableControls(true);
             manageCacheButton.Text = "Refresh Cache";
         }
