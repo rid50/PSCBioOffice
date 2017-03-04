@@ -175,6 +175,7 @@ namespace PSCBioIdentification
                 //{
                 //int i = Thread.CurrentThread.ManagedThreadId;
                 e.Result = client.match(_guid, _fingerList, _gender, _firstMatch, _record.probeTemplate, _trackBarValue);
+                //e.Result = client.match(_guid, _fingerList, _gender, _firstMatch, _record.probeTemplate, _trackBarValue);
                 //int i = 0;
                     //tl.Loop();
 
@@ -428,7 +429,8 @@ namespace PSCBioIdentification
                 //if (e.Result != null && (e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 0)
                 //    score = (e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item2;
 
-                if (e.Result != null) {
+                if (e.Result != null)
+                {
                     if ((e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 0)
                         score = (e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item2;
 

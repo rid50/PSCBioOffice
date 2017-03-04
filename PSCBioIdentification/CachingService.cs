@@ -162,18 +162,32 @@ namespace PSCBioIdentification
             }
 
             dynamic client = null;
+            //dynamic client2 = null;
 
             if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
                 client = e.Argument as MemoryCachePopulateService.PopulateCacheServiceClient;
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                client = e.Argument as AppFabricCachePopulateService.PopulateCacheServiceClient;
 
-            //if (!ReferenceEquals(null, client))
             if (client != null) {
                 try
                 {
                     client.Run(new ArrayList(_fingerList));
                     _mre.WaitOne();
+
+                    //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+                    //{
+                    //    client2 = new MemoryCacheMatchingService.MatchingServiceClient();
+
+                    //    string errorMessage;
+                    //    if (!IsServiceAvailable(client2, out errorMessage))
+                    //    {
+                    //        ShowErrorMessage(errorMessage);
+                    //        client2.Close();
+                    //        return;
+                    //    }
+                    //    ShowStatusMessage("   ---Enrolment process started...", true);
+                    //    client2.enrollGalleryTemplate(_fingerList);
+                    //    ShowStatusMessage("   ready", true);
+                    //}
                 }
                 catch (Exception ex)
                 {

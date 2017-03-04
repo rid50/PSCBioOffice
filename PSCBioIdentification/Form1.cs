@@ -642,14 +642,14 @@ namespace PSCBioIdentification
             if (ConfigurationManager.AppSettings["fingerFrom"] == "file")
             {
                 fileTemplate = true;
-                for (int i = 0; i < 10; i++)
-                {
-                    CheckBox bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
-                    bb.Checked = false;
-                }
+                //for (int i = 0; i < 10; i++)
+                //{
+                //    CheckBox bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                //    bb.Checked = false;
+                //}
 
-                checkBox1.Checked = true;
-                checkBox2.Checked = true;
+                //checkBox1.Checked = true;
+                //checkBox2.Checked = true;
             }
 
             if (_isCapturing)
@@ -668,19 +668,19 @@ namespace PSCBioIdentification
                 short count = 0;
                 //if (radioButtonIdentify.Checked)
                 //{
-                CheckBox bb;
-                for (int i = 0; i < 10; i++)
-                {
-                    bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
-                    if (bb.Checked)
-                        count++;
-                }
+                //CheckBox bb;
+                //for (int i = 0; i < 10; i++)
+                //{
+                //    bb = this.Controls.Find("checkBox" + (i + 1).ToString(), true)[0] as CheckBox;
+                //    if (bb.Checked)
+                //        count++;
+                //}
 
-                if (count == 0)
-                {
-                    ShowErrorMessage("No fingers selected");
-                    return;
-                }
+                //if (count == 0)
+                //{
+                //    ShowErrorMessage("No fingers selected");
+                //    return;
+                //}
 
                 //}
                 NFPosition nFPosition = 0;
@@ -1782,7 +1782,7 @@ namespace PSCBioIdentification
             //}
 
             //WsqImage im = fingersCollection[0] as WsqImage;
- 
+
 
             //im.Content = img.SaveToMem((int)GX_IMGFILEFORMATS.GX_WSQ);
             //im.XRes = img.GetXRes();
@@ -1792,7 +1792,7 @@ namespace PSCBioIdentification
             //PixelFormat == 1 GRAY
             //PixelFormat == 6 RGB
 
-                        //byte[] buffer = null;
+            //byte[] buffer = null;
             //string fileName = "lindex.wsq";
             //FileStream fs = null;
             //try
@@ -1807,6 +1807,7 @@ namespace PSCBioIdentification
             //    fs.Dispose();
             //}
 
+            ShowErrorMessage("");
             //MemoryStream ms = null;
             NImage image = null;
             NFinger finger = null;
@@ -1858,7 +1859,8 @@ namespace PSCBioIdentification
                 //MessageBox.Show(string.Format("Error creating image retrieved from database {0}", ex.Message),
                 //  Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                string text = string.Format("Error creating image retrieved from database: {0} ", ex.Message);
+                //string text = string.Format("Error creating image retrieved from database: {0} ", ex.Message);
+                string text = string.Format("Error: {0} ", ex.Message);
                 ShowErrorMessage(text);
 
                 //return false;
@@ -3270,12 +3272,15 @@ namespace PSCBioIdentification
             enrollFromWSQ(wsqImage);
         }
 
-        public void ShowStatusMessage(string message)
+        public void ShowStatusMessage(string message, bool append = false)
         {
             this.BeginInvoke(new Action(delegate ()
             {
                 toolStripStatusLabelError.ForeColor = Color.Black;
-                toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+                if (!append)
+                    toolStripStatusLabelError.Text = System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
+                else
+                    toolStripStatusLabelError.Text += System.Text.RegularExpressions.Regex.Replace(message, @"\r\n?|\n", "");
             }));
 
             //toolStripProgressBar.Visible = false;
