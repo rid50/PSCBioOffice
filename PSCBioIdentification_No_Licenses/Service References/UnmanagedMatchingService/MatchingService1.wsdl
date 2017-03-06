@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MatchingService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IMatchingService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex" />
+        <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy" />
+        <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.Text" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IMatchingService_fillCache2_InputMessage">
+    <wsdl:part name="parameters" element="tns:fillCache2" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_fillCache_InputMessage">
+    <wsdl:part name="parameters" element="tns:fillCache" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_fillCache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:fillCacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_match_InputMessage">
+    <wsdl:part name="parameters" element="tns:match" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_match_OutputMessage">
+    <wsdl:part name="parameters" element="tns:matchResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_terminateMatchingService_InputMessage">
+    <wsdl:part name="parameters" element="tns:terminateMatchingService" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_terminateMatchingService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:terminateMatchingServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_RespondWithRecordNumbers_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithRecordNumbers" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_RespondWithText_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithText" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_RespondWithError_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RespondWithError" />
+  </wsdl:message>
+  <wsdl:message name="IMatchingService_CacheOperationComplete_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:CacheOperationComplete" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="IMatchingService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="fillCache2">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/fillCache2" message="tns:IMatchingService_fillCache2_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="fillCache">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/fillCache" message="tns:IMatchingService_fillCache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/fillCacheResponse" message="tns:IMatchingService_fillCache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="match">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/match" message="tns:IMatchingService_match_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/matchResponse" message="tns:IMatchingService_match_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="terminateMatchingService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMatchingService/terminateMatchingService" message="tns:IMatchingService_terminateMatchingService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/terminateMatchingServiceResponse" message="tns:IMatchingService_terminateMatchingService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithRecordNumbers">
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/RespondWithRecordNumbers" message="tns:IMatchingService_RespondWithRecordNumbers_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithText">
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/RespondWithText" message="tns:IMatchingService_RespondWithText_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RespondWithError">
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/RespondWithError" message="tns:IMatchingService_RespondWithError_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CacheOperationComplete">
+      <wsdl:output wsaw:Action="http://tempuri.org/IMatchingService/CacheOperationComplete" message="tns:IMatchingService_CacheOperationComplete_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSDualHttpBinding_IMatchingService" type="tns:IMatchingService">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_IMatchingService_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="fillCache2">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/fillCache2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="fillCache">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/fillCache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="match">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/match" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="terminateMatchingService">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/terminateMatchingService" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithRecordNumbers">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/RespondWithRecordNumbers" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithText">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/RespondWithText" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RespondWithError">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/RespondWithError" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CacheOperationComplete">
+      <soap12:operation soapAction="http://tempuri.org/IMatchingService/CacheOperationComplete" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MatchingService">
+    <wsdl:port name="WSDualHttpBinding_IMatchingService" binding="tns:WSDualHttpBinding_IMatchingService">
+      <soap12:address location="http://localhost/BiometricService/MatchingService.svc" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost/BiometricService/MatchingService.svc</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -95,7 +95,7 @@ namespace PSCBioIdentification
         //private NFRecord enrolledTemplate;
         //private FPScannerMan scannerMan;
 
-        dynamic _serviceClient = null;
+        //dynamic _serviceClient = null;
 
         CallbackFromDualHttpBindingService _callbackFromDualHttpBindingService = null;
         InstanceContext _instanceContext = null;
@@ -104,7 +104,7 @@ namespace PSCBioIdentification
         //CancellationToken _ct;
 
         private ManualResetEvent _mre;
-        private UInt32 _matchingResult = 0;
+        //private UInt32 _matchingResult = 0;
 
         //private NImage _image;
         private NDeviceManager _deviceManager;
@@ -112,12 +112,14 @@ namespace PSCBioIdentification
         private NSubject _subject;
         private NSubject _subject2;
 
+        private MatchingService.EnrollmentClient _matchingService = null;
+
         //private NBiometricClient[] _biometricClients = new NBiometricClient[10];        
         //private NSubject[] _subjects = new NSubject[10];
 
         //private NFinger _subjectFinger;
         //private NDevice _device;
-        
+
         private bool _isCapturing = false;
         //private bool _isPopulatingChache = false;
 
@@ -214,32 +216,26 @@ namespace PSCBioIdentification
             _callbackFromDualHttpBindingService.MyEvent += MyEvent;
             _instanceContext = new InstanceContext(_callbackFromDualHttpBindingService);
 
-            dynamic client = null;
+            //dynamic client = null;
+
             string errorMessage;
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            if (ConfigurationManager.AppSettings["cachingProvider"] == "Enrollment")
             {
-                client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+                //client = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+                _matchingService = new MatchingService.EnrollmentClient(_instanceContext);
 
-                if (!IsServiceAvailable(client, out errorMessage))
+                if (!IsServiceAvailable(_matchingService, out errorMessage))
                 {
                     ShowErrorMessage(errorMessage);
-                    if (client != null)
-                        client.Close();
+                    if (_matchingService != null)
+                        _matchingService.Close();
 
                     return;
                 }
-            }
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                client = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
-
-
-            if (client == null  || (client != null && client.State == CommunicationState.Faulted))
+            } else
             {
-                ShowErrorMessage("PopulateCacheService communication faulted");
-                if (client != null)
-                    client.Close();
-
+                ShowErrorMessage("Wrong Caching Provider");
                 return;
             }
 
@@ -247,15 +243,15 @@ namespace PSCBioIdentification
 
             ArrayList fingerList = null;
 
-            if (client != null)
+            if (_matchingService != null)
             {
                 try
                 {
                     //DateTime dt = client.getExpirationTime();
 
-                    fingerList = client.getFingerList();
+                    fingerList = _matchingService.GetFingerList();
                     if (fingerList != null && fingerList.Count > 0)
-                        labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", client.getExpirationTime());
+                        labelCacheValidationTime.Text += string.Format("Valid until: {0:MMM dd} {0:t}", _matchingService.GetExpirationTime());
                 }
                 catch (FaultException ex)
                 {
@@ -274,10 +270,10 @@ namespace PSCBioIdentification
                     //radioButtonIdentify.Enabled = false;
                     //buttonScan.Enabled = false;
                 }
-                finally
-                {
-                    client.Close();
-                }
+                //finally
+                //{
+                //    _matchingService.Close();
+                //}
             }
 
             //radioButtonIdentify.Tag = "on";
@@ -309,7 +305,7 @@ namespace PSCBioIdentification
                 }
                 else
                 {
-                    if (fingerList.Count == 0)
+                    if (fingerList.Count == 0 && i < 5)
                         cb.Checked = true;
                     else
                         cb.Checked = false;
@@ -2046,20 +2042,8 @@ namespace PSCBioIdentification
                 {
                     bool retcode = false;
 
-                    //var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient(_instanceContext);
-                    var matchingServiceClient = new MemoryCacheMatchingService.MatchingServiceClient();
-                    //var b = _subject.GetTemplateBuffer().ToArray();
-                    //var b2 = _subject2.GetTemplateBuffer().ToArray();
-                    string errorMessage;
-                    if (!IsServiceAvailable(matchingServiceClient, out errorMessage))
-                    {
-                        ShowErrorMessage(errorMessage);
-                        matchingServiceClient.Close();
-                        return;
-                    }
-
                     try {
-                        retcode = matchingServiceClient.verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray(), trackBar1.Value);
+                        retcode = _matchingService.Verify(_subject.GetTemplateBuffer().ToArray(), _subject2.GetTemplateBuffer().ToArray(), trackBar1.Value);
                         //retcode = matchingServiceClient.verify(b, b2);
                     }
                     catch (Exception ex)
@@ -3315,9 +3299,9 @@ namespace PSCBioIdentification
             if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
                 show = true;
 
-            radioButtonMan.Visible = !show;
-            radioButtonWoman.Visible = !show;
-            radioButtonManAndWoman.Visible = !show;
+            //radioButtonMan.Visible = !show;
+            //radioButtonWoman.Visible = !show;
+            //radioButtonManAndWoman.Visible = !show;
 
             radioButtonFirstMatch.Visible = !show;
             radioButtonAllOccurrences.Visible = !show;
@@ -3395,19 +3379,19 @@ namespace PSCBioIdentification
 
         private void terminateService()
         {
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
-            {
-                if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                {
-                    terminateMatchingService();
-                }
-                else
-                {
-                    if (_serviceClient != null)
-                        _serviceClient.terminateMatchingService();
-                }
-            } else
-            {
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache")
+            //{
+            //    if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //    {
+            //        terminateMatchingService();
+            //    }
+            //    else
+            //    {
+            //        if (_serviceClient != null)
+            //            _serviceClient.terminateMatchingService();
+            //    }
+            //} else
+            //{
 
                 //CallbackFromCacheFillingService callback = new CallbackFromCacheFillingService();
                 //InstanceContext context = new InstanceContext(callback);
@@ -3423,10 +3407,10 @@ namespace PSCBioIdentification
                 //if (client != null)
                 //    client.Terminate();
 
-                if (_serviceClient != null)
-                {
-                    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
-                    {
+                //if (_serviceClient != null)
+                //{
+                //    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
+                //    {
                         if (backgroundWorkerCachingService.IsBusy)
                         {
                             backgroundWorkerCachingService.CancelAsync();
@@ -3435,7 +3419,7 @@ namespace PSCBioIdentification
 
                             try
                             {
-                                TerminateCaching(_serviceClient);
+                                TerminateCaching();
                             }
                             catch (Exception ex)
                             {
@@ -3444,25 +3428,26 @@ namespace PSCBioIdentification
                         }
 
                         //_serviceClient.Terminate();
-                    } else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
-                    {
-                        if (backgroundWorkerMatchingService.IsBusy)
-                        {
-                            //backgroundWorkerMatchingService.CancelAsync();
-                            //_mre.Set();                      //Terminate MatchingServiceService
+                    //}
+                    //else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+                    //{
+                    //    if (backgroundWorkerMatchingService.IsBusy)
+                    //    {
+                    //        //backgroundWorkerMatchingService.CancelAsync();
+                    //        //_mre.Set();                      //Terminate MatchingServiceService
 
-                            try
-                            {
-                                TerminateMatching(_serviceClient);
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(ex.Message);
-                            }
-                        }
-                    }
+                    //        try
+                    //        {
+                    //            TerminateMatching(_serviceClient);
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            throw new Exception(ex.Message);
+                    //        }
+                    //    }
+                    //}
 
-                }
+                //}
 
                 if (backgroundWorkerDataService.IsBusy)
                 {
@@ -3470,7 +3455,7 @@ namespace PSCBioIdentification
                 }
 
                 //_mre.Set();
-            }
+            //}
 
             //_serviceClient = null;
         }
@@ -3659,49 +3644,49 @@ namespace PSCBioIdentification
         {
             if (e == null)
             {
-                //this.BeginInvoke((Action)(() =>
-                //{
-                //    ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
-                //}));
+                this.BeginInvoke((Action)(() =>
+                {
+                    ShowStatusMessage(string.Format(" --- {0:0.00}%", 100));
+                }));
 
                 _mre.Set();                 //cache service finished cache populating or matching service completed a search 
             }
             else if (e.Error.Length == 0)   // Show message
             {
-                if (_serviceClient != null && _serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
-                {
+                //if (_serviceClient != null && _serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+                //{
 
-                    _matchingResult = Convert.ToUInt32(e.Message, 10);
-                }
-                else
-                {
-                    this.BeginInvoke((Action<string>)((Message) =>
+                //    _matchingResult = Convert.ToUInt32(e.Message, 10);
+                //}
+                //else
+                //{
+                    this.BeginInvoke((Action<MyEventArgs>)((args) =>
                     {
-                        ShowStatusMessage(Message);
-                    }), e.Message);
-                }
+                        ShowStatusMessage(args.Message, args.Append);
+                    }), e);
+                //}
             }
             else                           // Error
             {
-                if (_serviceClient != null)
-                {
-                    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
-                    {
+                //if (_serviceClient != null)
+                //{
+                //    if (_serviceClient is MemoryCachePopulateService.PopulateCacheServiceClient)
+                //    {
                         if (backgroundWorkerCachingService.IsBusy)
                         {
                             backgroundWorkerCachingService.CancelAsync();
                         }
 
                         //_serviceClient.Terminate();
-                    }
-                    else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
-                    {
-                        if (backgroundWorkerMatchingService.IsBusy)
-                        {
-                            backgroundWorkerMatchingService.CancelAsync();
-                        }
-                    }
-                }
+                    //}
+                    //else if (_serviceClient is MemoryCacheMatchingService.MatchingServiceClient)
+                    //{
+                    //    if (backgroundWorkerMatchingService.IsBusy)
+                    //    {
+                    //        backgroundWorkerMatchingService.CancelAsync();
+                    //    }
+                    //}
+                //}
 
                 _mre.Set();                     //terminate cache service or matching service 
 

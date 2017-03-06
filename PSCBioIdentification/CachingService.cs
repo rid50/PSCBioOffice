@@ -86,34 +86,43 @@ namespace PSCBioIdentification
             _callbackFromDualHttpBindingService.TotalRecords = 0;
             _callbackFromDualHttpBindingService.RunningSum = 0;
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                _serviceClient = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                _serviceClient = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
-            else
-                _serviceClient = new UnmanagedMatchingService.MatchingServiceClient(_instanceContext);
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //    _serviceClient = new MemoryCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+            //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //    _serviceClient = new AppFabricCachePopulateService.PopulateCacheServiceClient(_instanceContext);
+            //else
+            //    _serviceClient = new UnmanagedMatchingService.MatchingServiceClient(_instanceContext);
 
             String clientPort = ConfigurationManager.AppSettings["clientPort"];
 
-            if (clientPort != "80" && _serviceClient.Endpoint.Binding.Name == "WSDualHttpBinding")
+            if (clientPort != "80" && _matchingService.Endpoint.Binding.Name == "WSDualHttpBinding")
             {
-                ServiceEndpoint serviceEndpoint = _serviceClient.Endpoint;
+                //WSDualHttpBinding dualBinding = new WSDualHttpBinding();
+                //EndpointAddress endptadr = new EndpointAddress("http://localhost:12000/DuplexTestUsingCode/Server");
+                //dualBinding.ClientBaseAddress = new Uri("http://localhost:8000/DuplexTestUsingCode/Client/");
+
+                ServiceEndpoint serviceEndpoint = _matchingService.Endpoint;
+                var dualBinding = _matchingService.Endpoint.Binding as WSDualHttpBinding;
                 Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
-                _serviceClient.Endpoint.Binding.ClientBaseAddress = uri;
+                dualBinding.ClientBaseAddress = uri;
+
+                //ServiceEndpoint serviceEndpoint = _matchingService.Endpoint;
+                //Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
+                //_matchingService.Endpoint.Binding.ClientBaseAddress = uri;
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/PopulateCacheServiceClient/");
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:8733/Design_Time_Addresses/");
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/Temporary_Listen_Addresses/");
             }
 
-            string errorMessage;
-            //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
-            if (!IsServiceAvailable(_serviceClient, out errorMessage))
-            {
-                ShowErrorMessage(errorMessage);
-                //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
-                _serviceClient.Close();
-                return;
-            }
+            //string errorMessage;
+            ////if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            //if (!IsServiceAvailable(_serviceClient, out errorMessage))
+            //{
+            //    ShowErrorMessage(errorMessage);
+            //    //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+            //    _serviceClient.Close();
+            //    return;
+            //}
 
             _fingerList = new List<string>();
             //_fingerList = new System.Collections.ArrayList();
@@ -139,7 +148,7 @@ namespace PSCBioIdentification
             //Application.DoEvents();
             //manageCacheButton.Text = "Cancel";
 
-            backgroundWorkerCachingService.RunWorkerAsync(_serviceClient);
+            backgroundWorkerCachingService.RunWorkerAsync();
 
             //dynamic client;
 
@@ -161,16 +170,16 @@ namespace PSCBioIdentification
                 return;
             }
 
-            dynamic client = null;
-            //dynamic client2 = null;
+            //dynamic client = null;
+            ////dynamic client2 = null;
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-                client = e.Argument as MemoryCachePopulateService.PopulateCacheServiceClient;
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //    client = e.Argument as MemoryCachePopulateService.PopulateCacheServiceClient;
 
-            if (client != null) {
+            //if (client != null) {
                 try
                 {
-                    client.Run(new ArrayList(_fingerList));
+                    _matchingService.Run(new ArrayList(_fingerList));
                     _mre.WaitOne();
 
                     //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
@@ -193,42 +202,42 @@ namespace PSCBioIdentification
                 {
                     throw new Exception(ex.Message);
                 }
-            }
-            else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
-            {
-                _record = new Record();
-                _record.errorMessage = new System.Text.StringBuilder(512);
+            //}
+            //else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
+            //{
+            //    _record = new Record();
+            //    _record.errorMessage = new System.Text.StringBuilder(512);
 
-                _record.fingerListSize = _fingerList.Count;
-                _record.fingerList = _fingerList.ToArray() as string[];
-                //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
+            //    _record.fingerListSize = _fingerList.Count;
+            //    _record.fingerList = _fingerList.ToArray() as string[];
+            //    //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
-                var list = new System.Collections.ArrayList();
+            //    var list = new System.Collections.ArrayList();
 
-                list.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
-                list.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
-                list.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
-                list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                _record.appSettings = list.ToArray(typeof(string)) as string[];
+            //    list.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+            //    list.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+            //    list.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+            //    list.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+            //    _record.appSettings = list.ToArray(typeof(string)) as string[];
 
-                unsafe
-                {
-                    fixed (UInt32* ptr = &_record.probeTemplateSize)
-                    {
-                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                        {
-                            fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings, new CallBackDelegate(OnCallback));
-                        }
-                        else
-                        {
-                            client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
+            //    unsafe
+            //    {
+            //        fixed (UInt32* ptr = &_record.probeTemplateSize)
+            //        {
+            //            if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //            {
+            //                fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings, new CallBackDelegate(OnCallback));
+            //            }
+            //            else
+            //            {
+            //                client = e.Argument as UnmanagedMatchingService.MatchingServiceClient;
 
-                            client.fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings);
-                            _mre.WaitOne();
-                        }
-                    }
-                }
-            }
+            //                client.fillCache(_record.fingerList, _record.fingerListSize, _record.appSettings);
+            //                _mre.WaitOne();
+            //            }
+            //        }
+            //    }
+            //}
 
             if (!backgroundWorkerCachingService.CancellationPending)
                 e.Result = new ArrayList(_fingerList);
@@ -249,14 +258,14 @@ namespace PSCBioIdentification
             }
         }
 
-        private void TerminateCaching(dynamic client)
+        private void TerminateCaching()
         {
-            DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
-                new DuplexChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(_instanceContext, client.Endpoint.Name);
+            DuplexChannelFactory<MatchingService.IEnrollment> factory =
+                new DuplexChannelFactory<MatchingService.IEnrollment>(_instanceContext, _matchingService.Endpoint.Name);
             //ChannelFactory<MemoryCachePopulateService.IPopulateCacheService> factory =
             //    new ChannelFactory<MemoryCachePopulateService.IPopulateCacheService>(client.Endpoint.Binding, client.Endpoint.Address);
 
-            MemoryCachePopulateService.IPopulateCacheService cl = factory.CreateChannel();
+            MatchingService.IEnrollment cl = factory.CreateChannel();
             int i = cl.Terminate();
             //LogLine(k.ToString(), true);
             ((IClientChannel)cl).Close();
@@ -264,7 +273,7 @@ namespace PSCBioIdentification
 
         private void backgroundWorkerCachingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _serviceClient = null;
+            //_serviceClient = null;
 
             radioButtonIdentify.Enabled = false;
 

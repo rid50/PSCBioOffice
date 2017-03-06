@@ -456,6 +456,9 @@
   <data name="radioButtonManAndWoman.Text" xml:space="preserve">
     <value>M&amp;&amp;W</value>
   </data>
+  <data name="radioButtonManAndWoman.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;radioButtonManAndWoman.Name" xml:space="preserve">
     <value>radioButtonManAndWoman</value>
   </data>
@@ -486,6 +489,9 @@
   <data name="radioButtonWoman.Text" xml:space="preserve">
     <value>W</value>
   </data>
+  <data name="radioButtonWoman.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;radioButtonWoman.Name" xml:space="preserve">
     <value>radioButtonWoman</value>
   </data>
@@ -515,6 +521,9 @@
   </data>
   <data name="radioButtonMan.Text" xml:space="preserve">
     <value>M</value>
+  </data>
+  <data name="radioButtonMan.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;radioButtonMan.Name" xml:space="preserve">
     <value>radioButtonMan</value>

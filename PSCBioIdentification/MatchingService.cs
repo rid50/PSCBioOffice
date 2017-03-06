@@ -94,24 +94,24 @@ namespace PSCBioIdentification
 
             //CookieContainer cookieContainer = new CookieContainer();
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-            {
-                _serviceClient = new MemoryCacheMatchingService.MatchingServiceClient();
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //{
+            //    _serviceClient = new MemoryCacheMatchingService.MatchingServiceClient();
 
-                //_serviceClient.CookieContainer = cookieContainer;
-            }
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
-                _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
+            //    //_serviceClient.CookieContainer = cookieContainer;
+            //}
+            //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //    _serviceClient = new AppFabricCacheMatchingService.MatchingServiceClient();
 
-            string errorMessage;
-            //if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
-            if (!IsServiceAvailable(_serviceClient, out errorMessage))            
-            {
-                //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
-                ShowErrorMessage(errorMessage);
-                _serviceClient.Close();
-                return;
-            }
+            //string errorMessage;
+            ////if (!IsServiceAvailable(_serviceClient.Endpoint.Address.Uri.AbsoluteUri, out errorMessage))
+            //if (!IsServiceAvailable(_serviceClient, out errorMessage))            
+            //{
+            //    //ShowErrorMessage(errorMessage + " : " + _serviceClient.Endpoint.Address.Uri.AbsoluteUri);
+            //    ShowErrorMessage(errorMessage);
+            //    _serviceClient.Close();
+            //    return;
+            //}
 
             _trackBarValue = trackBar1.Value;
             _guid = Guid.NewGuid().ToString();
@@ -132,19 +132,19 @@ namespace PSCBioIdentification
                     _fingerList.Add(cb.Tag as string);
             }
 
-            if (radioButtonMan.Checked)
-                _gender = 1;
-            else if (radioButtonWoman.Checked)
-                _gender = 2;
-            else if (radioButtonManAndWoman.Checked)
-                _gender = 0;
+            //if (radioButtonMan.Checked)
+            //    _gender = 1;
+            //else if (radioButtonWoman.Checked)
+            //    _gender = 2;
+            //else if (radioButtonManAndWoman.Checked)
+            //    _gender = 0;
 
             if (radioButtonFirstMatch.Checked)
                 _firstMatch = 1;
             else
                 _firstMatch = 0;
 
-            backgroundWorkerMatchingService.RunWorkerAsync(_serviceClient);
+            backgroundWorkerMatchingService.RunWorkerAsync();
         }
 
         private void backgroundWorkerMatchingService_DoWork(object sender, DoWorkEventArgs e)
@@ -165,33 +165,35 @@ namespace PSCBioIdentification
             //if (!ReferenceEquals(null, client))
             e.Result = null;
 
-            dynamic client = null;
+            //dynamic client = null;
 
-            if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
-            {
-                client = e.Argument as MemoryCacheMatchingService.MatchingServiceClient;
+            //if (ConfigurationManager.AppSettings["cachingProvider"] == "MemoryCache")
+            //{
+                //client = e.Argument as MemoryCacheMatchingService.MatchingServiceClient;
                 e.Result = null; //_matchingResult = 0;
-                //try
-                //{
+            try
+            {
                 //int i = Thread.CurrentThread.ManagedThreadId;
-                e.Result = client.match(_guid, _fingerList, _gender, _firstMatch, _record.probeTemplate, _trackBarValue);
+                e.Result = _matchingService.Identify(new ArrayList(_fingerList), _firstMatch, _record.probeTemplate, _trackBarValue);
+
+
                 //e.Result = client.match(_guid, _fingerList, _gender, _firstMatch, _record.probeTemplate, _trackBarValue);
                 //int i = 0;
-                    //tl.Loop();
+                //tl.Loop();
 
-                    //RunMatching(client, fingerList, gender, record, e);
-                    //_mre.WaitOne();
-                //}
-                //catch (FaultException ex)
-                //{
-                //    throw new Exception(ex.Message);
-                //}
+                //RunMatching(client, fingerList, gender, record, e);
+                //_mre.WaitOne();
             }
-            else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            catch (FaultException ex)
             {
-                client = e.Argument as AppFabricCacheMatchingService.MatchingServiceClient;
-                e.Result = client.match(_guid, _fingerList, _gender, _record.probeTemplate);
+                ShowErrorMessage(ex.Message);
             }
+            //}
+            //else if (ConfigurationManager.AppSettings["cachingProvider"] == "AppFabricCache")
+            //{
+            //    client = e.Argument as AppFabricCacheMatchingService.MatchingServiceClient;
+            //    e.Result = client.match(_guid, _fingerList, _gender, _record.probeTemplate);
+            //}
             //    if (client != null)
             //{
             //    try
@@ -227,105 +229,105 @@ namespace PSCBioIdentification
             //        //_serviceClient = null;
             //    }
             //}
-            else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
-            {
-                //record = new Record();
-                //record.size = (UInt32)template.GetSize();
-                //record.template = template.Save();
-                //record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
-                _record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
-                //record.probeTemplate = e.Argument as byte[];
-                //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
-                _record.errorMessage = new System.Text.StringBuilder(512);
+            //else    // ConfigurationManager.AppSettings["cachingProvider"] == "ODBCCache"
+            //{
+            //    //record = new Record();
+            //    //record.size = (UInt32)template.GetSize();
+            //    //record.template = template.Save();
+            //    //record.probeTemplateSize = (UInt32)(e.Argument as NFRecord).GetSize();
+            //    _record.probeTemplateSize = (UInt32)(e.Argument as byte[]).Length;
+            //    //record.probeTemplate = e.Argument as byte[];
+            //    //record.probeTemplate[0] = (e.Argument as NFRecord).Save().ToArray();
+            //    _record.errorMessage = new System.Text.StringBuilder(512);
 
-                //var ar = new ArrayList();
+            //    //var ar = new ArrayList();
 
-                ////record.fingerList = new string[3] { "ri", "rm", "rr" };
-                ////record.fingerListSize = 3;
-                //CheckBox cb;
-                //for (int i = 1; i < 11; i++)
-                //{
-                //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
-                //    if (cb.Checked)
-                //        ar.Add(cb.Tag);
-                //}
-                _record.fingerListSize = _fingerList.Count;
-                //record.fingerList = new string[ar.Count];
-                _record.fingerList = _fingerList.ToArray() as string[];
-                //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
+            //    ////record.fingerList = new string[3] { "ri", "rm", "rr" };
+            //    ////record.fingerListSize = 3;
+            //    //CheckBox cb;
+            //    //for (int i = 1; i < 11; i++)
+            //    //{
+            //    //    cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+            //    //    if (cb.Checked)
+            //    //        ar.Add(cb.Tag);
+            //    //}
+            //    _record.fingerListSize = _fingerList.Count;
+            //    //record.fingerList = new string[ar.Count];
+            //    _record.fingerList = _fingerList.ToArray() as string[];
+            //    //_record.fingerList = _fingerList.ToArray(typeof(string)) as string[];
 
-                _fingerList.Clear();
+            //    _fingerList.Clear();
 
-                //record.appSettings = new System.Text.StringBuilder(4);
-                //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
-                //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
+            //    //record.appSettings = new System.Text.StringBuilder(4);
+            //    //ar.Add(MyConfigurationSettings.AppSettings["serverName"]);
+            //    //ar.Add(MyConfigurationSettings.AppSettings["dbName"]);
 
-                _fingerList.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
-                _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
-                _fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
-                _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
-                _record.appSettings = _fingerList.ToArray() as string[];
-                //_record.appSettings = _fingerList.ToArray(typeof(string)) as string[];
+            //    _fingerList.Add(MyConfigurationSettings.ConnectionStrings["ODBCConnectionString"].ToString());
+            //    _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerTable"]);
+            //    _fingerList.Add(MyConfigurationSettings.AppSettings["dbIdColumn"]);
+            //    _fingerList.Add(MyConfigurationSettings.AppSettings["dbFingerColumn"]);
+            //    _record.appSettings = _fingerList.ToArray() as string[];
+            //    //_record.appSettings = _fingerList.ToArray(typeof(string)) as string[];
 
-                //UInt32 score = 0;
-                unsafe
-                {
-                    fixed (UInt32* ptr = &_record.probeTemplateSize)
-                    {
-                        if (ConfigurationManager.AppSettings["cachingService"] == "local")
-                        {
-                            e.Result = match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, _record.errorMessage, _record.errorMessage.Capacity);
-                            //e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
-                        }
-                        else
-                        {
-                            CallbackFromDualHttpBindingService callback = new CallbackFromDualHttpBindingService();
-                            callback.MyEvent += MyEvent;
-                            InstanceContext context = new InstanceContext(callback);
+            //    //UInt32 score = 0;
+            //    unsafe
+            //    {
+            //        fixed (UInt32* ptr = &_record.probeTemplateSize)
+            //        {
+            //            if (ConfigurationManager.AppSettings["cachingService"] == "local")
+            //            {
+            //                e.Result = match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, _record.errorMessage, _record.errorMessage.Capacity);
+            //                //e.Result = match(record.fingerList, record.fingerListSize, record.probeTemplate[0], record.probeTemplateSize, record.appSettings, record.errorMessage, record.errorMessage.Capacity);
+            //            }
+            //            else
+            //            {
+            //                CallbackFromDualHttpBindingService callback = new CallbackFromDualHttpBindingService();
+            //                callback.MyEvent += MyEvent;
+            //                InstanceContext context = new InstanceContext(callback);
 
-                            //var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
-                            //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
-                            _serviceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
-                            e.Result = _serviceClient.match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, ref _record.errorMessage, _record.errorMessage.Capacity);
-                        }
-                    }
-                }
-            }
+            //                //var matchingServiceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
+            //                //e.Result = matchingServiceClient.match(record.fingerList, record.fingerListSize, record.probeTemplate, record.probeTemplateSize, record.appSettings, ref record.errorMessage, record.errorMessage.Capacity);
+            //                _serviceClient = new PSCBioIdentification.UnmanagedMatchingService.MatchingServiceClient(context);
+            //                e.Result = _serviceClient.match(_record.fingerList, _record.fingerListSize, _record.probeTemplate, _record.probeTemplateSize, _record.appSettings, ref _record.errorMessage, _record.errorMessage.Capacity);
+            //            }
+            //        }
+            //    }
+            //}
 
             //if (backgroundWorkerMatchingService.CancellationPending)
             //{
-                //try
-                //{
-                //    TerminateMatching(client);
-                //}
-                //catch (Exception ex)
-                //{
-                //    throw new Exception(ex.Message);
-                //}
+            //try
+            //{
+            //    TerminateMatching(client);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception(ex.Message);
+            //}
 
-                //await proxy.GetMessagesAsync();
+            //await proxy.GetMessagesAsync();
 
-                //var task = System.Threading.Tasks.Task<int>.Factory.FromAsync(client.BeginTerminate, client.EndTerminate, 0, null);
-                //int i = task.Result;
+            //var task = System.Threading.Tasks.Task<int>.Factory.FromAsync(client.BeginTerminate, client.EndTerminate, 0, null);
+            //int i = task.Result;
 
-                //client.Terminate(0);
-                //try
-                //{
+            //client.Terminate(0);
+            //try
+            //{
 
-                //    Action myAction = () =>
-                //    {
-                //        _serviceClient.Terminate();
-                //    };
+            //    Action myAction = () =>
+            //    {
+            //        _serviceClient.Terminate();
+            //    };
 
 
-                //    IAsyncResult result = myAction.BeginInvoke(null, null);
+            //    IAsyncResult result = myAction.BeginInvoke(null, null);
 
-                //    myAction.EndInvoke(result);
+            //    myAction.EndInvoke(result);
 
-                //    //if (_tokenSource != null)
-                //    //    _tokenSource.Cancel();
-                //}
-                //catch (Exception) { }
+            //    //if (_tokenSource != null)
+            //    //    _tokenSource.Cancel();
+            //}
+            //catch (Exception) { }
             //}
         }
 
@@ -339,80 +341,17 @@ namespace PSCBioIdentification
         }
 
         private void TerminateMatching(dynamic client)
-        //private async Task TerminateMatching(dynamic client)
         {
-            //int i = 0;
-            //Task<int> t = Task.Run(() =>
-            //{
-            //    //try
-            //    //{
-            //    i = Thread.CurrentThread.ManagedThreadId;
-            //    i = client.Terminate(guid);
-            //    return i;
-            //    //tl.Terminate();
-            //    //i = 2;
+            DuplexChannelFactory<MatchingService.IEnrollment> factory =
+                new DuplexChannelFactory<MatchingService.IEnrollment>(_instanceContext, _matchingService.Endpoint.Name);
 
-            //    //}
-            //    //catch (Exception) { }
-            //});
-
-            //i = await t;
-            //i = 2;
-
-            //Task<int> t = client.TerminateAsync();
-            //int result = await t;
-            //int i = 0;
-
-            //var cli = new MemoryCacheMatchingService.MatchingServiceClient();
-            //int k = cl.Terminate();
-            //cl.Close();
-
-            ////// Create a channel factory.
-            ////BasicHttpBinding binding = new BasicHttpBinding(client.Endpoint.Name);
-            //WSHttpBinding binding = new WSHttpBinding(client.Endpoint.Name);
-            ////NetTcpBinding binding = new NetTcpBinding(client.Endpoint.Name);
-
-            ////binding.ReliableSession.Enabled = true;
-            ////binding.Security.Mode = SecurityMode.None;
-            //cli.Endpoint.Address.Uri.AbsoluteUri
-            //EndpointAddress endpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
-            //ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(binding, endpoint);
-
-            //////WSDualHttpBinding binding = new WSDualHttpBinding();
-            //////ContractDescription contract = new ContractDescription("WSDualHttpBinding_IMatchingService");
-            //////EndpointAddress myEndpoint = new EndpointAddress("http://localhost/MemoryCacheService/MatchingService.svc");
-            //////ServiceEndpoint serviceEndpoint = new ServiceEndpoint(contract, binding, myEndpoint);
-            //////DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> myChannelFactory =
-            //////    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, serviceEndpoint);
-
-            //DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService> factory =
-            //    new DuplexChannelFactory<MemoryCacheMatchingService.IMatchingService>(_instanceContext, client.Endpoint.Name);
-
-            // Create a channel.
-            ChannelFactory<MemoryCacheMatchingService.IMatchingService> factory = new ChannelFactory<MemoryCacheMatchingService.IMatchingService>(client.Endpoint.Binding, client.Endpoint.Address);
-            MemoryCacheMatchingService.IMatchingService cl = factory.CreateChannel();
-            cl.Terminate(_guid);
-            //LogLine(k.ToString(), true);
+            MatchingService.IEnrollment cl = factory.CreateChannel();
+            cl.Terminate();
             ((IClientChannel)cl).Close();
         }
 
         private void backgroundWorkerMatchingService_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //if (_tokenSource != null)
-            //    _tokenSource.Dispose();
-            try
-            {
-                if (_serviceClient != null)
-                {
-                    if (_serviceClient.State == CommunicationState.Opened)
-                        _serviceClient.Close();
-
-                    _serviceClient = null;
-                }
-            } catch (Exception) { }
-            //Application.DoEvents();
-
-            //MessageBox.Show(toolStripProgressBar.Value.ToString());
             _stw.Stop();
 
             if (e.Error != null)
@@ -431,20 +370,20 @@ namespace PSCBioIdentification
 
                 if (e.Result != null)
                 {
-                    if ((e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 0)
-                        score = (e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item2;
+                    if ((e.Result as MatchingService.MatchingResult).Result.Length > 0)
+                        score = (e.Result as MatchingService.MatchingResult).Result[0].Item2;
 
-                    if ((e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count > 1)
+                    if ((e.Result as MatchingService.MatchingResult).Result.Length > 1)
                     {
-                        int count = (e.Result as MemoryCacheMatchingService.MatchingResult).Result.Count;
+                        int count = (e.Result as MatchingService.MatchingResult).Result.Length;
                         if (count > 20)
                             count = 20;
 
                         for (int i = 0; i < count; i++)
                         {
                             string str2 = string.Format("Id: {0}, Score({1})",
-                                (e.Result as MemoryCacheMatchingService.MatchingResult).Result[i].Item1,
-                                (e.Result as MemoryCacheMatchingService.MatchingResult).Result[i].Item2);
+                                (e.Result as MatchingService.MatchingResult).Result[i].Item1,
+                                (e.Result as MatchingService.MatchingResult).Result[i].Item2);
                             Log(str2, false, true);
                             HighlightCurrentLine();
                             LogLine(true);
@@ -465,7 +404,7 @@ namespace PSCBioIdentification
                 personId.Text = "";
                 if (score > 0)
                 {
-                    this.userId = Int32.Parse((e.Result as MemoryCacheMatchingService.MatchingResult).Result[0].Item1);
+                    this.userId = Int32.Parse((e.Result as MatchingService.MatchingResult).Result[0].Item1);
                     personId.Text = this.userId.ToString();
                     pictureBoxCheckMark.Image = Properties.Resources.checkmark;
                     Mode = ProgramMode.PreEnrolled;

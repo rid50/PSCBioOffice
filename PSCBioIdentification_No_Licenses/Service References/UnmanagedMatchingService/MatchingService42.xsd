@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost/BiometricService/MatchingService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.Text" />
+  <xs:element name="fillCache2">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q1:ArrayOfstring" />
+        <xs:element minOccurs="0" name="fingerListSize" type="xs:int" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="appSettings" nillable="true" type="q2:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fillCache">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q3:ArrayOfstring" />
+        <xs:element minOccurs="0" name="fingerListSize" type="xs:int" />
+        <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="appSettings" nillable="true" type="q4:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fillCacheResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="match">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="fingerList" nillable="true" type="q5:ArrayOfstring" />
+        <xs:element minOccurs="0" name="fingerListSize" type="xs:int" />
+        <xs:element minOccurs="0" name="probeTemplate" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="probeTemplateSize" type="xs:unsignedInt" />
+        <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="appSettings" nillable="true" type="q6:ArrayOfstring" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/System.Text" minOccurs="0" name="errorMessage" nillable="true" type="q7:StringBuilder" />
+        <xs:element minOccurs="0" name="messageSize" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="matchResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="matchResult" type="xs:unsignedInt" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/System.Text" minOccurs="0" name="errorMessage" nillable="true" type="q8:StringBuilder" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="terminateMatchingService">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="terminateMatchingServiceResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RespondWithRecordNumbers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="num" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RespondWithText">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="str" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RespondWithError">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="str" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CacheOperationComplete">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

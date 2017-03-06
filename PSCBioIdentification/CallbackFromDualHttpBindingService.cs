@@ -16,7 +16,7 @@ namespace PSCBioIdentification
     //class CallbackFromCacheFillingService : CallbackFromUnmanagedCacheService, CallbackFromManagedCacheService
     //class CallbackFromDualHttpBindingService : UnmanagedMatchingService.IMatchingServiceCallback, MemoryCachePopulateService.IPopulateCacheServiceCallback, AppFabricCachePopulateService.IPopulateCacheServiceCallback, MemoryCacheMatchingService.IMatchingServiceCallback
     [CallbackBehavior(ConcurrencyMode=ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
-    class CallbackFromDualHttpBindingService : UnmanagedMatchingService.IMatchingServiceCallback, MemoryCachePopulateService.IPopulateCacheServiceCallback, AppFabricCachePopulateService.IPopulateCacheServiceCallback
+    class CallbackFromDualHttpBindingService : MatchingService.IEnrollmentCallback
     {
         private static int totalRecords;
         private static double runningSum;
@@ -68,9 +68,9 @@ namespace PSCBioIdentification
             }
         }
 
-        public void RespondWithText(string str)
+        public void RespondWithText(string str, bool append = false)
         {
-            MyEventArgs args = new MyEventArgs { Message = str, Error = "" };
+            MyEventArgs args = new MyEventArgs { Message = str, Append = append, Error = "" };
             //args.Message = str;
 
             EventHandler<MyEventArgs> handler = MyEvent;
@@ -120,6 +120,7 @@ namespace PSCBioIdentification
     public class MyEventArgs : EventArgs
     {
         public string Message { get; set; }
+        public bool Append { get; set; }
         public string Error { get; set; }
     }
 }
