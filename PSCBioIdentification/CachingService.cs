@@ -95,23 +95,29 @@ namespace PSCBioIdentification
 
             String clientPort = ConfigurationManager.AppSettings["clientPort"];
 
-            if (clientPort != "80" && _matchingService.Endpoint.Binding.Name == "WSDualHttpBinding")
+            int cp = 0;
+            if (Int32.TryParse(clientPort, out cp) && _matchingService.Endpoint.Binding.Name == "WSDualHttpBinding")
             {
                 //WSDualHttpBinding dualBinding = new WSDualHttpBinding();
                 //EndpointAddress endptadr = new EndpointAddress("http://localhost:12000/DuplexTestUsingCode/Server");
                 //dualBinding.ClientBaseAddress = new Uri("http://localhost:8000/DuplexTestUsingCode/Client/");
 
-                ServiceEndpoint serviceEndpoint = _matchingService.Endpoint;
-                var dualBinding = _matchingService.Endpoint.Binding as WSDualHttpBinding;
-                Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
-                dualBinding.ClientBaseAddress = uri;
-
                 //ServiceEndpoint serviceEndpoint = _matchingService.Endpoint;
+                //var dualBinding = _matchingService.Endpoint.Binding as WSDualHttpBinding;
                 //Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
-                //_matchingService.Endpoint.Binding.ClientBaseAddress = uri;
+                //dualBinding.ClientBaseAddress = uri;
+
+                ServiceEndpoint serviceEndpoint = _matchingService.Endpoint;
+                Uri uri = new Uri(serviceEndpoint.Address.Uri.Scheme + "://" + System.Environment.MachineName + ":" + clientPort + "/Design_Time_Addresses/");
+                ((WSDualHttpBinding)_matchingService.Endpoint.Binding).ClientBaseAddress = uri;
+
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/PopulateCacheServiceClient/");
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:8733/Design_Time_Addresses/");
                 //_serviceClient.Endpoint.Binding.ClientBaseAddress = new Uri("http://lenovo-pc:80/Temporary_Listen_Addresses/");
+            } else
+            {
+                ShowErrorMessage("Client port is not valid");
+                return;
             }
 
             //string errorMessage;
@@ -142,8 +148,7 @@ namespace PSCBioIdentification
             manageCacheButton.Tag = "off";
 
             EnableControls(false);
-
-            //buttonScan.Enabled = false;
+            buttonScan.Enabled = false;
 
             //Application.DoEvents();
             //manageCacheButton.Text = "Cancel";
@@ -319,6 +324,7 @@ namespace PSCBioIdentification
                 for (int i = 1; i < 11; i++)
                 {
                     cb = this.Controls.Find("checkBox" + i.ToString(), true)[0] as CheckBox;
+                    cb.Checked = false;
                     if (fingerList.IndexOf(cb.Tag) != -1)
                         cb.Enabled = true;
                     else

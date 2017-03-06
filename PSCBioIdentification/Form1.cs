@@ -413,7 +413,7 @@ namespace PSCBioIdentification
         {
             this.BeginInvoke(new Action(delegate ()
             {
-                buttonScan.Enabled = !capturing;
+                //buttonScan.Enabled = !capturing;
                 pictureBoxGreen.Active = capturing;
                 pictureBoxGreen.Invalidate();
                 pictureBoxRed.Active = !capturing;
@@ -441,7 +441,7 @@ namespace PSCBioIdentification
                 groupBoxMode.Enabled = enable;
 
                 buttonScan.Text = _isCapturing ? "Cancel" : "Scan";
-                buttonScan.Enabled = false;
+                //buttonScan.Enabled = false;
                 //buttonRequest.Enabled = enable;
                 if (!radioButtonIdentify.Checked && enable)
                 {
